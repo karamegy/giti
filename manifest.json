@@ -1,19 +1,27 @@
 {
-  "name": "Global Transport Hub",
-  "short_name": "N2 App",
-  "description": "منصة شاملة لإدارة وتتبع حركة النقل والمواصلات بكفاءة عالية.",
+  "name": "مكتبة الألعاب الفضائية",
+  "short_name": "ألعاب الفضاء",
+  "description": "منصة تفاعلية لألعاب السينما الفضائية ومحاكاة الرحلات مع ربط سحابي متطور.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "/giti/index.html",
   "scope": "/giti/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#02020a",
   "theme_color": "#000000",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3063/3063823.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3063/3063823.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
