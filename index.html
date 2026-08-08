@@ -1968,6 +1968,48 @@
                 }
             }
         }
+function securePaymentSection() {
+    const section = document.getElementById('sec-store');
+    
+    if (!section) return;
+
+    // 1. منع النقر بزر الماوس الأيمن داخل القسم تماماً
+    section.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        alert('عذراً، محتويات هذا القسم محمية لأسباب أمنية.');
+    });
+
+    // 2. منع تحديد النص أو نسخه (Copy / Select)
+    section.addEventListener('copy', function(e) {
+        e.preventDefault();
+        alert('نسخ بيانات الدفع غير مسموح به.');
+    });
+
+    section.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+    });
+
+    // 3. منع استخدام اختصارات لوحة المفاتيح الشائعة للنسخ أو فحص العناصر (Ctrl+C, Ctrl+U, F12)
+    section.addEventListener('keydown', function(e) {
+        if (
+            e.key === 'F12' || 
+            (e.ctrlKey && (e.key === 'u' || e.key === 'c' || e.key === 's' || e.key === 'i'))
+        ) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // 4. تشفير طفيف للبيانات وحقنها برمجياً لضمان عدم قراءتها بسهولة من كود المصدر الخام
+    const fawrySpan = section.querySelector('span[style*="#00f3ff"]');
+    const wePaySpan = section.querySelector('span[style*="#2ecc71"]');
+
+    if (fawrySpan) fawrySpan.textContent = "011140997" + "99";
+    if (wePaySpan) wePaySpan.textContent = "01554440" + "996";
+}
+
+// تشغيل الدالة بمجرد تحميل الصفحة
+document.addEventListener('DOMContentLoaded', securePaymentSection);
 
     </script>
 </body>
