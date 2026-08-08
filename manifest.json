@@ -1,11 +1,11 @@
 {
-  "name": "أسطورة الطريق - Global Transport Hub V60 PRO",
-  "short_name": "أسطورة الطريق",
-  "description": "منصة إدارة الشحنات والأسطول البري المتقدمة",
+  "name": "مكتبة الألعاب الفضائية V10.1",
+  "short_name": "السينما الفضائية",
+  "description": "منصة ألعاب الفضاء السحابية مع لوحة تحكم الإدارة ونظام VIP",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#020208",
+  "theme_color": "#0b0c2a",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3202/3202926.png",
