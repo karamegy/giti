@@ -989,46 +989,42 @@
         const auth = firebase.auth();
 
         const gameContainer = document.getElementById('game-container');
-        const player = document.getElementById('player');
-        const scoreDisplay = document.getElementById('score');
-        const livesDisplay = document.getElementById('lives');
-        const liveGemsDisplay = document.getElementById('live-gems');
-        
-        const gameScreen = document.getElementById('game-screen');
-        const mainMenu = document.getElementById('main-menu');
-        const bottomNavBar = document.getElementById('bottom-nav-bar');
-        const rechargeModal = document.getElementById('recharge-modal');
-        const vipModal = document.getElementById('vip-modal');
-        const shopModal = document.getElementById('shop-modal');
-        const loginScreen = document.getElementById('login-screen');
-        const usernameInput = document.getElementById('username-input');
-        const passwordInput = document.getElementById('password-input');
-        const welcomeTitle = document.getElementById('welcome-title');
-        const userStatusDesc = document.getElementById('user-status-desc');
-        const screenTitle = document.getElementById('screen-title');
-        const screenDesc = document.getElementById('screen-desc');
-        const highScoreText = document.getElementById('high-score-text');
-        const startBtn = document.getElementById('start-btn');
-        const ui = document.getElementById('ui');
-        const controls = document.getElementById('controls');
-        const adminPanelBtn = document.getElementById('admin-panel-btn');
-        const adminModal = document.getElementById('admin-modal');
-        const splitScreenContainer = document.getElementById('split-screen-container');
+                const leftBtn = document.getElementById('left-btn');
+        const rightBtn = document.getElementById('right-btn');
+        const fireBtn = document.getElementById('fire-btn');
 
-        const topProfileBadge = document.getElementById('top-profile-badge');
-        const profileAvatarIcon = document.getElementById('profile-avatar-icon');
-        const profileDisplayName = document.getElementById('profile-display-name');
-        const profileDisplayRank = document.getElementById('profile-display-rank');
-        const chatMessagesBox = document.getElementById('chat-messages-box');
-        const chatTextInput = document.getElementById('chat-text-input');
+        rightBtn.addEventListener('mousedown', () => { moveRight = true; rightBtn.classList.add('active-touch'); });
+        rightBtn.addEventListener('mouseup', () => { moveRight = false; rightBtn.classList.remove('active-touch'); });
+        rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight = true; rightBtn.classList.add('active-touch'); });
+        rightBtn.addEventListener('touchend', () => { moveRight = false; rightBtn.classList.remove('active-touch'); });
 
-        let currentPlayer = localStorage.getItem('currentSpacePilotV10') || '';
-        let currentPilotData = { 
-            name: '',
-            password: '',
-            highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0}, 
-            ship: '🛸', gems: 0, vipRank: 'عادية', adminApproved: true, isAdmin: false
-        };
+        leftBtn.addEventListener('mousedown', () => { moveLeft = true; leftBtn.classList.add('active-touch'); });
+        leftBtn.addEventListener('mouseup', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
+        leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft = true; leftBtn.classList.add('active-touch'); });
+        leftBtn.addEventListener('touchend', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
+
+        // أحداث زر إطلاق النار المحدثة لدعم الإطلاق التلقائي عند الاستمرار بالضغط
+        fireBtn.addEventListener('mousedown', onFireButtonDown);
+        fireBtn.addEventListener('mouseup', onFireButtonUp);
+        fireBtn.addEventListener('mouseleave', onFireButtonUp);
+        fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
+        fireBtn.addEventListener('touchend', onFireButtonUp);
+
+        function onFireButtonDown() {
+            if (!isPlaying || isPaused) return;
+            if (isAutoFire) { disableAutoFire(); return; }
+            firePressTimer = setTimeout(() => { enableAutoFire(); }, 300);
+        }
+
+        function onFireButtonUp() {
+            if (!isPlaying || isPaused) return;
+            if (firePressTimer) {
+                clearTimeout(firePressTimer);
+                firePressTimer = null;
+                if (!isAutoFire) { fireWeapon(); }
+            }
+        }
+
 
         if (currentPlayer) {
             loadPlayerDataFromCloud(currentPlayer, (data) => {
