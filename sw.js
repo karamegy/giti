@@ -1,38 +1,29 @@
-const CACHE_NAME = 'giti-cache-v2'; // قم بتغيير الرقم عند التحديث
-const urlsToCache = [
-  '/giti/',
-  '/giti/index.html',
-  '/giti/manifest.json'
-  // أضف أي ملفات جديدة هنا (مثل ملفات التصميم أو الصور)
-];
+// استيراد مكتبات Firebase اللازمة للعمل في الخلفية
+importScripts('https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.0.0/firebase-messaging-compat.js');
 
-// تثبيت الـ Service Worker وحفظ الملفات
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-  );
+// تهيئة Firebase في Service Worker باستخدام بيانات مشروعك
+firebase.initializeApp({
+    apiKey: "AIzaSyDn-rNJ2ak3I0DdfzTZmXKjePDdgxhfyIY",
+    authDomain: "n2la-642d3.firebaseapp.com",
+    projectId: "n2la-642d3",
+    storageBucket: "n2la-642d3.firebasestorage.app",
+    messagingSenderId: "1085749997466",
+    appId: "1:1085749997466:web:13e5535dc6d2312397d423",
+    measurementId: "G-KH4ZYFB8LC"
 });
 
-// تفعيل الـ Service Worker وحذف الكاش القديم
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName); // حذف النسخ القديمة
-          }
-        })
-      );
-    })
-  );
-});
+const messaging = firebase.messaging();
 
-// جلب الملفات
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
-  );
+// التعامل مع الإشعارات الواردة عندما يكون التطبيق في الخلفية
+messaging.onBackgroundMessage(function(payload) {
+    console.log('[sw.js] Received background message ', payload);
+    
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: '/icons/icon-192x192.png'
+    };
+
+    self.registration.showNotification(notificationTitle, notificationOptions);
 });
