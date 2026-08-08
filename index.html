@@ -1054,22 +1054,19 @@
             isAdmin: false
         };
 
+        // تفعيل حجب النقر ومنع التفاعل على أي زر داخل قائمة الاشتراكات وإظهار رسالة بالأسعار المحددة
         document.addEventListener('DOMContentLoaded', () => {
-    const subscriptionsContainer = document.getElementById('sec-store');
-    if (subscriptionsContainer) {
-        subscriptionsContainer.addEventListener('click', (e) => {
-            // تحقق إذا كان العنصر المنقور هو زر يحتاج لتنبيه الأسعار فقط
-            const targetBtn = e.target.closest('.restricted-action-btn'); 
-            
-            if (targetBtn) {
-                e.preventDefault();
-                e.stopPropagation();
-                alert('🚫 عذراً، تم حجب النقر المباشر على أزرار قائمة الاشتراكات!\n\n✨ أسعار باقات وطرق الاشتراك المتاحة:\n• الحد الأدنى للاشتراك والشحن: ١٠٠ جنيه مصري\n• الحد الأقصى للاشتراك والشحن: ١٠,٠٠0 جنيه مصري\n\nيرجى التواصل مع الإدارة أو استخدام أزرار الشحن المعتمدة عبر فوري كاش و WE Pay.');
+            const subscriptionsContainer = document.getElementById('sec-store');
+            if (subscriptionsContainer) {
+                subscriptionsContainer.addEventListener('click', (e) => {
+                    // حجب النقر الفعلي على أزرار القائمة وإظهار رسالة الاشتراك المحددة بالأرقام (من ١٠٠ حتى ١٠٠٠٠ جنيه مصري)
+                    e.preventDefault();
+                    e.stopPropagation();
+                    alert('🚫 عذراً، تم حجب النقر المباشر على أزرار قائمة الاشتراكات!\n\n✨ أسعار باقات وطرق الاشتراك المتاحة:\n• الحد الأدنى للاشتراك والشحن: ١٠٠ جنيه مصري\n• الحد الأقصى للاشتراك والشحن: ١٠,٠٠0 جنيه مصري\n\nيرجى التواصل مع الإدارة أو استخدام أزرار الشحن المعتمدة عبر فوري كاش و WE Pay.');
+                }, true);
             }
-            // إذا لم يكن زراً محظوراً، ستعمل باقي الأزرار بشكل طبيعي تماماً بدون تجميد!
-        }); // تم إزالة الـ true الخاطئة هنا لتجنب اعتراض الأحداث بالكامل
-    }
-});
+        });
+
         const leftBtn = document.getElementById('left-btn');
         const rightBtn = document.getElementById('right-btn');
         const fireBtn = document.getElementById('fire-btn');
