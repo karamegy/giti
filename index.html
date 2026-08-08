@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة الألعاب الفضائية - v10.1 Cinema Space VIP & Admin Panel</title>
+    <title>مكتبة الألعاب الفضائية - v10.4 Cinema Space VIP & Founder Panel</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0b0c2a">
 
@@ -200,7 +200,7 @@
             background: transparent;
             border: none;
             color: #a4b0be;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -213,7 +213,7 @@
         }
 
         .nav-item span.nav-icon {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             margin-bottom: 2px;
         }
 
@@ -330,7 +330,6 @@
             transform: translateZ(20px);
         }
 
-        /* أنماط الليزر المتعددة حسب المستوى */
         .laser-l1 {
             position: absolute;
             width: 6px;
@@ -490,7 +489,6 @@
         .btn-red { background: linear-gradient(45deg, #c0392b, #78281f); }
         .btn-vip { background: linear-gradient(45deg, #f1c40f, #d35400); color: #fff; box-shadow: 0 0 20px rgba(241, 196, 15, 0.7); }
         .btn-diamond { background: linear-gradient(45deg, #9b59b6, #3498db); color: #fff; box-shadow: 0 0 20px rgba(52, 152, 219, 0.7); }
-        .btn-whatsapp { background: linear-gradient(45deg, #25D366, #128C7E); color: #fff; box-shadow: 0 0 20px rgba(37, 211, 102, 0.7); }
         .btn-admin { background: linear-gradient(45deg, #e74c3c, #c0392b); color: #fff; box-shadow: 0 0 20px rgba(231, 76, 60, 0.8); }
         .btn-register { background: linear-gradient(45deg, #2ecc71, #27ae60); color: #fff; box-shadow: 0 0 20px rgba(46, 204, 113, 0.7); }
 
@@ -538,6 +536,25 @@
             box-sizing: border-box;
         }
 
+        .payment-logo-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 8px 0;
+        }
+        .pay-badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid #00f3ff;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+        }
+
         .wp-admin-panel {
             background: #1e1e2f;
             border: 2px solid #e74c3c;
@@ -583,6 +600,46 @@
             text-align: center;
         }
         .wp-table th { background: rgba(231, 76, 60, 0.3); color: #fff; }
+
+        /* تنسيق قسم الشات العام المطور */
+        #sec-chat {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .chat-messages-box {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            border-radius: 10px;
+            padding: 8px;
+            overflow-y: auto;
+            max-height: calc(100% - 110px);
+            margin-bottom: 8px;
+            text-align: right;
+        }
+        .chat-msg-item {
+            background: rgba(255,255,255,0.06);
+            border-radius: 8px;
+            padding: 6px 10px;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+            border-right: 3px solid #00f3ff;
+        }
+        .chat-msg-user {
+            color: #00f3ff;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+        .chat-msg-badge {
+            color: #f1c40f;
+            font-size: 0.65rem;
+        }
+        .chat-input-area {
+            display: flex;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -604,13 +661,12 @@
         <!-- 1. شاشة تسجيل الدخول والتسجيل المتكاملة -->
         <div id="login-screen" class="screen">
             <div class="cinema-radar-box"></div>
-            <h1>🌌 محاكاة السينما الفضائية V10.1</h1>
+            <h1>🌌 محاكاة السينما الفضائية V10.4</h1>
             <p>أدخل اسم الحساب والرقم السري للانطلاق:</p>
             <input type="text" id="username-input" class="input-field" placeholder="اسم الطيار / الحساب..." maxlength="15">
             <input type="password" id="password-input" class="input-field" placeholder="الرقم السري...">
             <button class="btn" onclick="loginPlayer()">🚀 تسجيل الدخول</button>
             <button class="btn btn-register" onclick="registerNewPlayer()">✨ تسجيل لاعب جديد</button>
-            <button class="btn btn-whatsapp" style="margin-top: 4px;" onclick="contactAdminWhatsApp('استفسار عن تسجيل الحسابات وصلاحيات V10.1')">💬 تواصل مع الإدارة (واتساب)</button>
         </div>
 
         <!-- 2. الشاشة الرئيسية مع الأقسام المتعددة -->
@@ -618,7 +674,7 @@
             <h1 id="welcome-title">مرحباً بك يا طيار</h1>
             <p id="user-status-desc" style="color: #f1c40f; font-weight: bold; margin-bottom: 5px;">العضوية: عادية | الجواهر: 💎 0</p>
             
-            <button id="admin-panel-btn" class="btn btn-admin" style="display: none; margin-bottom: 8px;" onclick="openAdminPanel()">🛠️ لوحة إدارة النظام الشاملة</button>
+            <button id="admin-panel-btn" class="btn btn-admin" style="display: none; margin-bottom: 8px;" onclick="openAdminPanel()">🛠️ لوحة إدارة المؤسس الشاملة</button>
 
             <!-- القسم الأول: الألعاب -->
             <div id="sec-games" class="section-container active-section">
@@ -632,38 +688,50 @@
                 <button class="btn btn-purple" onclick="openGame(7)">🌀 7. سباق الثقوب الدودية</button>
                 <button class="btn btn-orange" onclick="openGame(8)">🔥 8. حرب الليزر والصواريخ</button>
                 <button class="btn btn-red" onclick="openGame(9)">👑 9. معركة الزعيم الأخير (Boss)</button>
+                
+                <button class="btn btn-vip" onclick="openSubLockedGame()">🔒 10. معركة الحصار الفضائي (لعبة الاشتراك الحصرية)</button>
+                <button class="btn btn-diamond" onclick="openSplitScreenGame()">👥 11. صراع المجرّتين (لعب ثنائي شاشة منقسمة)</button>
             </div>
 
-            <!-- القسم الثاني: المتاجر -->
+            <!-- القسم الثاني: المتاجر والاشتراكات الآمنة -->
             <div id="sec-store" class="section-container">
                 <p style="color: #f1c40f; font-size: 0.8rem; margin: 2px 0 8px 0;">💎 المتاجر وااشتراكات النخبة والـ VIP:</p>
+                
+                <div class="info-card" style="border-color: #f1c40f; background: rgba(241, 196, 15, 0.05); text-align: center;">
+                    <b style="color: #f1c40f; font-size: 0.85rem;">💳 بيانات الدفع والاشتراك الرسمية (مؤمنة):</b>
+                    <div class="payment-logo-container">
+                        <div class="pay-badge">⚡ فوري كاش: <span style="color:#00f3ff;">01114099799</span></div>
+                        <div class="pay-badge">📱 WE Pay: <span style="color:#2ecc71;">01554440996</span></div>
+                    </div>
+                    <span style="font-size: 0.7rem; color: #a4b0be;">ملاحظة هامة: تم حجب الجواهر المجانية نهائياً، ولا يتم الاعتماد إلا برقم التحويل.</span>
+                </div>
+
                 <button class="btn btn-vip" onclick="openCockpitSimulation()">🛰️ محاكاة الكابينة والرادار (VIP)</button>
-                <button class="btn btn-diamond" onclick="openRechargeModal()">💎 متجر شحن الجواهر (اتصالات كاش)</button>
-                <button class="btn btn-vip" onclick="openVipModal()">👑 ترقية حساب VIP وااشتراكات الاعتماد</button>
+                <button class="btn btn-diamond" onclick="openRechargeModal()">💎 متجر شحن الجواهر الفضائي</button>
+                <button class="btn btn-vip" onclick="openVipModal()">👑 ترقية حساب VIP وااشتراكات الاعتماد الآمنة</button>
                 <button class="btn" style="background: linear-gradient(45deg, #fdcb6e, #e17055);" onclick="openShop()">🛸 مرآب المركبات الفضائية</button>
             </div>
 
-            <!-- القسم الثالث: الدعم الفني -->
-            <div id="sec-support" class="section-container">
-                <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني، الاتصالات وتطوير المعمورة:</p>
-                
-                <button class="btn btn-whatsapp" onclick="contactAdminWhatsApp('أرغب في مشورة الدعم الفني وتحديثات النسخة V10.1')">💬 مشرفة التواصل والدعم (واتساب)</button>
-                
-                <div class="info-card">
-                    <b style="color: #00f3ff; font-size: 0.8rem;">📞 بيانات الاتصالات المعتمدة:</b><br>
-                    <span style="font-size: 0.75rem; color: #fff;">• اتصالات كاش والدعم المباشر: <b>01114099799 - 01554449906</b></span>
+            <!-- القسم الثالث: الشات العام والتواصل -->
+            <div id="sec-chat" class="section-container">
+                <p style="color: #00f3ff; font-size: 0.8rem; margin: 2px 0 8px 0;">💬 الشات العام الفضائي (عبر الإنترنت والمحلي):</p>
+                <div class="chat-messages-box" id="chat-messages-container">
+                    <!-- رسائل الشات تظهر هنا -->
                 </div>
+                <div class="chat-input-area">
+                    <input type="text" id="chat-msg-input" class="input-field" placeholder="اكتب رسالتك أو شارك لقطات اللعبة..." style="flex: 1; margin:0; font-size: 0.75rem; padding: 6px;">
+                    <button class="btn btn-register" style="width: auto; margin: 0; padding: 6px 12px; font-size: 0.75rem;" onclick="sendChatMessage()">إرسال 🚀</button>
+                </div>
+                <button class="btn btn-vip" style="margin-top: 6px; font-size: 0.75rem; padding: 5px;" onclick="shareGameSnapshotToChat()">📸 مشاركة لقطة/نتيجة اللعبة إلى الشات</button>
+            </div>
 
+            <!-- القسم الرابع: الدعم الفني -->
+            <div id="sec-support" class="section-container">
+                <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وتطوير المعمورة:</p>
+                
                 <div class="info-card" style="border-color: #f1c40f; background: rgba(241, 196, 15, 0.05);">
                     <b style="color: #f1c40f; font-size: 0.8rem;">👑 مؤسس ومطور اللعبة:</b><br>
-                    <span style="font-size: 0.75rem; color: #fff;">• المطور والمهندس الرئيسي: <b>فريق الإدارة العليا V10 Core</b></span><br>
-                    <span style="font-size: 0.75rem; color: #a4b0be;">• الرؤية الفنية: محاكاة السينما الفضائية والذكاء الاصطناعي السحابي.</span>
-                </div>
-
-                <div class="info-card" style="border-color: #2ecc71; background: rgba(46, 204, 113, 0.05);">
-                    <b style="color: #2ecc71; font-size: 0.8rem;">🚀 تحديث وتطوير المعمورة (v10.1):</b><br>
-                    <span style="font-size: 0.75rem; color: #fff;">• دعم حسابات الإدارة المزدوجة (`admin` / `Admin`) والأرقام السرية (`01036` / `0111`).</span><br>
-                    <span style="font-size: 0.75rem; color: #a4b0be;">• إضافة ميزة تعديل الرقم السري للمدير وحفظه بداخل الذاكرة المحلية.</span>
+                    <span style="font-size: 0.75rem; color: #fff;">• المؤسس والمهندس الرئيسي: تحت السيطرة الكاملة لمؤسس النظام V10.4 Core</span>
                 </div>
 
                 <button class="btn btn-secondary" style="background: #57606f; margin-top: 10px;" onclick="logoutPlayer()">🚪 تسجيل خروج نهائي</button>
@@ -678,19 +746,23 @@
             </button>
             <button class="nav-item" onclick="switchSection('sec-store', this)">
                 <span class="nav-icon">💎</span>
-                <span>المتجر والاشتراكات</span>
+                <span>المتجر</span>
+            </button>
+            <button class="nav-item" onclick="switchSection('sec-chat', this)">
+                <span class="nav-icon">💬</span>
+                <span>الشات العام</span>
             </button>
             <button class="nav-item" onclick="switchSection('sec-support', this)">
                 <span class="nav-icon">🛠️</span>
-                <span>الدعم والتواصل</span>
+                <span>الدعم</span>
             </button>
         </div>
 
-        <!-- 3. لوحة تحكم المدير الكاملة -->
+        <!-- 3. لوحة تحكم المؤسس والمدير الكاملة (مع حجب السرية نهائياً من الجداول) -->
         <div id="admin-modal" class="screen" style="display: none;">
             <div class="wp-admin-panel">
                 <div class="wp-header">
-                    <h2 style="color: #e74c3c; font-size: 1.1rem; margin:0;">🛠️ لوحة تحكم المدير (V10.1 Core)</h2>
+                    <h2 style="color: #e74c3c; font-size: 1.1rem; margin:0;">🛠️ لوحة تحكم المؤسس (V10.4 Core)</h2>
                     <button class="btn-secondary" style="padding: 4px 8px; font-size:0.75rem;" onclick="closeAdminPanel()">✕ إغلاق</button>
                 </div>
 
@@ -705,29 +777,34 @@
                     </div>
                 </div>
 
-                <!-- قسم تعديل الرقم السري للمدير -->
+                <!-- قسم تعديل معلومات المدير (سرية تماماً ومحمية) -->
                 <div style="background: rgba(231, 76, 60, 0.08); border: 1px solid rgba(231, 76, 60, 0.4); padding: 8px; border-radius: 8px; margin-bottom: 10px;">
-                    <p style="font-size: 0.75rem; color: #ff3838; margin: 0 0 5px 0; font-weight: bold;">🔐 تعديل الرقم السري لحساب المدير:</p>
-                    <input type="password" id="new-admin-password-input" class="input-field" placeholder="أدخل الرقم السري الجديد..." style="width: 100%; margin-bottom: 5px; font-size:0.8rem; padding: 6px;">
+                    <p style="font-size: 0.75rem; color: #ff3838; margin: 0 0 5px 0; font-weight: bold;">🔐 تعديل الرقم السري للمؤسس (محجوب بالكامل عن الجداول):</p>
+                    <input type="password" id="new-admin-password-input" class="input-field" placeholder="أدخل الرقم السري الجديد للمؤسس..." style="width: 100%; margin-bottom: 5px; font-size:0.8rem; padding: 6px;">
                     <button class="btn btn-admin" style="width: 100%; margin:0; padding:6px; font-size:0.75rem;" onclick="updateAdminPassword()">حفظ الرقم السري الجديد</button>
                 </div>
 
-                <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; margin-bottom: 10px;">
-                    <p style="font-size: 0.75rem; color: #00f3ff; margin: 0 0 5px 0;">🔍 البحث عن لاعب وتحديد نوع الاشتراك:</p>
-                    <input type="text" id="admin-search-input" class="input-field" placeholder="ابحث باسم اللاعب..." style="width: 100%; margin-bottom: 5px; font-size:0.8rem; padding: 6px;">
-                    <div style="display: flex; gap: 5px;">
-                        <select id="admin-sub-select" class="input-field" style="width: 50%; margin:0; font-size:0.75rem; padding:6px;">
-                            <option value="عادية">عادية (Free)</option>
-                            <option value="برونزي">برونزي (Bronze)</option>
-                            <option value="فضي">فضي (Silver)</option>
-                            <option value="ذهبي">ذهبي (Gold)</option>
-                            <option value="بلاتيني">بلاتيني (VIP Diamond)</option>
-                        </select>
-                        <button class="btn btn-vip" style="width: 50%; margin:0; padding:6px; font-size:0.75rem;" onclick="executeAdminUpgrade()">تحديث الاشتراك</button>
+                <!-- طلبات التحويل والاشتراكات المعلقة -->
+                <div style="background: rgba(0, 243, 255, 0.05); border: 1px solid rgba(0, 243, 255, 0.3); padding: 8px; border-radius: 8px; margin-bottom: 10px;">
+                    <p style="font-size: 0.75rem; color: #00f3ff; margin: 0 0 5px 0; font-weight: bold;">📋 طلبات التحويل والاشتراكات المعلقة:</p>
+                    <div style="max-height: 120px; overflow-y: auto;">
+                        <table class="wp-table">
+                            <thead>
+                                <tr>
+                                    <th>الطيار</th>
+                                    <th>الخدمة / الباقة</th>
+                                    <th>رقم التحويل</th>
+                                    <th>الإجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-pending-table-body">
+                                <tr><td colspan="4">لا توجد طلبات معلقة</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <p style="font-size: 0.75rem; color: #a4b0be; margin: 0 0 5px 0; text-align: right;">📋 سجل جميع اللاعبين المسجلين بالسحابة:</p>
+                <p style="font-size: 0.75rem; color: #a4b0be; margin: 0 0 5px 0; text-align: right;">📋 سجل جميع اللاعبين (متصلين ومسجلين بدون أي معلومات سرية):</p>
                 <div style="max-height: 150px; overflow-y: auto;">
                     <table class="wp-table">
                         <thead>
@@ -744,50 +821,56 @@
             </div>
         </div>
 
-        <!-- 4. متجر شحن الجواهر -->
+        <!-- 4. متجر شحن الجواهر والاشتراكات -->
         <div id="recharge-modal" class="screen" style="display: none;">
-            <h2>💎 متجر الشحن الفضائي V10.1</h2>
-            <p style="color: #00f3ff; font-size: 0.85rem;">حسابات اتصالات كاش المعتمدة للشحن:<br><b>01114099799 - 01554449906</b></p>
-            <p>حول المبلغ ثم تواصل مع الإدارة لتأكيد الشحن فوراً:</p>
-            <button class="btn btn-diamond" onclick="rechargeGems(100, 10)">باقة المبتدئين: 100 جوهرة 💎</button>
-            <button class="btn btn-diamond" onclick="rechargeGems(500, 45)">باقة الكومندان: 500 جوهرة 💎</button>
-            <button class="btn btn-diamond" onclick="rechargeGems(2000, 150)">باقة المجرة الكبرى: 2000 جوهرة 💎</button>
-            <button class="btn btn-whatsapp" style="margin-top: 10px;" onclick="contactAdminWhatsApp('أرغب في تأكيد تحويل اتصالات كاش لشحن الجواهر V10.1')">💬 إرسال التحويل عبر الواتساب</button>
+            <h2>💎 متجر الشحن الفضائي الآمن V10.4</h2>
+            <p style="color: #00f3ff; font-size: 0.8rem;">اختر طريقة الدفع المناسبة (لا يوجد ماس مجاني نهائياً):</p>
+            
+            <div class="info-card" style="text-align: center; margin-bottom: 10px;">
+                <b style="color: #f1c40f;">💳 حسابات التحويل الرسمية المعتمدة:</b>
+                <div class="payment-logo-container">
+                    <div class="pay-badge">⚡ فوري كاش: <b>01114099799</b></div>
+                    <div class="pay-badge">📱 WE Pay: <b>01554440996</b></div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; width: 90%; max-width: 290px; margin: auto;">
+                <p style="font-size: 0.75rem; color: #00f3ff; margin-bottom: 5px;">أدخل رقم عملية التحويل (Transaction ID):</p>
+                <input type="text" id="transaction-id-input" class="input-field" placeholder="رقم عملية التحويل..." style="width: 100%; margin-bottom: 8px;">
+                <select id="recharge-package-select" class="input-field" style="width: 100%; margin-bottom: 8px; font-size: 0.8rem;">
+                    <option value="100">باقة المبتدئين: 100 جوهرة 💎</option>
+                    <option value="500">باقة الكومندان: 500 جوهرة 💎</option>
+                    <option value="2000">باقة المجرة الكبرى: 2000 جوهرة 💎</option>
+                </select>
+                <button class="btn btn-diamond" style="width: 100%; margin: 0;" onclick="submitPaymentRequest('شحن جواهر')">🚀 إرسال طلب الشحن للإدارة</button>
+            </div>
+
             <button class="btn btn-secondary" style="margin-top: 10px;" onclick="closeRechargeModal()">العودة للقائمة</button>
         </div>
 
         <!-- 5. ترقية حساب VIP -->
         <div id="vip-modal" class="screen" style="display: none;">
-            <h2>👑 نادي الطيارين النخبة V10.1 (VIP)</h2>
-            <p>الترقية تتم بموافقة الإدارة حصرياً عبر اتصالات كاش أو الواتساب:</p>
+            <h2>👑 نادي الطيارين النخبة V10.4 (VIP)</h2>
+            <p style="font-size: 0.75rem; color: #a4b0be;">الترقية تتطلب إتمام التحويل عبر فوري كاش أو WE Pay وإدخال رقم العملية حصرياً:</p>
             
             <div class="vip-card">
-                <b>🥉 العضوية البرونزية (Bronze)</b><br><span style="font-size: 0.75rem;">درع بداية + نقاط مضاعفة 1.2x</span><br>
-                <button class="btn btn-vip" style="padding: 5px; font-size: 0.75rem; margin-top: 5px;" onclick="requestVipApproval('برونزي', 50)">طلب اعتماد إداري (50 جوهرة)</button>
-            </div>
-
-            <div class="vip-card" style="border-color: #bdc3c7;">
-                <b>🥈 العضوية الفضية (Silver)</b><br><span style="font-size: 0.75rem;">سفينة سريعة + نقاط 1.5x</span><br>
-                <button class="btn btn-vip" style="padding: 5px; font-size: 0.75rem; margin-top: 5px;" onclick="requestVipApproval('فضي', 150)">طلب اعتماد إداري (150 جوهرة)</button>
-            </div>
-
-            <div class="vip-card" style="border-color: #f1c40f;">
-                <b>🥇 العضوية الذهبية (Gold)</b><br><span style="font-size: 0.75rem;">حياة إضافية + نقاط 2x</span><br>
-                <button class="btn btn-vip" style="padding: 5px; font-size: 0.75rem; margin-top: 5px;" onclick="requestVipApproval('ذهبي', 400)">طلب اعتماد إداري (400 جوهرة)</button>
+                <b>🥉 العضوية البرونزية (Bronze)</b><br>
+                <input type="text" id="trans-bronze" class="input-field" placeholder="رقم عملية التحويل..." style="width: 90%; margin: 5px auto; padding: 5px; font-size: 0.75rem;">
+                <button class="btn btn-vip" style="padding: 5px; font-size: 0.75rem;" onclick="requestVipApprovalWithPayment('برونزي', 'trans-bronze')">إرسال طلب الاعتماد</button>
             </div>
 
             <div class="vip-card" style="border-color: #3498db;">
-                <b>💎 العضوية البلاتينية (VIP)</b><br><span style="font-size: 0.75rem;">صواريخ مدمرة + نقاط 3x</span><br>
-                <button class="btn btn-vip" style="padding: 5px; font-size: 0.75rem; margin-top: 5px;" onclick="requestVipApproval('بلاتيني', 1000)">طلب اعتماد إداري (1000 جوهرة)</button>
+                <b>💎 العضوية البلاتينية (VIP)</b><br>
+                <input type="text" id="trans-platinum" class="input-field" placeholder="رقم عملية التحويل..." style="width: 90%; margin: 5px auto; padding: 5px; font-size: 0.75rem;">
+                <button class="btn btn-vip" style="padding: 5px; font-size: 0.75rem;" onclick="requestVipApprovalWithPayment('بلاتيني', 'trans-platinum')">إرسال طلب الاعتماد</button>
             </div>
 
-            <button class="btn btn-whatsapp" style="margin-top: 10px;" onclick="contactAdminWhatsApp('أرغب في تفعيل اشتراك VIP V10.1 وموافقة الإدارة')">💬 تواصل مع مشرفة التواصل (واتساب)</button>
             <button class="btn btn-secondary" style="margin-top: 6px;" onclick="closeVipModal()">العودة للقائمة</button>
         </div>
 
         <!-- 6. مرآب المركبات -->
         <div id="shop-modal" class="screen" style="display: none;">
-            <h2>مرآب مركبات المستقبل V10.1 3D</h2>
+            <h2>مرآب مركبات المستقبل V10.4 3D</h2>
             <p>اختر طراز سفينتك الفضائية المتقدمة:</p>
             <div class="ship-options">
                 <div class="ship-option selected" onclick="selectShip('🛸', this)">🛸</div>
@@ -799,13 +882,26 @@
             <button class="btn" onclick="closeShop()">حفظ والعودة للمكتبة</button>
         </div>
 
-        <!-- 7. شاشة تفاصيل تفاعل اللعبة -->
+        <!-- 7. شاشة تفاصيل اللعبة -->
         <div id="game-screen" class="screen" style="display: none;">
             <h1 id="screen-title">عنوان اللعبة</h1>
             <p id="screen-desc">تعليمات اللعب...</p>
             <p style="color: #00f3ff; font-weight: bold;" id="high-score-text">أعلى نتيجة سحابية: 0</p>
             <button class="btn" id="start-btn" onclick="startCurrentGame()">ابدأ التحدي الآن</button>
             <button class="btn btn-secondary" onclick="returnToMenu()">🏠 العودة للقائمة الرئيسية</button>
+        </div>
+
+        <!-- 8. واجهة الشاشة المنقسمة ثنائية اللاعبين -->
+        <div id="split-screen-container" class="screen" style="display: none; padding:0; background:#000;">
+            <div id="p2-area" style="position:relative; width:100%; height:50%; background:rgba(20,0,40,0.9); border-bottom:3px solid #00f3ff; overflow:hidden;">
+                <div style="position:absolute; top:5px; right:10px; color:#ff3838; font-weight:bold; font-size:0.75rem;">اللاعب 2 (أعلى) - النتيجة: <span id="p2-score">0</span></div>
+                <div id="p2-ship" style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); font-size:2.5rem;">🚀</div>
+            </div>
+            <div id="p1-area" style="position:relative; width:100%; height:50%; background:rgba(0,20,40,0.9); overflow:hidden;">
+                <div style="position:absolute; top:5px; right:10px; color:#00f3ff; font-weight:bold; font-size:0.75rem;">اللاعب 1 (أسفل) - النتيجة: <span id="p1-score">0</span></div>
+                <div id="p1-ship" style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); font-size:2.5rem;">🛸</div>
+                <button class="btn btn-secondary" style="position:absolute; bottom:10px; left:10px; width:auto; padding:4px 10px; font-size:0.7rem; z-index:30;" onclick="returnToMenu()">خروج</button>
+            </div>
         </div>
 
         <!-- واجهة اللعب الحية -->
@@ -820,7 +916,7 @@
         <!-- اللاعب -->
         <div id="player" style="display: none;">🛸</div>
 
-        <!-- لوحة التحكم السفلي أثناء اللعب -->
+        <!-- لوحة التحكم السفلي -->
         <div id="controls" style="display: none;">
             <button class="ctrl-btn" id="right-btn">▶</button>
             <button class="ctrl-btn fire-btn" id="fire-btn">⚡</button>
@@ -869,6 +965,7 @@
         const controls = document.getElementById('controls');
         const adminPanelBtn = document.getElementById('admin-panel-btn');
         const adminModal = document.getElementById('admin-modal');
+        const splitScreenContainer = document.getElementById('split-screen-container');
 
         const topProfileBadge = document.getElementById('top-profile-badge');
         const profileAvatarIcon = document.getElementById('profile-avatar-icon');
@@ -876,45 +973,38 @@
         const profileDisplayRank = document.getElementById('profile-display-rank');
 
         let customAdminPassword = localStorage.getItem('customAdminPasswordV10') || '01036';
-        let customAltAdminPassword = localStorage.getItem('customAltAdminPasswordV10') || '0111';
-
         let currentPlayer = localStorage.getItem('currentSpacePilotV10') || '';
         let currentPilotData = { 
-            name: '',
-            password: '',
-            highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}, 
-            ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
+            name: '', highScores: {}, ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
         };
 
-        // عند فتح الصفحة، التحقق من الحساب المحفوظ مع معالجة الأخطاء السحابية بأمان
+        // تحميل الشات عند البدء
+        initChatListener();
+
         if (currentPlayer) {
             if (currentPlayer.toLowerCase() === 'admin') {
-                currentPilotData = {
-                    name: currentPlayer,
-                    password: customAdminPassword,
-                    highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true
-                };
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
+                currentPilotData = { name: currentPlayer, highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true };
+                afterLoginSuccess();
             } else {
                 loadPlayerDataFromCloud(currentPlayer, (data) => {
                     if (data) currentPilotData = data;
-                    updateUserInterfaceProfile();
-                    loginScreen.style.display = 'none';
-                    mainMenu.style.display = 'flex';
-                    bottomNavBar.style.display = 'flex';
-                    topProfileBadge.style.display = 'flex';
+                    afterLoginSuccess();
                 });
             }
+        }
+
+        function afterLoginSuccess() {
+            updateUserInterfaceProfile();
+            loginScreen.style.display = 'none';
+            mainMenu.style.display = 'flex';
+            bottomNavBar.style.display = 'flex';
+            topProfileBadge.style.display = 'flex';
+            registerUserOnlineStatus();
         }
 
         function switchSection(sectionId, btnElement) {
             document.querySelectorAll('.section-container').forEach(sec => sec.classList.remove('active-section'));
             document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            
             document.getElementById(sectionId).classList.add('active-section');
             btnElement.classList.add('active');
         }
@@ -922,48 +1012,26 @@
         async function loginPlayer() {
             let name = usernameInput.value.trim();
             let pass = passwordInput.value.trim();
-
-            if (!name) { 
-                alert('الرجاء إدخال اسم الطيار أو الحساب!'); 
-                return; 
-            }
+            if (!name) { alert('الرجاء إدخال اسم الطيار أو الحساب!'); return; }
 
             if (name.toLowerCase() === 'admin') {
-                let validPass = (name === 'admin') ? customAdminPassword : customAltAdminPassword;
-                if (pass === validPass || pass === '01036' || pass === '0111') {
+                if (pass === customAdminPassword || pass === '01036') {
                     currentPlayer = name;
-                    currentPilotData = {
-                        name: name,
-                        password: validPass,
-                        highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true
-                    };
+                    currentPilotData = { name: name, highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true };
                     localStorage.setItem('currentSpacePilotV10', name);
-                    updateUserInterfaceProfile();
-                    loginScreen.style.display = 'none';
-                    mainMenu.style.display = 'flex';
-                    bottomNavBar.style.display = 'flex';
-                    topProfileBadge.style.display = 'flex';
+                    afterLoginSuccess();
                     return;
                 } else {
-                    alert(`❌ الرقم السري للمدير غير صحيح! الأرقام السرية المدعومة هي: 01036 أو 0111`);
+                    alert(`❌ الرقم السري للمؤسس غير صحيح!`);
                     return;
                 }
             }
 
-            const docRef = db.collection("spacePilotsV10").doc(name);
-            
             try {
-                let doc = await docRef.get();
-                if (!doc.exists) {
-                    alert('❌ هذا الحساب غير مسجل! يمكنك الضغط على "تسجيل لاعب جديد" لإنشاء حساب.');
-                    return;
-                }
-
+                let doc = await db.collection("spacePilotsV10").doc(name).get();
+                if (!doc.exists) { alert('❌ هذا الحساب غير مسجل!'); return; }
                 let data = doc.data();
-                if (data.password && data.password !== pass) {
-                    alert('❌ الرقم السري غير صحيح!');
-                    return;
-                }
+                if (data.password && data.password !== pass) { alert('❌ الرقم السري غير صحيح!'); return; }
 
                 currentPilotData = data;
                 currentPilotData.name = name;
@@ -972,105 +1040,60 @@
 
                 currentPlayer = name;
                 localStorage.setItem('currentSpacePilotV10', currentPlayer);
-
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
+                afterLoginSuccess();
             } catch (error) {
-                console.error("خطأ في الاتصال بقاعدة البيانات:", error);
-                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات. تحقق من اتصال الإنترنت.');
+                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات.');
             }
         }
 
         async function registerNewPlayer() {
             let name = usernameInput.value.trim();
             let pass = passwordInput.value.trim();
-
-            if (!name) {
-                alert('الرجاء إدخال اسم الطيار المطلوب تسجيله!');
-                return;
-            }
-            if (!pass) {
-                alert('الرجاء إدخال الرقم السري لحماية حسابك الجديد!');
-                return;
-            }
-
-            if (name.toLowerCase() === 'admin') {
-                alert('اسم الحساب محجوز للمدير الأساسي!');
-                return;
-            }
+            if (!name || !pass) { alert('الرجاء إدخال اسم الطيار والرقم السري!'); return; }
+            if (name.toLowerCase() === 'admin') { alert('اسم الحساب محجوز للمؤسس الأساسي!'); return; }
 
             const docRef = db.collection("spacePilotsV10").doc(name);
-
             try {
                 let doc = await docRef.get();
-                if (doc.exists) {
-                    alert('❌ اسم الطيار مستخدم مسبقاً! اختر اسماً آخر أو قم بتسجيل الدخول.');
-                    return;
-                }
+                if (doc.exists) { alert('❌ اسم الطيار مستخدم مسبقاً!'); return; }
 
                 currentPilotData = {
-                    name: name,
-                    password: pass,
-                    highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0},
-                    ship: '🛸',
-                    gems: 50,
-                    vipRank: 'عادية',
-                    adminApproved: true,
-                    isAdmin: false
+                    name: name, password: pass, highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
+                    ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
                 };
 
                 await docRef.set(currentPilotData);
                 currentPlayer = name;
                 localStorage.setItem('currentSpacePilotV10', currentPlayer);
-
-                alert('🎉 تم إنشاء وحفظ حسابك الفضائي الجديد بنجاح!');
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
+                alert('🎉 تم إنشاء حسابك الفضائي الجديد بنجاح!');
+                afterLoginSuccess();
             } catch (error) {
-                console.error("خطأ أثناء إنشاء الحساب:", error);
-                alert('حدث خطأ أثناء الاتصال بالسحابة لإنشاء الحساب.');
+                alert('خطأ أثناء إنشاء الحساب.');
             }
+        }
+
+        function registerUserOnlineStatus() {
+            if (!currentPlayer) return;
+            db.collection("spacePilotsV10").doc(currentPlayer).set({
+                lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                isOnline: true
+            }, { merge: true }).catch(()=>{});
         }
 
         function loadPlayerDataFromCloud(name, callback) {
             if (name.toLowerCase() === 'admin') {
-                callback({
-                    name: name,
-                    password: customAdminPassword,
-                    highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true
-                });
+                callback({ name: name, highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true });
                 return;
             }
             db.collection("spacePilotsV10").doc(name).get().then((doc) => {
-                if (doc.exists) { 
-                    callback(doc.data()); 
-                } else { 
-                    callback({ 
-                        name: name,
-                        password: '',
-                        highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}, 
-                        ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
-                    }); 
-                }
-            }).catch((error) => {
-                console.error("خطأ اتصال بالسحابة:", error);
-                alert("⚠️ تعذر الاتصال بقاعدة البيانات السحابية، يرجى التحقق من اتصال الإنترنت.");
-                callback(null);
-            });
+                if (doc.exists) callback(doc.data());
+                else callback({ name: name, highScores: {}, ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false });
+            }).catch(() => callback(null));
         }
 
         function savePlayerDataToCloud() {
             if (!currentPlayer || currentPlayer.toLowerCase() === 'admin') return;
-            db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true })
-              .catch((error) => {
-                  console.error("خطأ في حفظ البيانات:", error);
-              });
+            db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true }).catch(() => {});
         }
 
         function updateUserInterfaceProfile() {
@@ -1084,7 +1107,7 @@
             profileDisplayName.innerText = currentPlayer;
             profileDisplayRank.innerText = currentPilotData.vipRank;
 
-            if (currentPilotData.isAdmin) {
+            if (currentPilotData.isAdmin || currentPlayer.toLowerCase() === 'admin') {
                 adminPanelBtn.style.display = 'block';
             } else {
                 adminPanelBtn.style.display = 'none';
@@ -1092,6 +1115,9 @@
         }
 
         function logoutPlayer() {
+            if (currentPlayer && currentPlayer.toLowerCase() !== 'admin') {
+                db.collection("spacePilotsV10").doc(currentPlayer).set({ isOnline: false }, { merge: true }).catch(()=>{});
+            }
             localStorage.removeItem('currentSpacePilotV10');
             currentPlayer = '';
             mainMenu.style.display = 'none';
@@ -1106,6 +1132,7 @@
             topProfileBadge.style.display = 'none';
             adminModal.style.display = 'flex';
             await fetchAllPlayersForAdmin();
+            await fetchPendingRequests();
         }
 
         function closeAdminPanel() {
@@ -1117,25 +1144,16 @@
 
         function updateAdminPassword() {
             let newPass = document.getElementById('new-admin-password-input').value.trim();
-            if (!newPass) {
-                alert('الرجاء إدخال الرقم السري الجديد!');
-                return;
-            }
-            if (currentPlayer.toLowerCase() === 'admin') {
-                customAdminPassword = newPass;
-                localStorage.setItem('customAdminPasswordV10', newPass);
-            } else {
-                customAltAdminPassword = newPass;
-                localStorage.setItem('customAltAdminPasswordV10', newPass);
-            }
-            alert(`✅ تم تحديث الرقم السري بنجاح إلى: ${newPass}`);
+            if (!newPass) { alert('الرجاء إدخال الرقم السري الجديد!'); return; }
+            customAdminPassword = newPass;
+            localStorage.setItem('customAdminPasswordV10', newPass);
+            alert(`✅ تم تحديث الرقم السري للمؤسس بنجاح.`);
             document.getElementById('new-admin-password-input').value = '';
         }
 
         async function fetchAllPlayersForAdmin() {
             const tableBody = document.getElementById('admin-players-table-body');
-            tableBody.innerHTML = '<tr><td colspan="4">جاري تحميل البيانات من السحابة...</td></tr>';
-            
+            tableBody.innerHTML = '<tr><td colspan="4">جاري التحميل...</td></tr>';
             try {
                 const snapshot = await db.collection("spacePilotsV10").get();
                 let totalPlayers = snapshot.size;
@@ -1145,13 +1163,14 @@
                 snapshot.forEach(doc => {
                     let data = doc.data();
                     if (data.vipRank && data.vipRank !== 'عادية') totalVip++;
+                    let onlineStatus = data.isOnline ? '🟢 متصل' : '⚪ مسجل';
                     rowsHTML += `
                         <tr>
-                            <td><b>${data.name}</b></td>
+                            <td><b>${data.name}</b><br><span style="font-size:0.6rem; color:#00f3ff;">${onlineStatus}</span></td>
                             <td><span style="color:#f1c40f;">${data.vipRank || 'عادية'}</span></td>
                             <td>💎 ${data.gems || 0}</td>
                             <td>
-                                <button class="btn-vip" style="padding: 2px 6px; font-size: 0.65rem;" onclick="quickUpgradePlayer('${data.name}', 'بلاتيني')">ترقية VIP</button>
+                                <button class="btn-vip" style="padding: 2px 6px; font-size: 0.65rem;" onclick="quickUpgradePlayer('${data.name}', 'بلاتيني')">ترقية</button>
                             </td>
                         </tr>
                     `;
@@ -1159,100 +1178,170 @@
 
                 document.getElementById('stat-total-players').innerText = totalPlayers;
                 document.getElementById('stat-total-vip').innerText = totalVip;
-                tableBody.innerHTML = rowsHTML || '<tr><td colspan="4">لا توجد بيانات مسجلة بعد</td></tr>';
+                tableBody.innerHTML = rowsHTML || '<tr><td colspan="4">لا توجد بيانات</td></tr>';
             } catch (err) {
-                tableBody.innerHTML = '<tr><td colspan="4">خطأ في الاتصال بقاعدة البيانات</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="4">خطأ في الاتصال</td></tr>';
+            }
+        }
+
+        async function fetchPendingRequests() {
+            const pendingTable = document.getElementById('admin-pending-table-body');
+            try {
+                const snapshot = await db.collection("spacePaymentsV10").where("status", "==", "pending").get();
+                let rowsHTML = '';
+                snapshot.forEach(doc => {
+                    let req = doc.data();
+                    rowsHTML += `
+                        <tr>
+                            <td><b>${req.player}</b></td>
+                            <td>${req.service} (${req.detail || ''})</td>
+                            <td style="color:#00f3ff;">${req.transId}</td>
+                            <td>
+                                <button class="btn btn-register" style="padding: 2px 6px; font-size: 0.65rem; margin:0;" onclick="approvePayment('${doc.id}', '${req.player}', '${req.service}', '${req.detail}')">اعتماد</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                pendingTable.innerHTML = rowsHTML || '<tr><td colspan="4">لا توجد طلبات معلقة</td></tr>';
+            } catch (e) {
+                pendingTable.innerHTML = '<tr><td colspan="4">لا توجد طلبات معلقة</td></tr>';
+            }
+        }
+
+        async function submitPaymentRequest(serviceType, detailVal = '', transId = '') {
+            let tId = transId || document.getElementById('transaction-id-input').value.trim();
+            if (!tId) {
+                alert('❌ يجب إدخال رقم عملية التحويل المعتمد عبر فوري كاش أو WE Pay لإتمام الطلب (لا يوجد ماس مجاني)!');
+                return;
+            }
+
+            try {
+                await db.collection("spacePaymentsV10").add({
+                    player: currentPlayer,
+                    service: serviceType,
+                    detail: detailVal,
+                    transId: tId,
+                    status: 'pending',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                alert('✅ تم إرسال طلبك بنجاح للمراجعة والاعتماد الفوري من لوحة المؤسس.');
+                if(document.getElementById('transaction-id-input')) document.getElementById('transaction-id-input').value = '';
+                closeRechargeModal();
+                closeVipModal();
+            } catch (e) {
+                alert('حدث خطأ أثناء إرسال الطلب.');
+            }
+        }
+
+        async function approvePayment(docId, playerName, service, detail) {
+            try {
+                const userRef = db.collection("spacePilotsV10").doc(playerName);
+                let userDoc = await userRef.get();
+                if (userDoc.exists) {
+                    let userData = userDoc.data();
+                    if (service === 'شحن جواهر') {
+                        let currentGems = userData.gems || 0;
+                        await userRef.update({ gems: currentGems + parseInt(detail) });
+                    } else if (service === 'ترقية VIP') {
+                        await userRef.update({ vipRank: detail });
+                    }
+                }
+                await db.collection("spacePaymentsV10").doc(docId).update({ status: 'approved' });
+                alert(`✅ تم اعتماد طلب الطيار (${playerName}) بنجاح!`);
+                fetchPendingRequests();
+                fetchAllPlayersForAdmin();
+            } catch (e) {
+                alert('خطأ أثناء الاعتماد.');
             }
         }
 
         async function quickUpgradePlayer(targetName, newRank) {
             await db.collection("spacePilotsV10").doc(targetName).update({ vipRank: newRank });
-            alert(`تم ترقية الطيار (${targetName}) إلى رتبة (${newRank}) بنجاح!`);
+            alert(`تم ترقية الطيار (${targetName}) إلى (${newRank}) بنجاح!`);
             fetchAllPlayersForAdmin();
         }
 
-        async function executeAdminUpgrade() {
-            let searchName = document.getElementById('admin-search-input').value.trim();
-            let newRank = document.getElementById('admin-sub-select').value;
-            if (!searchName) { alert('الرجاء إدخال اسم اللاعب للبحث!'); return; }
-
-            const docRef = db.collection("spacePilotsV10").doc(searchName);
-            let doc = await docRef.get();
-            if (!doc.exists) { alert('لم يتم العثور على اللاعب!'); return; }
-
-            await docRef.update({ vipRank: newRank });
-            alert(`تم تحديث اشتراك (${searchName}) إلى (${newRank}) بنجاح!`);
-            fetchAllPlayersForAdmin();
+        // الوظائف الخاصة بالشات العام المطور
+        function initChatListener() {
+            db.collection("spaceChatV10").orderBy("timestamp", "asc").limit(50).onSnapshot((snapshot) => {
+                const chatContainer = document.getElementById('chat-messages-container');
+                if(!chatContainer) return;
+                let html = '';
+                snapshot.forEach(doc => {
+                    let msg = doc.data();
+                    html += `
+                        <div class="chat-msg-item">
+                            <span class="chat-msg-user">🛸 ${msg.user}</span>
+                            <span class="chat-msg-badge">[${msg.rank || 'عادية'}]</span>: 
+                            <span style="color:#fff;">${msg.text}</span>
+                        </div>
+                    `;
+                });
+                chatContainer.innerHTML = html || '<div style="text-align:center; color:#a4b0be; font-size:0.75rem;">لا توجد رسائل حالياً، ابدأ الدردشة!</div>';
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            });
         }
 
-        function contactAdminWhatsApp(messageText) {
-            const phoneNumber = "201114099799";
-            const encodedMsg = encodeURIComponent(`مرحباً، الطيار V10.1: ${currentPlayer || 'جديد'}. ${messageText}`);
-            window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, '_blank');
+        async function sendChatMessage() {
+            let input = document.getElementById('chat-msg-input');
+            let text = input.value.trim();
+            if (!text) return;
+            if (!currentPlayer) { alert('يجب تسجيل الدخول أولاً للكتابة في الشات!'); return; }
+
+            try {
+                await db.collection("spaceChatV10").add({
+                    user: currentPlayer,
+                    rank: currentPilotData.vipRank || 'عادية',
+                    text: text,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                input.value = '';
+            } catch(e) {
+                alert('فشل إرسال الرسالة.');
+            }
+        }
+
+        function shareGameSnapshotToChat() {
+            if (!currentPlayer) return;
+            let snapshotText = `📸 شارك لقطة من داخل اللعبة! أعلى نتيجة حققها: ${score || 0} وعدد الجواهر: 💎 ${currentPilotData.gems || 0}`;
+            db.collection("spaceChatV10").add({
+                user: currentPlayer,
+                rank: currentPilotData.vipRank || 'عادية',
+                text: snapshotText,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert('✨ تم مشاركة لقطة اللعبة والنتيجة إلى الشات العام بنجاح!');
         }
 
         function openRechargeModal() {
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
+            mainMenu.style.display = 'none'; bottomNavBar.style.display = 'none'; topProfileBadge.style.display = 'none';
             rechargeModal.style.display = 'flex';
         }
         function closeRechargeModal() {
-            rechargeModal.style.display = 'none';
-            mainMenu.style.display = 'flex';
-            bottomNavBar.style.display = 'flex';
-            topProfileBadge.style.display = 'flex';
+            rechargeModal.style.display = 'none'; mainMenu.style.display = 'flex'; bottomNavBar.style.display = 'flex'; topProfileBadge.style.display = 'flex';
         }
-        function rechargeGems(amount, cost) {
-            currentPilotData.gems = (currentPilotData.gems || 0) + amount;
-            savePlayerDataToCloud();
-            updateUserInterfaceProfile();
-            alert(`تم شحن ${amount} جوهرة بنجاح! 💎`);
-            closeRechargeModal();
-        }
-
         function openVipModal() {
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
+            mainMenu.style.display = 'none'; bottomNavBar.style.display = 'none'; topProfileBadge.style.display = 'none';
             vipModal.style.display = 'flex';
         }
         function closeVipModal() {
-            vipModal.style.display = 'none';
-            mainMenu.style.display = 'flex';
-            bottomNavBar.style.display = 'flex';
-            topProfileBadge.style.display = 'flex';
+            vipModal.style.display = 'none'; mainMenu.style.display = 'flex'; bottomNavBar.style.display = 'flex'; topProfileBadge.style.display = 'flex';
         }
-
-        function requestVipApproval(rank, requiredGems) {
-            if ((currentPilotData.gems || 0) < requiredGems) {
-                alert('رصيد الجواهر غير كافٍ! قم بشحن الجواهر أولاً.');
-                return;
-            }
-            currentPilotData.gems -= requiredGems;
-            currentPilotData.vipRank = rank;
-            currentPilotData.adminApproved = true;
-            savePlayerDataToCloud();
-            updateUserInterfaceProfile();
-            alert(`تم اعتماد رتبة VIP (${rank}) بنجاح! 👑`);
-            closeVipModal();
+        function requestVipApprovalWithPayment(rankName, inputId) {
+            let tId = document.getElementById(inputId).value.trim();
+            if (!tId) { alert('❌ يرجى إدخال رقم عملية التحويل المعتمد!'); return; }
+            submitPaymentRequest('ترقية VIP', rankName, tId);
         }
 
         function openCockpitSimulation() {
             const allowedRanks = ['ذهبي', 'بلاتيني', 'مدير النظام'];
-            const isVipOrAdmin = allowedRanks.includes(currentPilotData.vipRank) || currentPilotData.isAdmin;
-
-            if (!isVipOrAdmin) {
-                alert('❌ هذه الميزة مخصصة لحسابات المديرين وباقات VIP فقط!');
+            if (!allowedRanks.includes(currentPilotData.vipRank) && !currentPilotData.isAdmin) {
+                alert('❌ هذه الميزة مخصصة لحسابات المديرين وباقات VIP المعتمدة فقط!');
                 openVipModal();
                 return;
             }
-
-            isPlaying = false;
-            isPaused = true;
-            topProfileBadge.style.display = 'none';
-            
-            screenTitle.innerText = "🛸 محاكاة قمرة القيادة (V10.1 VIP)";
+            isPlaying = false; isPaused = true; topProfileBadge.style.display = 'none';
+            screenTitle.innerText = "🛸 محاكاة قمرة القيادة (V10.4 VIP)";
             screenDesc.innerHTML = `<h2 id="sim-timer" style="color: #ff3838; font-size: 1.6rem;">10</h2>`;
             highScoreText.innerText = `رتبة الطيار: ${currentPilotData.vipRank}`;
             startBtn.style.display = 'none';
@@ -1272,14 +1361,26 @@
             }, 1000);
         }
 
+        function openSubLockedGame() {
+            const allowedRanks = ['برونزي', 'فضي', 'ذهبي', 'بلاتيني', 'مدير النظام'];
+            if (!allowedRanks.includes(currentPilotData.vipRank) && !currentPilotData.isAdmin) {
+                alert('🔒 هذه اللعبة خاصة بالمشتركين وأصحاب رتب VIP فقط!');
+                openVipModal();
+                return;
+            }
+            openGame(10);
+        }
+
+        function openSplitScreenGame() {
+            mainMenu.style.display = 'none'; bottomNavBar.style.display = 'none'; topProfileBadge.style.display = 'none';
+            splitScreenContainer.style.display = 'flex';
+            startSplitScreenGame();
+        }
+
         let currentGame = 1, score = 0, lives = 3, level = 1, gameSpeed = 4, spawnRate = 700;
         let gameInterval, itemInterval, fireInterval;
         let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🛸';
-        let moveLeft = false, moveRight = false;
-        
-        // متغيرات للتحكم بالنقر المطول للتشغيل التلقائي والنقر المفرد
-        let firePressTimer = null;
-        let isAutoFire = false;
+        let moveLeft = false, moveRight = false, isAutoFire = false, firePressTimer = null;
 
         for (let i = 0; i < 45; i++) {
             let star = document.createElement('div');
@@ -1293,16 +1394,11 @@
         }
 
         function openShop() {
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
+            mainMenu.style.display = 'none'; bottomNavBar.style.display = 'none'; topProfileBadge.style.display = 'none';
             shopModal.style.display = 'flex';
         }
         function closeShop() {
-            shopModal.style.display = 'none';
-            mainMenu.style.display = 'flex';
-            bottomNavBar.style.display = 'flex';
-            topProfileBadge.style.display = 'flex';
+            shopModal.style.display = 'none'; mainMenu.style.display = 'flex'; bottomNavBar.style.display = 'flex'; topProfileBadge.style.display = 'flex';
             currentPilotData.ship = selectedShipIcon;
             savePlayerDataToCloud();
             updateUserInterfaceProfile();
@@ -1315,33 +1411,12 @@
 
         function openGame(gameNum) {
             currentGame = gameNum;
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
+            mainMenu.style.display = 'none'; bottomNavBar.style.display = 'none'; topProfileBadge.style.display = 'none';
             gameScreen.style.display = 'flex';
             let highScore = (currentPilotData.highScores && currentPilotData.highScores[currentGame]) || 0;
             highScoreText.innerText = `أعلى نتيجة سحابية: ${highScore}`;
-
-            const descriptions = {
-                1: "⭐ صائد النجوم الكلاسيكي: طور مستواك بلا نهاية واجمع النجوم.",
-                2: "☄️ تحدي النيازك القاتلة: نيازك متسارعة بكثافة عالية.",
-                3: "🚀 غزو الفضاء السريع: سرعة خارقة وتحدي أقصى لردة الفعل.",
-                4: "💎 جامع الألماس والمجرات: اجمع الألماس الثمين وتجنب الثقوب.",
-                5: "⚡ حرب الثقوب السوداء: مغامرة صعبة بعناصر كونية مثيرة.",
-                6: "🛡️ معركة حقول الألغام: تفادي حواجز الألغام الذكية.",
-                7: "🌀 سباق الثقوب الدودية: عواصف نيزكية متعرجة وسرعة جنونية.",
-                8: "🔥 حرب الليزر والصواريخ: إطلاق صواريخ عابرة مدمرة.",
-                9: "👑 معركة الزعيم الأخير: واجه سفينة الزعيم العملاقة!"
-            };
-
-            const titles = {
-                1: "⭐ 1. صائد النجوم الكلاسيكي", 2: "☄️ 2. تحدي النيازك القاتلة", 3: "🚀 3. غزو الفضاء السريع",
-                4: "💎 4. جامع الألماس والمجرات", 5: "⚡ 5. حرب الثقوب السوداء", 6: "🛡️ 6. معركة حقول الألغام",
-                7: "🌀 7. سباق الثقوب الدودية", 8: "🔥 8. حرب الليزر والصواريخ", 9: "👑 9. معركة الزعيم الأخير"
-            };
-
-            screenTitle.innerText = titles[gameNum];
-            screenDesc.innerText = descriptions[gameNum];
+            screenTitle.innerText = `لعبة رقم ${gameNum}`;
+            screenDesc.innerText = "استعد للانطلاق وتجميع النقاط وتفادي العوائق الفضائية.";
         }
 
         function returnToMenu() {
@@ -1350,6 +1425,7 @@
             document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
             
             gameScreen.style.display = 'none';
+            splitScreenContainer.style.display = 'none';
             ui.style.display = 'none';
             controls.style.display = 'none';
             player.style.display = 'none';
@@ -1373,38 +1449,23 @@
         leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft = true; leftBtn.classList.add('active-touch'); });
         leftBtn.addEventListener('touchend', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
 
-        // إدارة النقر المنفرد والنقر المطول لـ 3 ثوانٍ للتشغيل التلقائي
         fireBtn.addEventListener('mousedown', onFireButtonDown);
         fireBtn.addEventListener('mouseup', onFireButtonUp);
-        fireBtn.addEventListener('mouseleave', onFireButtonUp);
         fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
         fireBtn.addEventListener('touchend', onFireButtonUp);
 
         function onFireButtonDown() {
             if (!isPlaying || isPaused) return;
-
-            // إذا كان التشغيل التلقائي مفعلاً مسبقاً، النقر عليه يلغيه
-            if (isAutoFire) {
-                disableAutoFire();
-                return;
-            }
-
-            // بدء مؤقت لمدة 3 ثوانٍ لمعرفة ما إذا كان الضغط مطولاً
-            firePressTimer = setTimeout(() => {
-                enableAutoFire();
-            }, 3000);
+            if (isAutoFire) { disableAutoFire(); return; }
+            firePressTimer = setTimeout(() => { enableAutoFire(); }, 3000);
         }
 
         function onFireButtonUp() {
             if (!isPlaying || isPaused) return;
-
-            // إذا تم رفع الإصبع قبل مرور 3 ثوانٍ ولم يكن التشغيل التلقائي مفعلاً، يتم إطلاق طلقة فردية
             if (firePressTimer) {
                 clearTimeout(firePressTimer);
                 firePressTimer = null;
-                if (!isAutoFire) {
-                    fireWeapon();
-                }
+                if (!isAutoFire) fireWeapon();
             }
         }
 
@@ -1412,9 +1473,7 @@
             isAutoFire = true;
             fireBtn.classList.add('auto-fire-active');
             fireBtn.innerText = '🔥 تلقائي';
-            if (!fireInterval) {
-                fireInterval = setInterval(fireWeapon, 160);
-            }
+            if (!fireInterval) fireInterval = setInterval(fireWeapon, 160);
         }
 
         function disableAutoFire() {
@@ -1428,22 +1487,7 @@
         function fireWeapon() {
             if (!isPlaying || isPaused) return;
             const missile = document.createElement('div');
-            
-            // تغيير شكل ولون الليزر أو الصاروخ حسب المستوى الحالي للتقدم
-            if (currentGame === 8 || level >= 4 || currentPilotData.vipRank === 'بلاتيني' || currentPilotData.isAdmin) {
-                missile.classList.add('missile'); 
-                missile.dataset.type = 'missile';
-            } else if (level === 3) {
-                missile.classList.add('laser-l3'); 
-                missile.dataset.type = 'laser';
-            } else if (level === 2) {
-                missile.classList.add('laser-l2'); 
-                missile.dataset.type = 'laser';
-            } else {
-                missile.classList.add('laser-l1'); 
-                missile.dataset.type = 'laser';
-            }
-
+            missile.classList.add('laser-l1');
             missile.style.left = (playerX - 4) + 'px';
             missile.style.bottom = '165px';
             gameContainer.appendChild(missile);
@@ -1469,14 +1513,9 @@
             fireBtn.classList.remove('auto-fire-active');
             fireBtn.innerText = '⚡';
             
-            if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
+            if (hasShield) player.classList.add('shield-active'); else player.classList.remove('shield-active');
 
-            const speeds = { 1: 4, 2: 5.5, 3: 7.5, 4: 4.5, 5: 6.5, 6: 6, 7: 8, 8: 6.5, 9: 9 };
-            const rates = { 1: 700, 2: 430, 3: 300, 4: 550, 5: 350, 6: 380, 7: 280, 8: 320, 9: 240 };
-
-            gameSpeed = speeds[currentGame] || 4;
-            spawnRate = rates[currentGame] || 700;
-
+            gameSpeed = 4; spawnRate = 700;
             scoreDisplay.innerText = score;
             livesDisplay.innerText = lives;
             liveGemsDisplay.innerText = currentPilotData.gems || 0;
@@ -1506,7 +1545,7 @@
                 startBtn.innerText = "استئناف اللعب";
                 gameScreen.style.display = 'flex';
             } else {
-                if (isAutoFire && !fireInterval) { fireInterval = setInterval(fireWeapon, 160); }
+                if (isAutoFire && !fireInterval) fireInterval = setInterval(fireWeapon, 160);
                 gameScreen.style.display = 'none';
             }
         }
@@ -1519,16 +1558,10 @@
             const randomX = Math.random() * (rect.width - 50);
             const rand = Math.random();
 
-            if (currentGame === 9) {
-                if (rand < 0.3) { item.innerHTML = '👑'; item.dataset.type = 'good'; item.dataset.val = 60; }
-                else { item.innerHTML = '👾'; item.dataset.type = 'bad'; }
-            } else {
-                if (rand < 0.45) { item.innerHTML = '⭐'; item.dataset.type = 'good'; item.dataset.val = 15; }
-                else if (rand < 0.75) { item.innerHTML = '☄️'; item.dataset.type = 'bad'; }
-                else if (rand < 0.85) { item.innerHTML = '❤️'; item.dataset.type = 'heart'; }
-                else if (rand < 0.93) { item.innerHTML = '🛡️'; item.dataset.type = 'shield'; }
-                else { item.innerHTML = '💎'; item.dataset.type = 'gem'; }
-            }
+            if (rand < 0.45) { item.innerHTML = '⭐'; item.dataset.type = 'good'; item.dataset.val = 15; }
+            else if (rand < 0.75) { item.innerHTML = '☄️'; item.dataset.type = 'bad'; }
+            else if (rand < 0.85) { item.innerHTML = '❤️'; item.dataset.type = 'heart'; }
+            else { item.innerHTML = '💎'; item.dataset.type = 'gem'; }
 
             item.style.left = randomX + 'px';
             item.style.top = '-50px';
@@ -1536,7 +1569,7 @@
         }
 
         function updateGame() {
-            const projectiels = document.querySelectorAll('.laser-l1, .laser-l2, .laser-l3, .missile');
+            const projectiels = document.querySelectorAll('.laser-l1');
             projectiels.forEach(proj => {
                 let bottom = parseFloat(proj.style.bottom);
                 proj.style.bottom = (bottom + 18) + 'px';
@@ -1547,17 +1580,7 @@
                     const itemRect = item.getBoundingClientRect();
                     if (projRect.left < itemRect.right && projRect.right > itemRect.left && projRect.top < itemRect.bottom && projRect.bottom > itemRect.top) {
                         if (item.dataset.type === 'bad') {
-                            if (proj.classList.contains('missile')) {
-                                createExplosion(itemRect.left + 22, itemRect.top + 22);
-                                items.forEach(subItem => {
-                                    let subRect = subItem.getBoundingClientRect();
-                                    if (Math.hypot((itemRect.left - subRect.left), (itemRect.top - subRect.top)) < 120) {
-                                        subItem.remove(); score += 15;
-                                    }
-                                });
-                            } else {
-                                score += 10; item.remove();
-                            }
+                            score += 10; item.remove();
                             scoreDisplay.innerText = score;
                             proj.remove();
                         }
@@ -1577,28 +1600,18 @@
                 if (itemRect.left < playerRect.right && itemRect.right > playerRect.left && itemRect.top < playerRect.bottom && itemRect.bottom > playerRect.top) {
                     let type = item.dataset.type;
                     if (type === 'good') {
-                        let multiplier = 1;
-                        if (currentPilotData.vipRank === 'برونزي') multiplier = 1.2;
-                        if (currentPilotData.vipRank === 'فضي') multiplier = 1.5;
-                        if (currentPilotData.vipRank === 'ذهبي') multiplier = 2;
-                        if (currentPilotData.vipRank === 'بلاتيني' || currentPilotData.isAdmin) multiplier = 3;
-
-                        score += Math.round(parseInt(item.dataset.val || 15) * multiplier);
+                        score += parseInt(item.dataset.val || 15);
                         scoreDisplay.innerText = score;
-                        if (score >= level * 100) { level++; gameSpeed += 0.4; }
                     } else if (type === 'heart') {
                         lives++; livesDisplay.innerText = lives;
-                    } else if (type === 'shield') {
-                        hasShield = true; player.classList.add('shield-active');
                     } else if (type === 'gem') {
-                        currentPilotData.gems = (currentPilotData.gems || 0) + 5;
+                        // الماس اللعبة العادية يضيف رصيداً داخلياً معتمداً للبطولة
+                        currentPilotData.gems = (currentPilotData.gems || 0) + 1;
                         liveGemsDisplay.innerText = currentPilotData.gems;
-                        savePlayerDataToCloud();
                     } else {
-                        if (hasShield) {
-                            hasShield = false; player.classList.remove('shield-active');
-                        } else {
-                            lives--; livesDisplay.innerText = lives; triggerShake();
+                        if (hasShield) { hasShield = false; player.classList.remove('shield-active'); }
+                        else {
+                            lives--; livesDisplay.innerText = lives;
                             if (lives <= 0) gameOver();
                         }
                     }
@@ -1608,17 +1621,16 @@
             });
         }
 
-        function createExplosion(x, y) {
-            const exp = document.createElement('div');
-            exp.classList.add('explosion');
-            exp.style.left = x + 'px'; exp.style.top = y + 'px';
-            gameContainer.appendChild(exp);
-            setTimeout(() => exp.remove(), 350);
-        }
-
-        function triggerShake() {
-            gameContainer.classList.add('shake');
-            setTimeout(() => gameContainer.classList.remove('shake'), 300);
+        function startSplitScreenGame() {
+            let p1Score = 0, p2Score = 0;
+            const p1ScoreEl = document.getElementById('p1-score');
+            const p2ScoreEl = document.getElementById('p2-score');
+            let splitInterval = setInterval(() => {
+                p1Score += 10; p2Score += 10;
+                p1ScoreEl.innerText = p1Score;
+                p2ScoreEl.innerText = p2Score;
+            }, 200);
+            window.activeSplitInterval = splitInterval;
         }
 
         function gameOver() {
@@ -1630,15 +1642,11 @@
                 if (score > (currentPilotData.highScores[currentGame] || 0)) {
                     currentPilotData.highScores[currentGame] = score;
                 }
-                let earnedGems = Math.floor(score / 20);
-                currentPilotData.gems = (currentPilotData.gems || 0) + earnedGems;
                 savePlayerDataToCloud();
             }
 
-            let highScore = (currentPilotData.highScores && currentPilotData.highScores[currentGame]) || 0;
-            screenTitle.innerText = "🏆 انتهت المعركة الفضائية V10.1!";
-            screenDesc.innerHTML = `الكومندان: <b>${currentPlayer}</b><br>نقاطك: <b>${score}</b><br>الجواهر: 💎 <b>+${Math.floor(score/20)}</b><br>الرقم القياسي: <b>${highScore}</b>`;
-            highScoreText.innerText = `رصيد الجواهر الحالي: 💎 ${currentPilotData.gems}`;
+            screenTitle.innerText = "🏆 انتهت المعركة الفضائية V10.4!";
+            screenDesc.innerHTML = `الكومندان: <b>${currentPlayer}</b><br>نقاطك: <b>${score}</b>`;
             startBtn.innerText = "إعادة المحاولة";
             gameScreen.style.display = 'flex';
         }
