@@ -395,7 +395,7 @@
             to { transform: rotate(360deg); }
         }
         .cinema-radar-box::after {
-            content: '🛸';
+            content: '🚀';
             position: absolute;
             font-size: 1.8rem;
             animation: radarSpinReverse 10s linear infinite;
@@ -563,7 +563,7 @@
 
         <!-- أداة البروفايل الدائرية في الأعلى -->
         <div id="top-profile-badge">
-            <div class="profile-avatar-circle" id="profile-avatar-icon">🛸</div>
+            <div class="profile-avatar-circle" id="profile-avatar-icon">🚀</div>
             <div class="profile-info-text">
                 <span class="profile-name" id="profile-display-name">الطيار</span>
                 <span class="profile-rank" id="profile-display-rank">عادية</span>
@@ -609,7 +609,7 @@
                 <button class="btn btn-vip" onclick="openCockpitSimulation()">🛰️ محاكاة الكابينة والرادار (VIP)</button>
                 <button class="btn btn-diamond" onclick="openRechargeModal()">💎 متجر شحن الجواهر (اتصالات كاش)</button>
                 <button class="btn btn-vip" onclick="openVipModal()">👑 ترقية حساب VIP وااشتراكات الاعتماد</button>
-                <button class="btn" style="background: linear-gradient(45deg, #fdcb6e, #e17055);" onclick="openShop()">🛸 مرآب المركبات الفضائية</button>
+                <button class="btn" style="background: linear-gradient(45deg, #fdcb6e, #e17055);" onclick="openShop()">🚀 مرآب المركبات الفضائية</button>
             </div>
 
             <!-- القسم الثالث: الدعم الفني -->
@@ -759,8 +759,8 @@
             <h2>مرآب مركبات المستقبل V10.1 3D</h2>
             <p>اختر طراز سفينتك الفضائية المتقدمة:</p>
             <div class="ship-options">
-                <div class="ship-option selected" onclick="selectShip('🛸', this)">🛸</div>
-                <div class="ship-option" onclick="selectShip('🚀', this)">🚀</div>
+                <div class="ship-option selected" onclick="selectShip('🚀', this)">🚀</div>
+                <div class="ship-option" onclick="selectShip('🛸', this)">🛸</div>
                 <div class="ship-option" onclick="selectShip('🛰️', this)">🛰️</div>
                 <div class="ship-option" onclick="selectShip('👽', this)">👽</div>
                 <div class="ship-option" onclick="selectShip('👾', this)">👾</div>
@@ -787,7 +787,7 @@
         </div>
 
         <!-- اللاعب -->
-        <div id="player" style="display: none;">🛸</div>
+        <div id="player" style="display: none;">🚀</div>
 
         <!-- لوحة التحكم السفلي أثناء اللعب -->
         <div id="controls" style="display: none;">
@@ -850,7 +850,7 @@
             name: '',
             password: '',
             highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}, 
-            ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
+            ship: '🚀', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
         };
 
         if (currentPlayer) {
@@ -981,7 +981,7 @@
                     name: name,
                     password: pass,
                     highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0},
-                    ship: '🛸',
+                    ship: '🚀',
                     gems: 50,
                     vipRank: 'عادية',
                     adminApproved: true,
@@ -1021,7 +1021,7 @@
                         name: name,
                         password: '',
                         highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0}, 
-                        ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
+                        ship: '🚀', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
                     }); 
                 }
             }).catch(() => callback(null));
@@ -1033,7 +1033,7 @@
         }
 
         function updateUserInterfaceProfile() {
-            selectedShipIcon = currentPilotData.ship || '🛸';
+            selectedShipIcon = currentPilotData.ship || '🚀';
             player.innerText = selectedShipIcon;
             welcomeTitle.innerText = `مرحباً بالكومندان: ${currentPlayer}`;
             userStatusDesc.innerHTML = `العضوية: <span style="color:#00f3ff;">${currentPilotData.vipRank}</span> | رصيد الجواهر: 💎 ${currentPilotData.gems || 0}`;
@@ -1211,7 +1211,7 @@
             isPaused = true;
             topProfileBadge.style.display = 'none';
             
-            screenTitle.innerText = "🛸 محاكاة قمرة القيادة (V10.1 VIP)";
+            screenTitle.innerText = "🚀 محاكاة قمرة القيادة (V10.1 VIP)";
             screenDesc.innerHTML = `<h2 id="sim-timer" style="color: #ff3838; font-size: 1.6rem;">10</h2>`;
             highScoreText.innerText = `رتبة الطيار: ${currentPilotData.vipRank}`;
             startBtn.style.display = 'none';
@@ -1233,7 +1233,7 @@
 
         let currentGame = 1, score = 0, lives = 3, level = 1, gameSpeed = 4, spawnRate = 700;
         let gameInterval, itemInterval, fireInterval;
-        let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🛸';
+        let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🚀';
         let moveLeft = false, moveRight = false;
 
         for (let i = 0; i < 45; i++) {
