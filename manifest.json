@@ -1,24 +1,20 @@
 {
-  "name": "محاكاة السينما الفضائية V10.1",
-  "short_name": "السينما الفضائية",
-  "description": "منصة ألعاب فضائية متعددة الأقسام مع لوحة تحكم إدارية ونظام ربط سحابي متطور",
-  "start_url": "./index.html",
+  "name": "N2LA App",
+  "short_name": "N2LA",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#020208",
-  "theme_color": "#00f3ff",
-  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#0f172a",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "icon-512.png",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
