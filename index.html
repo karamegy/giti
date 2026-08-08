@@ -662,16 +662,6 @@
             margin-top: 4px;
             border: 1px solid #00f3ff;
         }
-
-        /* تنسيقات لعبة التنطيط المطورة (مثل ماريو) */
-        #mario-game-canvas {
-            background: linear-gradient(to bottom, #111122 0%, #1a0033 100%);
-            display: block;
-            margin: auto;
-            border-radius: 12px;
-            border: 2px solid #00f3ff;
-            box-shadow: 0 0 20px rgba(0,243,255,0.4);
-        }
     </style>
 </head>
 <body>
@@ -726,12 +716,13 @@
                 <button class="btn btn-purple" onclick="openGame(7)">🌀 7. سباق الثقوب الدودية</button>
                 <button class="btn btn-orange" onclick="openGame(8)">🔥 8. حرب الليزر والصواريخ</button>
                 <button class="btn btn-red" onclick="openGame(9)">👑 9. معركة الزعيم الأخير (Boss)</button>
-                <button class="btn btn-vip" onclick="openMarioJumpGame()">🍄 10. مغامرة التنطيط الفضائي المتطورة (مثل ماريو)</button>
+                
+                <button class="btn btn-vip" onclick="openSubLockedGame()">🔒 10. معركة الحصار الفضائي (لعبة الاشتراك الحصرية)</button>
                 <button class="btn btn-diamond" onclick="openSplitScreenGame()">👥 11. صراع المجرّتين (لعب ثنائي شاشة منقسمة)</button>
             </div>
 
             <!-- القسم الثاني: المتاجر والاشتراكات الآمنة -->
-            <div id="sec-store" class="section-container" id="subscriptions-menu-container">
+            <div id="sec-store" class="section-container">
                 <p style="color: #f1c40f; font-size: 0.8rem; margin: 2px 0 8px 0;">💎 المتاجر وااشتراكات النخبة والـ VIP:</p>
                 
                 <div class="info-card" style="border-color: #f1c40f; background: rgba(241, 196, 15, 0.05); text-align: center;">
@@ -946,21 +937,6 @@
             <button class="btn btn-secondary" onclick="returnToMenu()">🏠 العودة للقائمة الرئيسية</button>
         </div>
 
-        <!-- شاشة لعبة التنطيط الفضائي المطورة (مثل ماريو) -->
-        <div id="mario-game-screen" class="screen" style="display: none; padding: 10px;">
-            <h1 style="color: #f1c40f; margin-bottom: 5px;">🍄 مغامرة التنطيط الفضائي المتطورة</h1>
-            <p style="font-size: 0.7rem; margin-bottom: 5px;">انقر للتنطيط وتجاوز العقبات وجمع النجوم الفضائية!</p>
-            <div style="display: flex; justify-content: space-around; width: 100%; max-width: 360px; font-size: 0.75rem; font-weight: bold; color: #00f3ff; margin-bottom: 5px;">
-                <span>النقاط: <span id="mario-score">0</span> ⭐</span>
-                <span>الارواح: <span id="mario-lives">3</span> ❤️</span>
-            </div>
-            <canvas id="mario-game-canvas" width="360" height="280"></canvas>
-            <div style="display: flex; gap: 10px; margin-top: 10px; width: 100%; max-width: 360px; justify-content: center;">
-                <button class="btn" style="width: 45%; margin:0; padding: 8px;" onclick="marioJumpAction()">⬆️ تنطيط (Jump)</button>
-                <button class="btn btn-secondary" style="width: 45%; margin:0; padding: 8px;" onclick="returnToMenu()">🏠 خروج</button>
-            </div>
-        </div>
-
         <!-- 8. واجهة الشاشة المنقسمة ثنائية اللاعبين -->
         <div id="split-screen-container" class="screen" style="display: none; padding:0; background:#000;">
             <div id="p2-area" style="position:relative; width:100%; height:50%; background:rgba(20,0,40,0.9); border-bottom:3px solid #00f3ff; overflow:hidden;">
@@ -1013,61 +989,7 @@
         const auth = firebase.auth();
 
         const gameContainer = document.getElementById('game-container');
-        const loginScreen = document.getElementById('login-screen');
-        const mainMenu = document.getElementById('main-menu');
-        const bottomNavBar = document.getElementById('bottom-nav-bar');
-        const topProfileBadge = document.getElementById('top-profile-badge');
-        const profileAvatarIcon = document.getElementById('profile-avatar-icon');
-        const profileDisplayName = document.getElementById('profile-display-name');
-        const profileDisplayRank = document.getElementById('profile-display-rank');
-        const adminPanelBtn = document.getElementById('admin-panel-btn');
-        const adminModal = document.getElementById('admin-modal');
-        const rechargeModal = document.getElementById('recharge-modal');
-        const vipModal = document.getElementById('vip-modal');
-        const shopModal = document.getElementById('shop-modal');
-        const gameScreen = document.getElementById('game-screen');
-        const splitScreenContainer = document.getElementById('split-screen-container');
-        const ui = document.getElementById('ui');
-        const controls = document.getElementById('controls');
-        const player = document.getElementById('player');
-        const usernameInput = document.getElementById('username-input');
-        const passwordInput = document.getElementById('password-input');
-        const welcomeTitle = document.getElementById('welcome-title');
-        const userStatusDesc = document.getElementById('user-status-desc');
-        const scoreDisplay = document.getElementById('score');
-        const livesDisplay = document.getElementById('lives');
-        const liveGemsDisplay = document.getElementById('live-gems');
-        const screenTitle = document.getElementById('screen-title');
-        const screenDesc = document.getElementById('screen-desc');
-        const highScoreText = document.getElementById('high-score-text');
-        const startBtn = document.getElementById('start-btn');
-        const chatMessagesBox = document.getElementById('chat-messages-box');
-        const chatTextInput = document.getElementById('chat-text-input');
-
-        let currentPlayer = localStorage.getItem('currentSpacePilotV10') || '';
-        let currentPilotData = {
-            name: '',
-            highScores: {},
-            ship: '🛸',
-            gems: 0,
-            vipRank: 'عادية',
-            isAdmin: false
-        };
-
-        // تفعيل حجب النقر ومنع التفاعل على أي زر داخل قائمة الاشتراكات وإظهار رسالة بالأسعار المحددة
-        document.addEventListener('DOMContentLoaded', () => {
-            const subscriptionsContainer = document.getElementById('sec-store');
-            if (subscriptionsContainer) {
-                subscriptionsContainer.addEventListener('click', (e) => {
-                    // حجب النقر الفعلي على أزرار القائمة وإظهار رسالة الاشتراك المحددة بالأرقام (من ١٠٠ حتى ١٠٠٠٠ جنيه مصري)
-                    e.preventDefault();
-                    e.stopPropagation();
-                    alert('🚫 عذراً، تم حجب النقر المباشر على أزرار قائمة الاشتراكات!\n\n✨ أسعار باقات وطرق الاشتراك المتاحة:\n• الحد الأدنى للاشتراك والشحن: ١٠٠ جنيه مصري\n• الحد الأقصى للاشتراك والشحن: ١٠,٠٠0 جنيه مصري\n\nيرجى التواصل مع الإدارة أو استخدام أزرار الشحن المعتمدة عبر فوري كاش و WE Pay.');
-                }, true);
-            }
-        });
-
-        const leftBtn = document.getElementById('left-btn');
+                const leftBtn = document.getElementById('left-btn');
         const rightBtn = document.getElementById('right-btn');
         const fireBtn = document.getElementById('fire-btn');
 
@@ -1081,6 +1003,7 @@
         leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft = true; leftBtn.classList.add('active-touch'); });
         leftBtn.addEventListener('touchend', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
 
+        // أحداث زر إطلاق النار المحدثة لدعم الإطلاق التلقائي عند الاستمرار بالضغط
         fireBtn.addEventListener('mousedown', onFireButtonDown);
         fireBtn.addEventListener('mouseup', onFireButtonUp);
         fireBtn.addEventListener('mouseleave', onFireButtonUp);
@@ -1102,6 +1025,7 @@
             }
         }
 
+
         if (currentPlayer) {
             loadPlayerDataFromCloud(currentPlayer, (data) => {
                 if (data) currentPilotData = data;
@@ -1122,6 +1046,7 @@
             btnElement.classList.add('active');
         }
 
+        // تسجيل الدخول عبر وسائل التواصل (Google, Facebook, Twitter/X)
         async function socialLogin(providerType) {
             let provider;
             if (providerType === 'google') {
@@ -1146,7 +1071,7 @@
                         password: '',
                         highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                         ship: '🛸',
-                        gems: 0,
+                        gems: 0, // قيود عدم أخذ الجوار عند النقر للأعضاء
                         vipRank: 'عادية',
                         adminApproved: true,
                         isAdmin: (name.toLowerCase() === 'admin'),
@@ -1234,7 +1159,7 @@
                     password: pass,
                     highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                     ship: '🛸',
-                    gems: 0,
+                    gems: 0, // لا يجوز أخذ الجوار للأعضاء عند النقر
                     vipRank: 'عادية',
                     adminApproved: true,
                     isAdmin: (name.toLowerCase() === 'admin'),
@@ -1315,6 +1240,7 @@
             topProfileBadge.style.display = 'flex';
         }
 
+        // زر بلاداره لإرسال ١٠٠ جوهره يوميا للأعضاء تلقائياً
         async function adminSendDailyGemsToAll() {
             if (!currentPilotData.isAdmin && currentPlayer.toLowerCase() !== 'admin') {
                 alert('❌ هذه الصلاحية للمدير ومسئول الإدارة فقط!');
@@ -1328,6 +1254,8 @@
 
                 snapshot.forEach(doc => {
                     let data = doc.data();
+                    let nameLower = data.name.toLowerCase();
+                    // استثناء المدير نفسه إذا رغبنا أو التوزيع للجميع
                     let userRef = db.collection("spacePilotsV10").doc(data.name);
                     let currentGems = data.gems || 0;
                     batch.update(userRef, { gems: currentGems + 100 });
@@ -1342,6 +1270,7 @@
             }
         }
 
+        // جلب وعرض اللاعبين في الإدارة مع إمكانية النقر لرؤيتهم متصلين ومسجلين (مع حجب معلومات المدير السرية تماماً)
         async function fetchAllPlayersForAdmin() {
             const tableBody = document.getElementById('admin-players-table-body');
             tableBody.innerHTML = '<tr><td colspan="4">جاري التحميل...</td></tr>';
@@ -1355,6 +1284,7 @@
                     let data = doc.data();
                     let nameLower = data.name.toLowerCase();
                     
+                    // حجب وإخفاء معلومات المدير السرية تماماً من الجدول
                     if (nameLower === 'admin' || data.isAdmin || nameLower.includes('founder')) {
                         return;
                     }
@@ -1523,6 +1453,18 @@
                     returnToMenu();
                 }
             }, 1000);
+        }
+
+        function openSubLockedGame() {
+            const allowedRanks = ['برونزي', 'فضي', 'ذهبي', 'بلاتيني', 'مدير النظام'];
+            const isSubscribed = allowedRanks.includes(currentPilotData.vipRank) || currentPilotData.isAdmin;
+
+            if (!isSubscribed) {
+                alert('🔒 هذه اللعبة خاصة بالمشتركين وأصحاب رتب VIP فقط!');
+                openVipModal();
+                return;
+            }
+            openGame(10);
         }
 
         function openSplitScreenGame() {
@@ -1706,13 +1648,15 @@
                 6: "🛡️ معركة حقول الألغام: تفادي حواجز الألغام الذكية.",
                 7: "🌀 سباق الثقوب الدودية: عواصف نيزكية متعرجة وسرعة جنونية.",
                 8: "🔥 حرب الليزر والصواريخ: إطلاق صواريخ عابرة مدمرة.",
-                9: "👑 معركة الزعيم الأخير: واجه سفينة الزعيم العملاقة!"
+                9: "👑 معركة الزعيم الأخير: واجه سفينة الزعيم العملاقة!",
+                10: "🔒 معركة الحصار الفضائي: لعبة حصرية للمشتركين فقط مع تحديات قوية."
             };
 
             const titles = {
                 1: "⭐ 1. صائد النجوم الكلاسيكي", 2: "☄️ 2. تحدي النيازك القاتلة", 3: "🚀 3. غزو الفضاء السريع",
                 4: "💎 4. جامع الألماس والمجرات", 5: "⚡ 5. حرب الثقوب السوداء", 6: "🛡️ 6. معركة حقول الألغام",
-                7: "🌀 7. سباق الثقوب الدودية", 8: "🔥 8. حرب الليزر والصواريخ", 9: "👑 9. معركة الزعيم الأخير"
+                7: "🌀 7. سباق الثقوب الدودية", 8: "🔥 8. حرب الليزر والصواريخ", 9: "👑 9. معركة الزعيم الأخير",
+                10: "🔒 10. معركة الحصار الفضائي (المشتركين)"
             };
 
             screenTitle.innerText = titles[gameNum];
@@ -1721,13 +1665,11 @@
 
         function returnToMenu() {
             isPlaying = false; isPaused = false; isAutoFire = false;
-            marioGameRunning = false;
             clearInterval(gameInterval); clearInterval(itemInterval); clearInterval(fireInterval);
             document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
             
             gameScreen.style.display = 'none';
             splitScreenContainer.style.display = 'none';
-            document.getElementById('mario-game-screen').style.display = 'none';
             ui.style.display = 'none';
             controls.style.display = 'none';
             player.style.display = 'none';
@@ -1735,6 +1677,41 @@
             bottomNavBar.style.display = 'flex';
             topProfileBadge.style.display = 'flex';
             updateUserInterfaceProfile();
+        }
+
+        const leftBtn = document.getElementById('left-btn');
+        const rightBtn = document.getElementById('right-btn');
+        const fireBtn = document.getElementById('fire-btn');
+
+        rightBtn.addEventListener('mousedown', () => { moveRight = true; rightBtn.classList.add('active-touch'); });
+        rightBtn.addEventListener('mouseup', () => { moveRight = false; rightBtn.classList.remove('active-touch'); });
+        rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight = true; rightBtn.classList.add('active-touch'); });
+        rightBtn.addEventListener('touchend', () => { moveRight = false; rightBtn.classList.remove('active-touch'); });
+
+        leftBtn.addEventListener('mousedown', () => { moveLeft = true; leftBtn.classList.add('active-touch'); });
+        leftBtn.addEventListener('mouseup', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
+        leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft = true; leftBtn.classList.add('active-touch'); });
+        leftBtn.addEventListener('touchend', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
+
+        fireBtn.addEventListener('mousedown', onFireButtonDown);
+        fireBtn.addEventListener('mouseup', onFireButtonUp);
+        fireBtn.addEventListener('mouseleave', onFireButtonUp);
+        fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
+        fireBtn.addEventListener('touchend', onFireButtonUp);
+
+        function onFireButtonDown() {
+            if (!isPlaying || isPaused) return;
+            if (isAutoFire) { disableAutoFire(); return; }
+            firePressTimer = setTimeout(() => { enableAutoFire(); }, 3000);
+        }
+
+        function onFireButtonUp() {
+            if (!isPlaying || isPaused) return;
+            if (firePressTimer) {
+                clearTimeout(firePressTimer);
+                firePressTimer = null;
+                if (!isAutoFire) { fireWeapon(); }
+            }
         }
 
         function enableAutoFire() {
@@ -1756,7 +1733,7 @@
             if (!isPlaying || isPaused) return;
             const missile = document.createElement('div');
             
-            if (currentGame === 8 || level >= 4 || currentPilotData.vipRank === 'بلاتيني' || currentPilotData.isAdmin) {
+            if (currentGame === 8 || currentGame === 10 || level >= 4 || currentPilotData.vipRank === 'بلاتيني' || currentPilotData.isAdmin) {
                 missile.classList.add('missile'); 
             } else if (level === 3) {
                 missile.classList.add('laser-l3'); 
@@ -1793,8 +1770,8 @@
             
             if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
 
-            const speeds = { 1: 4, 2: 5.5, 3: 7.5, 4: 4.5, 5: 6.5, 6: 6, 7: 8, 8: 6.5, 9: 9 };
-            const rates = { 1: 700, 2: 430, 3: 300, 4: 550, 5: 350, 6: 380, 7: 280, 8: 320, 9: 240 };
+            const speeds = { 1: 4, 2: 5.5, 3: 7.5, 4: 4.5, 5: 6.5, 6: 6, 7: 8, 8: 6.5, 9: 9, 10: 7 };
+            const rates = { 1: 700, 2: 430, 3: 300, 4: 550, 5: 350, 6: 380, 7: 280, 8: 320, 9: 240, 10: 300 };
 
             gameSpeed = speeds[currentGame] || 4;
             spawnRate = rates[currentGame] || 700;
@@ -1841,7 +1818,7 @@
             const randomX = Math.random() * (rect.width - 50);
             const rand = Math.random();
 
-            if (currentGame === 9) {
+            if (currentGame === 9 || currentGame === 10) {
                 if (rand < 0.3) { item.innerHTML = '👑'; item.dataset.type = 'good'; item.dataset.val = 60; }
                 else { item.innerHTML = '👾'; item.dataset.type = 'bad'; }
             } else {
@@ -1903,6 +1880,7 @@
                     } else if (type === 'shield') {
                         hasShield = true; player.classList.add('shield-active');
                     } else if (type === 'gem') {
+                        // تطبيق القيود: لا يجوز للأعضاء أخذ الجواهر عند النقر مباشرة إلا باعتماد الإدارة أو التحويل
                         if (currentPilotData.isAdmin || currentPilotData.vipRank !== 'عادية') {
                             currentPilotData.gems = (currentPilotData.gems || 0) + 5;
                             liveGemsDisplay.innerText = currentPilotData.gems;
@@ -1922,124 +1900,6 @@
                 }
                 if (top > window.innerHeight) item.remove();
             });
-        }
-
-        // إضافات لعبة التنطيط المطورة (مثل ماريو)
-        let marioGameRunning = false;
-        let marioX = 50, marioY = 200, marioVy = 0, marioGravity = 0.6, marioJumpPower = -10, marioScore = 0, marioLives = 3;
-        let marioObstacles = [], marioStars = [];
-
-        function openMarioJumpGame() {
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
-            document.getElementById('mario-game-screen').style.display = 'flex';
-            startMarioGame();
-        }
-
-        function startMarioGame() {
-            marioScore = 0;
-            marioLives = 3;
-            marioY = 200;
-            marioVy = 0;
-            marioObstacles = [];
-            marioStars = [];
-            marioGameRunning = true;
-            
-            document.getElementById('mario-score').innerText = marioScore;
-            document.getElementById('mario-lives').innerText = marioLives;
-
-            const canvas = document.getElementById('mario-game-canvas');
-            const ctx = canvas.getContext('2d');
-
-            // إنشاء عقبات ونجوم أولية
-            for(let i=0; i<3; i++) {
-                marioObstacles.push({x: 300 + i * 150, y: 220, w: 30, h: 40});
-                marioStars.push({x: 350 + i * 150, y: 150, collected: false});
-            }
-
-            function marioLoop() {
-                if (!marioGameRunning) return;
-
-                // تحديث الفيزياء
-                marioVy += marioGravity;
-                marioY += marioVy;
-                if (marioY > 220) {
-                    marioY = 220;
-                    marioVy = 0;
-                }
-
-                // تحريك العقبات والنجوم
-                marioObstacles.forEach(obs => {
-                    obs.x -= 3;
-                    if (obs.x < -30) {
-                        obs.x = canvas.width + Math.random() * 50;
-                        marioScore += 5;
-                        document.getElementById('mario-score').innerText = marioScore;
-                    }
-
-                    // فحص التصادم
-                    if (marioX < obs.x + obs.w && marioX + 30 > obs.x && marioY < obs.y + obs.h && marioY + 30 > obs.y) {
-                        marioLives--;
-                        document.getElementById('mario-lives').innerText = marioLives;
-                        obs.x = canvas.width + 100;
-                        if (marioLives <= 0) {
-                            marioGameRunning = false;
-                            alert(`🍄 انتهت لعبة التنطيط! مجموع نقاطك: ${marioScore}`);
-                            returnToMenu();
-                        }
-                    }
-                });
-
-                marioStars.forEach(star => {
-                    star.x -= 3;
-                    if (star.x < -20) {
-                        star.x = canvas.width + Math.random() * 100;
-                        star.collected = false;
-                    }
-                    if (!star.collected && Math.abs(marioX - star.x) < 25 && Math.abs(marioY - star.y) < 25) {
-                        star.collected = true;
-                        marioScore += 20;
-                        document.getElementById('mario-score').innerText = marioScore;
-                    }
-                });
-
-                // الرسم على الكانفاس
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                // رسم الأرضية
-                ctx.fillStyle = '#00f3ff';
-                ctx.fillRect(0, 250, canvas.width, 30);
-
-                // رسم الشخصية (ماريو الفضائي)
-                ctx.font = '28px Tahoma';
-                ctx.fillText('🧑‍🚀', marioX, marioY + 25);
-
-                // رسم العقبات
-                ctx.fillStyle = '#ff3838';
-                marioObstacles.forEach(obs => {
-                    ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
-                });
-
-                // رسم النجوم
-                ctx.font = '20px Tahoma';
-                marioStars.forEach(star => {
-                    if (!star.collected) {
-                        ctx.fillText('⭐', star.x, star.y);
-                    }
-                });
-
-                if (marioGameRunning) {
-                    requestAnimationFrame(marioLoop);
-                }
-            }
-            requestAnimationFrame(marioLoop);
-        }
-
-        function marioJumpAction() {
-            if (marioY >= 220) {
-                marioVy = marioJumpPower;
-            }
         }
 
         function startSplitScreenGame() {
@@ -2086,6 +1946,29 @@
             startBtn.innerText = "إعادة المحاولة";
             gameScreen.style.display = 'flex';
         }
+                // دالة التحقق من اشتراك العضو قبل السماح له بفتح القسم
+        function checkVipAccess(requiredRank = 'VIP', actionCallback) {
+            // بيانات المستخدم الحالي (نفترض أن رتبته مخزنة في currentPilotData.vipRank)
+            // الرتب العادية أو التي لا تمتلك اشتراكاً
+            const userRank = currentPilotData.vipRank; 
+
+            // إذا كان حساب مشرف أو تنطبق عليه شروط الاشتراك
+            if (currentPilotData.isAdmin || userRank !== 'عادية') {
+                // العضو مشترك بالفعل، قم بتنفيذ الوظيفة المطلوبة (فتح القسم)
+                if (typeof actionCallback === 'function') {
+                    actionCallback();
+                }
+            } else {
+                // العضو غير مشترك، طلب الاشتراك أولاً وإظهار نافذة الترقية
+                alert('عذراً يابطل! 🚀 هذا القسم يتطلب اشتراك VIP أو ترقية الحساب أولاً.');
+                
+                // يمكنك فتح نافذة الترقية تلقائياً إذا كانت موجودة لديك
+                if (typeof vipModal !== 'undefined' && vipModal) {
+                    vipModal.style.display = 'flex'; // أو إظهار الـ Modal الخاص بالاشتراكات
+                }
+            }
+        }
+
     </script>
 </body>
 </html>
