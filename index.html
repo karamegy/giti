@@ -7,9 +7,9 @@
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0b0c2a">
 
-    <!-- استدعاء مكتبات Firebase السحابية -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <!-- استدعاء مكتبات Firebase السحابية المحدثة والمستقرة -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
     <style>
         body {
@@ -810,7 +810,9 @@
             measurementId: "G-KH4ZYFB8LC"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.firestore();
 
         const gameContainer = document.getElementById('game-container');
@@ -855,7 +857,7 @@
             ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
         };
 
-        // عند فتح الصفحة، التحقق من الحساب المحفوظ
+        // عند فتح الصفحة، التحقق من الحساب المحفوظ مع معالجة الأخطاء السحابية بأمان
         if (currentPlayer) {
             if (currentPlayer.toLowerCase() === 'admin') {
                 currentPilotData = {
@@ -1027,12 +1029,19 @@
                         ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
                     }); 
                 }
-            }).catch(() => callback(null));
+            }).catch((error) => {
+                console.error("خطأ اتصال بالسحابة:", error);
+                alert("⚠️ تعذر الاتصال بقاعدة البيانات السحابية، يرجى التحقق من اتصال الإنترنت.");
+                callback(null);
+            });
         }
 
         function savePlayerDataToCloud() {
             if (!currentPlayer || currentPlayer.toLowerCase() === 'admin') return;
-            db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true });
+            db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true })
+              .catch((error) => {
+                  console.error("خطأ في حفظ البيانات:", error);
+              });
         }
 
         function updateUserInterfaceProfile() {
@@ -1549,4 +1558,4 @@
         }
     </script>
 </body>
-    </html>
+</html>
