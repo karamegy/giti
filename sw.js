@@ -1,18 +1,12 @@
-const CACHE_NAME = 'road-legend-v60-cache-v1';
+const CACHE_NAME = 'space-cinema-v10.1-cache';
 const assetsToCache = [
   './index.html',
   './manifest.json',
-  'https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js',
-  'https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js',
-  'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+  'https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js'
 ];
 
-// تثبيت الـ Service Worker وتخزين الملفات الأساسية
+// تثبيت الـ Service Worker وتخزين الأصول الأساسية
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -22,7 +16,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// تفعيل الـ Service Worker وتنظيف التخزين القديم
+// تفعيل الـ Service Worker وتنظيف النسخ القديمة
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -40,8 +34,8 @@ self.addEventListener('activate', (event) => {
 
 // التعامل مع طلبات الشبكة
 self.addEventListener('fetch', (event) => {
-  // استثناء طلبات قاعدة بيانات فايربيس من التخزين المؤقت لضمان حداثة البيانات السحابية
-  if (event.request.url.includes('firebaseio.com')) {
+  // استثناء طلبات فايربيس السحابية لضمان حداثة بيانات تسجيل الدخول والـ VIP
+  if (event.request.url.includes('firestore.googleapis.com') || event.request.url.includes('firebase')) {
     return;
   }
 
@@ -50,11 +44,7 @@ self.addEventListener('fetch', (event) => {
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request).then((response) => {
-        return response;
-      }).catch(() => {
-        // في حال انقطاع الإنترنت تماماً يمكن توفير صفحة بديلة أو الاعتماد على الذاكرة المحلية
-      });
+      return fetch(event.request);
     })
   );
 });
