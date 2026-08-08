@@ -274,6 +274,17 @@
             height: 60px;
             border-radius: 18px;
             box-shadow: 0 0 20px rgba(255, 56, 56, 0.7);
+            transition: all 0.2s;
+        }
+        .fire-btn.auto-fire-active {
+            background: linear-gradient(135deg, #00cec9, #0984e3) !important;
+            border-color: #00f3ff !important;
+            box-shadow: 0 0 30px #00f3ff !important;
+            animation: autoFirePulse 0.6s infinite alternate;
+        }
+        @keyframes autoFirePulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.06); }
         }
 
         #player {
@@ -319,7 +330,8 @@
             transform: translateZ(20px);
         }
 
-        .laser {
+        /* أنماط الليزر المتعددة حسب المستوى */
+        .laser-l1 {
             position: absolute;
             width: 6px;
             height: 24px;
@@ -328,14 +340,31 @@
             border-radius: 3px;
             z-index: 4;
         }
-
-        .missile {
+        .laser-l2 {
+            position: absolute;
+            width: 8px;
+            height: 28px;
+            background: #ff3838;
+            box-shadow: 0 0 20px #ff3838;
+            border-radius: 4px;
+            z-index: 4;
+        }
+        .laser-l3 {
             position: absolute;
             width: 10px;
-            height: 32px;
-            background: #ff3838;
-            box-shadow: 0 0 25px #ff3838;
+            height: 30px;
+            background: #2ecc71;
+            box-shadow: 0 0 22px #2ecc71;
             border-radius: 5px;
+            z-index: 4;
+        }
+        .missile {
+            position: absolute;
+            width: 12px;
+            height: 36px;
+            background: linear-gradient(to top, #f1c40f, #e74c3c);
+            box-shadow: 0 0 28px #f1c40f;
+            border-radius: 6px;
             z-index: 4;
         }
 
@@ -1247,6 +1276,10 @@
         let gameInterval, itemInterval, fireInterval;
         let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🛸';
         let moveLeft = false, moveRight = false;
+        
+        // متغيرات للتحكم بالنقر المطول للتشغيل التلقائي والنقر المفرد
+        let firePressTimer = null;
+        let isAutoFire = false;
 
         for (let i = 0; i < 45; i++) {
             let star = document.createElement('div');
@@ -1312,9 +1345,9 @@
         }
 
         function returnToMenu() {
-            isPlaying = false; isPaused = false;
+            isPlaying = false; isPaused = false; isAutoFire = false;
             clearInterval(gameInterval); clearInterval(itemInterval); clearInterval(fireInterval);
-            document.querySelectorAll('.item, .laser, .missile, .explosion').forEach(el => el.remove());
+            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
             
             gameScreen.style.display = 'none';
             ui.style.display = 'none';
@@ -1340,28 +1373,77 @@
         leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft = true; leftBtn.classList.add('active-touch'); });
         leftBtn.addEventListener('touchend', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
 
-        fireBtn.addEventListener('mousedown', startContinuousFire);
-        fireBtn.addEventListener('mouseup', stopContinuousFire);
-        fireBtn.addEventListener('mouseleave', stopContinuousFire);
-        fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startContinuousFire(); });
-        fireBtn.addEventListener('touchend', stopContinuousFire);
+        // إدارة النقر المنفرد والنقر المطول لـ 3 ثوانٍ للتشغيل التلقائي
+        fireBtn.addEventListener('mousedown', onFireButtonDown);
+        fireBtn.addEventListener('mouseup', onFireButtonUp);
+        fireBtn.addEventListener('mouseleave', onFireButtonUp);
+        fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
+        fireBtn.addEventListener('touchend', onFireButtonUp);
 
-        function startContinuousFire() {
+        function onFireButtonDown() {
             if (!isPlaying || isPaused) return;
-            fireWeapon();
-            if (!fireInterval) { fireInterval = setInterval(fireWeapon, 180); }
+
+            // إذا كان التشغيل التلقائي مفعلاً مسبقاً، النقر عليه يلغيه
+            if (isAutoFire) {
+                disableAutoFire();
+                return;
+            }
+
+            // بدء مؤقت لمدة 3 ثوانٍ لمعرفة ما إذا كان الضغط مطولاً
+            firePressTimer = setTimeout(() => {
+                enableAutoFire();
+            }, 3000);
         }
 
-        function stopContinuousFire() { clearInterval(fireInterval); fireInterval = null; }
+        function onFireButtonUp() {
+            if (!isPlaying || isPaused) return;
+
+            // إذا تم رفع الإصبع قبل مرور 3 ثوانٍ ولم يكن التشغيل التلقائي مفعلاً، يتم إطلاق طلقة فردية
+            if (firePressTimer) {
+                clearTimeout(firePressTimer);
+                firePressTimer = null;
+                if (!isAutoFire) {
+                    fireWeapon();
+                }
+            }
+        }
+
+        function enableAutoFire() {
+            isAutoFire = true;
+            fireBtn.classList.add('auto-fire-active');
+            fireBtn.innerText = '🔥 تلقائي';
+            if (!fireInterval) {
+                fireInterval = setInterval(fireWeapon, 160);
+            }
+        }
+
+        function disableAutoFire() {
+            isAutoFire = false;
+            fireBtn.classList.remove('auto-fire-active');
+            fireBtn.innerText = '⚡';
+            clearInterval(fireInterval);
+            fireInterval = null;
+        }
 
         function fireWeapon() {
             if (!isPlaying || isPaused) return;
             const missile = document.createElement('div');
-            if (currentGame === 8 || level >= 5 || currentPilotData.vipRank === 'بلاتيني' || currentPilotData.isAdmin) {
-                missile.classList.add('missile'); missile.dataset.type = 'missile';
+            
+            // تغيير شكل ولون الليزر أو الصاروخ حسب المستوى الحالي للتقدم
+            if (currentGame === 8 || level >= 4 || currentPilotData.vipRank === 'بلاتيني' || currentPilotData.isAdmin) {
+                missile.classList.add('missile'); 
+                missile.dataset.type = 'missile';
+            } else if (level === 3) {
+                missile.classList.add('laser-l3'); 
+                missile.dataset.type = 'laser';
+            } else if (level === 2) {
+                missile.classList.add('laser-l2'); 
+                missile.dataset.type = 'laser';
             } else {
-                missile.classList.add('laser'); missile.dataset.type = 'laser';
+                missile.classList.add('laser-l1'); 
+                missile.dataset.type = 'laser';
             }
+
             missile.style.left = (playerX - 4) + 'px';
             missile.style.bottom = '165px';
             gameContainer.appendChild(missile);
@@ -1383,6 +1465,9 @@
             lives = (['ذهبي', 'بلاتيني', 'مدير النظام'].includes(currentPilotData.vipRank) || currentPilotData.isAdmin) ? 4 : 3;
             level = 1;
             hasShield = (currentPilotData.vipRank !== 'عادية' || currentPilotData.isAdmin);
+            isAutoFire = false;
+            fireBtn.classList.remove('auto-fire-active');
+            fireBtn.innerText = '⚡';
             
             if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
 
@@ -1402,7 +1487,7 @@
             player.style.display = 'block';
 
             isPlaying = true; isPaused = false;
-            document.querySelectorAll('.item, .laser, .missile, .explosion').forEach(el => el.remove());
+            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
             clearInterval(itemInterval); clearInterval(gameInterval); clearInterval(fireInterval);
             fireInterval = null;
 
@@ -1414,13 +1499,14 @@
             if (!isPlaying) return;
             isPaused = !isPaused;
             if (isPaused) {
-                stopContinuousFire();
+                if (!isAutoFire) { clearInterval(fireInterval); fireInterval = null; }
                 screenTitle.innerText = "⏸️ اللعبة متوقفة مؤقتاً";
                 screenDesc.innerText = "خذ أنفاسك واستعد للمتابعة!";
                 highScoreText.innerText = `النتيجة الحالية: ${score}`;
                 startBtn.innerText = "استئناف اللعب";
                 gameScreen.style.display = 'flex';
             } else {
+                if (isAutoFire && !fireInterval) { fireInterval = setInterval(fireWeapon, 160); }
                 gameScreen.style.display = 'none';
             }
         }
@@ -1450,7 +1536,7 @@
         }
 
         function updateGame() {
-            const projectiels = document.querySelectorAll('.laser, .missile');
+            const projectiels = document.querySelectorAll('.laser-l1, .laser-l2, .laser-l3, .missile');
             projectiels.forEach(proj => {
                 let bottom = parseFloat(proj.style.bottom);
                 proj.style.bottom = (bottom + 18) + 'px';
@@ -1536,7 +1622,7 @@
         }
 
         function gameOver() {
-            isPlaying = false; stopContinuousFire();
+            isPlaying = false; disableAutoFire();
             clearInterval(gameInterval); clearInterval(itemInterval);
 
             if (currentPlayer && currentPlayer.toLowerCase() !== 'admin') {
