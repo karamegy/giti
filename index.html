@@ -1946,6 +1946,29 @@
             startBtn.innerText = "إعادة المحاولة";
             gameScreen.style.display = 'flex';
         }
+                // دالة التحقق من اشتراك العضو قبل السماح له بفتح القسم
+        function checkVipAccess(requiredRank = 'VIP', actionCallback) {
+            // بيانات المستخدم الحالي (نفترض أن رتبته مخزنة في currentPilotData.vipRank)
+            // الرتب العادية أو التي لا تمتلك اشتراكاً
+            const userRank = currentPilotData.vipRank; 
+
+            // إذا كان حساب مشرف أو تنطبق عليه شروط الاشتراك
+            if (currentPilotData.isAdmin || userRank !== 'عادية') {
+                // العضو مشترك بالفعل، قم بتنفيذ الوظيفة المطلوبة (فتح القسم)
+                if (typeof actionCallback === 'function') {
+                    actionCallback();
+                }
+            } else {
+                // العضو غير مشترك، طلب الاشتراك أولاً وإظهار نافذة الترقية
+                alert('عذراً يابطل! 🚀 هذا القسم يتطلب اشتراك VIP أو ترقية الحساب أولاً.');
+                
+                // يمكنك فتح نافذة الترقية تلقائياً إذا كانت موجودة لديك
+                if (typeof vipModal !== 'undefined' && vipModal) {
+                    vipModal.style.display = 'flex'; // أو إظهار الـ Modal الخاص بالاشتراكات
+                }
+            }
+        }
+
     </script>
 </body>
 </html>
