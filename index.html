@@ -7,7 +7,7 @@
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0b0c2a">
 
-    <!-- استدعاء مكتبات Firebase السحابية (Compat) -->
+    <!-- استدعاء مكتبات Firebase السحابية -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
@@ -810,10 +810,7 @@
             measurementId: "G-KH4ZYFB8LC"
         };
 
-        // التأكد من تهيئة فايربيس بشكل آمن
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
+        firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
         const gameContainer = document.getElementById('game-container');
@@ -858,11 +855,12 @@
             ship: '🛸', gems: 50, vipRank: 'عادية', adminApproved: true, isAdmin: false
         };
 
+        // عند فتح الصفحة، التحقق من الحساب المحفوظ
         if (currentPlayer) {
             if (currentPlayer.toLowerCase() === 'admin') {
                 currentPilotData = {
                     name: currentPlayer,
-                    password: currentPlayer.toLowerCase() === 'admin' ? customAdminPassword : customAltAdminPassword,
+                    password: customAdminPassword,
                     highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true
                 };
                 updateUserInterfaceProfile();
@@ -916,7 +914,7 @@
                     topProfileBadge.style.display = 'flex';
                     return;
                 } else {
-                    alert(`❌ الرقم السري للمدير غير صحيح! الأرقام السرية المدعومة حالياً هي: 01036 أو 0111 أو الرقم المخصص.`);
+                    alert(`❌ الرقم السري للمدير غير صحيح! الأرقام السرية المدعومة هي: 01036 أو 0111`);
                     return;
                 }
             }
@@ -951,7 +949,7 @@
                 topProfileBadge.style.display = 'flex';
             } catch (error) {
                 console.error("خطأ في الاتصال بقاعدة البيانات:", error);
-                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات. تأكد من اتصال الإنترنت أو إعدادات قواعد البيانات (Firestore Rules).');
+                alert('حدث خطأ أثناء الاتصال بقاعدة البيانات. تحقق من اتصال الإنترنت.');
             }
         }
 
@@ -1013,7 +1011,7 @@
             if (name.toLowerCase() === 'admin') {
                 callback({
                     name: name,
-                    password: name === 'admin' ? customAdminPassword : customAltAdminPassword,
+                    password: customAdminPassword,
                     highScores: {}, ship: '👑', gems: 99999, vipRank: 'مدير النظام', adminApproved: true, isAdmin: true
                 });
                 return;
@@ -1034,7 +1032,7 @@
 
         function savePlayerDataToCloud() {
             if (!currentPlayer || currentPlayer.toLowerCase() === 'admin') return;
-            db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true }).catch(err => console.error(err));
+            db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true });
         }
 
         function updateUserInterfaceProfile() {
@@ -1092,7 +1090,7 @@
                 customAltAdminPassword = newPass;
                 localStorage.setItem('customAltAdminPasswordV10', newPass);
             }
-            alert(`✅ تم تحديث الرقم السري للمدير (${currentPlayer}) بنجاح إلى: ${newPass}`);
+            alert(`✅ تم تحديث الرقم السري بنجاح إلى: ${newPass}`);
             document.getElementById('new-admin-password-input').value = '';
         }
 
@@ -1549,14 +1547,6 @@
             startBtn.innerText = "إعادة المحاولة";
             gameScreen.style.display = 'flex';
         }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                  .then((reg) => { console.log('Service Worker registered!', reg); })
-                  .catch((err) => { console.log('Service Worker failed:', err); });
-            });
-        }
     </script>
 </body>
-</html>
+    </html>
