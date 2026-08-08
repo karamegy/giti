@@ -2,8 +2,8 @@ const CACHE_NAME = 'space-cinema-v10.1-cache';
 const assetsToCache = [
   './index.html',
   './manifest.json',
-  'https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js'
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
 ];
 
 // تثبيت الـ Service Worker وتخزين الأصول الأساسية
