@@ -1,24 +1,21 @@
 {
-  "name": "مكتبة الألعاب الفضائية",
-  "short_name": "ألعاب الفضاء",
-  "description": "منصة تفاعلية لألعاب السينما الفضائية ومحاكاة الرحلات مع ربط سحابي متطور.",
-  "lang": "ar",
-  "dir": "rtl",
-  "start_url": "/giti/index.html",
-  "scope": "/giti/",
+  "name": "محاكاة السينما الفضائية V10.1",
+  "short_name": "السينما الفضائية",
+  "description": "منصة ألعاب فضائية متعددة الأقسام مع لوحة تحكم إدارية ونظام ربط سحابي متطور",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#02020a",
-  "theme_color": "#000000",
+  "background_color": "#020208",
+  "theme_color": "#00f3ff",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3063/3063823.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3063/3063823.png",
+      "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
