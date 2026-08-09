@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة الألعاب الفضائية - v10.5 Cinema Space VIP & Founder Panel</title>
+    <title>مكتبة الألعاب الفضائية - v10.5 Global Cinema Space VIP & Founder Panel</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0b0c2a">
 
@@ -685,7 +685,7 @@
         <!-- 1. شاشة تسجيل الدخول والتسجيل المتكاملة -->
         <div id="login-screen" class="screen">
             <div class="cinema-radar-box"></div>
-            <h1>🌌 محاكاة السينما الفضائية V10.5</h1>
+            <h1>🌌 محاكاة السينما الفضائية V10.5 Global</h1>
             <p>أدخل اسم الحساب والرقم السري للانطلاق أو سجل عبر مواقع التواصل:</p>
             <input type="text" id="username-input" class="input-field" placeholder="اسم الطيار / الحساب..." maxlength="15">
             <input type="password" id="password-input" class="input-field" placeholder="الرقم السري...">
@@ -762,7 +762,7 @@
                 <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وتطوير المعمورة:</p>
                 
                 <div class="info-card" style="border-color: #2ecc71; background: rgba(46, 204, 113, 0.05);">
-                    <b style="color: #2ecc71; font-size: 0.8rem;">🚀 تحديث المعمورة (v10.5):</b><br>
+                    <b style="color: #2ecc71; font-size: 0.8rem;">🚀 تحديث المعمورة الدولي (v10.5):</b><br>
                     <span style="font-size: 0.75rem; color: #fff;">• تقييد أخذ الجواهر عند النقر للأعضاء حصرياً واعتماد الترقيات عبر الإدارة فقط.</span><br>
                     <span style="font-size: 0.75rem; color: #00f3ff;">• دعم تسجيل الدخول باستخدام جوجل، فيسبوك، وإكس (Twitter).</span><br>
                     <span style="font-size: 0.75rem; color: #f1c40f;">• إضافة زر إداري خاص لإرسال 100 جوهرة يومياً للأعضاء تلقائياً.</span><br>
@@ -1616,8 +1616,8 @@
             } catch (e) {}
         }
 
-        let currentGame = 1, score = 0, lives = 3, level = 1, gameSpeed = 4, spawnRate = 700;
-        let gameInterval, itemInterval, fireInterval;
+        let currentGame = 1, score = 0, lives = 3, level = 1, gameSpeed = 5, spawnRate = 400;
+        let gameAnimFrame = null, itemInterval, fireInterval;
         let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🛸';
         let moveLeft = false, moveRight = false;
         let firePressTimer = null, isAutoFire = false;
@@ -1689,7 +1689,7 @@
 
         function returnToMenu() {
             isPlaying = false; isPaused = false; isAutoFire = false;
-            clearInterval(gameInterval); clearInterval(itemInterval); clearInterval(fireInterval);
+            cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
             document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
             
             gameScreen.style.display = 'none';
@@ -1707,7 +1707,7 @@
             isAutoFire = true;
             fireBtn.classList.add('auto-fire-active');
             fireBtn.innerText = '🔥 تلقائي';
-            if (!fireInterval) { fireInterval = setInterval(fireWeapon, 160); }
+            if (!fireInterval) { fireInterval = setInterval(fireWeapon, 120); }
         }
 
         function disableAutoFire() {
@@ -1740,7 +1740,7 @@
         function updatePlayerPosition() {
             if (!isPlaying || isPaused) return;
             const rect = gameContainer.getBoundingClientRect();
-            const step = 11;
+            const step = 16; // زيادة سرعة حركة الطيار للاستجابة الفورية جداً
             if (moveLeft) playerX -= step;
             if (moveRight) playerX += step;
             if (playerX < 35) playerX = 35;
@@ -1759,11 +1759,11 @@
             
             if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
 
-            const speeds = { 1: 4, 2: 5.5, 3: 7.5, 4: 4.5, 5: 6.5, 6: 6, 7: 8, 8: 6.5, 9: 9, 10: 7 };
-            const rates = { 1: 700, 2: 430, 3: 300, 4: 550, 5: 350, 6: 380, 7: 280, 8: 320, 9: 240, 10: 300 };
+            const speeds = { 1: 6, 2: 7.5, 3: 9.5, 4: 6.5, 5: 8.5, 6: 8, 7: 10, 8: 8.5, 9: 11, 10: 9 };
+            const rates = { 1: 500, 2: 320, 3: 240, 4: 400, 5: 280, 6: 300, 7: 220, 8: 250, 9: 200, 10: 240 };
 
-            gameSpeed = speeds[currentGame] || 4;
-            spawnRate = rates[currentGame] || 700;
+            gameSpeed = speeds[currentGame] || 6;
+            spawnRate = rates[currentGame] || 500;
 
             scoreDisplay.innerText = score;
             livesDisplay.innerText = lives;
@@ -1776,11 +1776,21 @@
 
             isPlaying = true; isPaused = false;
             document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
-            clearInterval(itemInterval); clearInterval(gameInterval); clearInterval(fireInterval);
+            cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
             fireInterval = null;
 
             itemInterval = setInterval(spawnItem, spawnRate);
-            gameInterval = setInterval(() => { updatePlayerPosition(); updateGame(); }, 20);
+            
+            // استخدام requestAnimationFrame لضمان أعلى سرعة وسلاسة مطلقة (60 إطار في الثانية)
+            function gameLoop() {
+                if (!isPlaying) return;
+                if (!isPaused) {
+                    updatePlayerPosition();
+                    updateGame();
+                }
+                gameAnimFrame = requestAnimationFrame(gameLoop);
+            }
+            gameAnimFrame = requestAnimationFrame(gameLoop);
         }
 
         function togglePause() {
@@ -1794,7 +1804,7 @@
                 startBtn.innerText = "استئناف اللعب";
                 gameScreen.style.display = 'flex';
             } else {
-                if (isAutoFire && !fireInterval) { fireInterval = setInterval(fireWeapon, 160); }
+                if (isAutoFire && !fireInterval) { fireInterval = setInterval(fireWeapon, 120); }
                 gameScreen.style.display = 'none';
             }
         }
@@ -1827,7 +1837,7 @@
             const projectiels = document.querySelectorAll('.laser-l1, .laser-l2, .laser-l3, .missile');
             projectiels.forEach(proj => {
                 let bottom = parseFloat(proj.style.bottom);
-                proj.style.bottom = (bottom + 18) + 'px';
+                proj.style.bottom = (bottom + 24) + 'px'; // سرعة فائقة للطلقات
                 const projRect = proj.getBoundingClientRect();
 
                 const items = document.querySelectorAll('.item');
@@ -1863,7 +1873,7 @@
 
                         score += Math.round(parseInt(item.dataset.val || 15) * multiplier);
                         scoreDisplay.innerText = score;
-                        if (score >= level * 100) { level++; gameSpeed += 0.4; }
+                        if (score >= level * 100) { level++; gameSpeed += 0.5; }
                     } else if (type === 'heart') {
                         lives++; livesDisplay.innerText = lives;
                     } else if (type === 'shield') {
@@ -1899,14 +1909,14 @@
 
             let p1X = 200, p2X = 200;
             let splitInterval = setInterval(() => {
-                p1Score += 10; p2Score += 10;
+                p1Score += 15; p2Score += 15;
                 p1ScoreEl.innerText = p1Score;
                 p2ScoreEl.innerText = p2Score;
-                p1X += (Math.random() - 0.5) * 30;
-                p2X += (Math.random() - 0.5) * 30;
+                p1X += (Math.random() - 0.5) * 35;
+                p2X += (Math.random() - 0.5) * 35;
                 p1Ship.style.left = Math.max(20, Math.min(380, p1X)) + 'px';
                 p2Ship.style.left = Math.max(20, Math.min(380, p2X)) + 'px';
-            }, 200);
+            }, 100);
             window.activeSplitInterval = splitInterval;
         }
 
@@ -1917,7 +1927,7 @@
 
         function gameOver() {
             isPlaying = false; disableAutoFire();
-            clearInterval(gameInterval); clearInterval(itemInterval);
+            cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval);
 
             if (currentPlayer) {
                 if (!currentPilotData.highScores) currentPilotData.highScores = {};
@@ -1976,6 +1986,18 @@
                     return false;
                 }
             });
+        }
+        
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./sw.js')
+              .then((reg) => {
+                console.log('Service Worker registered successfully: ', reg.scope);
+              })
+              .catch((err) => {
+                console.log('Service Worker registration failed: ', err);
+              });
+          });
         }
 
         document.addEventListener('DOMContentLoaded', securePaymentSection);
