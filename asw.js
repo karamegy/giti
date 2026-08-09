@@ -1,9 +1,7 @@
-const CACHE_NAME = 'space-cinema-v10.1-cache';
+const CACHE_NAME = 'space-cinema-v10.5-cache';
 const assetsToCache = [
   './index.html',
-  './manifest.json',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js'
+  './manifest.json'
 ];
 
 // تثبيت الـ Service Worker وتخزين الأصول الأساسية
@@ -32,19 +30,28 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// التعامل مع طلبات الشبكة
+// التعامل مع طلبات الشبكة (استراتيجية الشبكة أولاً مع العودة للكاش للملفات المحلية)
 self.addEventListener('fetch', (event) => {
   // استثناء طلبات فايربيس السحابية لضمان حداثة بيانات تسجيل الدخول والـ VIP
-  if (event.request.url.includes('firestore.googleapis.com') || event.request.url.includes('firebase')) {
+  if (event.request.url.includes('firestore.googleapis.com') || event.request.url.includes('firebase') || event.request.url.includes('googleapis.com')) {
     return;
   }
 
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
+      // إذا وجدنا الملف في الكاش نعيده، وإلا نجلبه من الشبكة
       if (cachedResponse) {
         return cachedResponse;
       }
-      return fetch(event.request);
+      return fetch(event.request).then((response) => {
+        // يمكنك هنا تخزين الملفات الجديدة ديناميكياً إذا رغبت
+        return response;
+      }).catch(() => {
+        // في حال انقطاع الإنترنت تماماً ولم يتم العثور على الملف
+        if (event.request.mode === 'navigate') {
+          return caches.match('./index.html');
+        }
+      });
     })
   );
 });
