@@ -197,7 +197,7 @@
             left: 0;
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
             padding: 0 20px;
             box-sizing: border-box;
@@ -267,37 +267,25 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .ctrl-btn {
-            background: linear-gradient(135deg, rgba(0, 243, 255, 0.3), rgba(0, 243, 255, 0.05));
-            border: 2px solid rgba(0, 243, 255, 0.7);
-            color: white;
-            font-size: 1.8rem;
-            width: 75px;
+        .fire-btn {
+            background: linear-gradient(135deg, #ff9f43, #ee5253);
+            border: 2px solid #ff3838;
+            font-size: 1.6rem;
+            width: 100%;
+            max-width: 200px;
             height: 60px;
             border-radius: 18px;
+            box-shadow: 0 0 20px rgba(255, 56, 56, 0.7);
+            color: white;
             cursor: pointer;
             backdrop-filter: blur(10px);
             display: flex;
             justify-content: center;
             align-items: center;
             outline: none;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.7);
         }
-        .ctrl-btn:active, .ctrl-btn.active-touch {
-            background: rgba(0, 243, 255, 0.6);
-            transform: scale(0.92);
-            border-color: #fff;
-            box-shadow: 0 0 20px #00f3ff;
-        }
-
-        .fire-btn {
-            background: linear-gradient(135deg, #ff9f43, #ee5253);
-            border: 2px solid #ff3838;
-            font-size: 1.6rem;
-            width: 85px;
-            height: 60px;
-            border-radius: 18px;
-            box-shadow: 0 0 20px rgba(255, 56, 56, 0.7);
+        .fire-btn:active, .fire-btn.active-touch {
+            transform: scale(0.95);
         }
         .fire-btn.auto-fire-active {
             background: linear-gradient(135deg, #00cec9, #0984e3) !important;
@@ -961,11 +949,9 @@
         <!-- اللاعب -->
         <div id="player" style="display: none;">🛸</div>
 
-        <!-- لوحة التحكم السفلي أثناء اللعب -->
+        <!-- لوحة التحكم السفلي أثناء اللعب (تم الاحتفاظ بزر الإطلاق فقط وإزالة أزرار اليمين واليسار) -->
         <div id="controls" style="display: none;">
-            <button class="ctrl-btn" id="right-btn">▶</button>
-            <button class="ctrl-btn fire-btn" id="fire-btn">⚡</button>
-            <button class="ctrl-btn" id="left-btn">◀</button>
+            <button class="fire-btn" id="fire-btn">⚡ إطلاق النار</button>
         </div>
     </div>
 
@@ -1019,8 +1005,6 @@
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
 
-        const leftBtn = document.getElementById('left-btn');
-        const rightBtn = document.getElementById('right-btn');
         const fireBtn = document.getElementById('fire-btn');
 
         let currentPlayer = localStorage.getItem('currentSpacePilotV10') || '';
@@ -1034,15 +1018,49 @@
             isAdmin: false
         };
 
-        rightBtn.addEventListener('mousedown', () => { moveRight = true; rightBtn.classList.add('active-touch'); });
-        rightBtn.addEventListener('mouseup', () => { moveRight = false; rightBtn.classList.remove('active-touch'); });
-        rightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveRight = true; rightBtn.classList.add('active-touch'); });
-        rightBtn.addEventListener('touchend', () => { moveRight = false; rightBtn.classList.remove('active-touch'); });
+        // تفعيل التحكم الحر باللمس المباشر وسحب الإصبع أو الماوس على الشاشة
+        let isTouchingScreen = false;
+        
+        gameContainer.addEventListener('touchstart', (e) => {
+            if (!isPlaying || isPaused) return;
+            if (e.target.closest('#controls') || e.target.closest('#ui')) return;
+            isTouchingScreen = true;
+            updateTouchPosition(e.touches[0].clientX);
+        });
 
-        leftBtn.addEventListener('mousedown', () => { moveLeft = true; leftBtn.classList.add('active-touch'); });
-        leftBtn.addEventListener('mouseup', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
-        leftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveLeft = true; leftBtn.classList.add('active-touch'); });
-        leftBtn.addEventListener('touchend', () => { moveLeft = false; leftBtn.classList.remove('active-touch'); });
+        gameContainer.addEventListener('touchmove', (e) => {
+            if (!isPlaying || isPaused || !isTouchingScreen) return;
+            updateTouchPosition(e.touches[0].clientX);
+        });
+
+        gameContainer.addEventListener('touchend', () => {
+            isTouchingScreen = false;
+        });
+
+        // دعم تحريك الماوس لأجهزة الكمبيوتر
+        gameContainer.addEventListener('mousedown', (e) => {
+            if (!isPlaying || isPaused) return;
+            if (e.target.closest('#controls') || e.target.closest('#ui')) return;
+            isTouchingScreen = true;
+            updateTouchPosition(e.clientX);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isPlaying || isPaused || !isTouchingScreen) return;
+            updateTouchPosition(e.clientX);
+        });
+
+        window.addEventListener('mouseup', () => {
+            isTouchingScreen = false;
+        });
+
+        function updateTouchPosition(clientX) {
+            const rect = gameContainer.getBoundingClientRect();
+            playerX = clientX - rect.left;
+            if (playerX < 35) playerX = 35;
+            if (playerX > rect.width - 35) playerX = rect.width - 35;
+            player.style.left = playerX + 'px';
+        }
 
         fireBtn.addEventListener('mousedown', onFireButtonDown);
         fireBtn.addEventListener('mouseup', onFireButtonUp);
@@ -1619,7 +1637,6 @@
         let currentGame = 1, score = 0, lives = 3, level = 1, gameSpeed = 5, spawnRate = 400;
         let gameAnimFrame = null, itemInterval, fireInterval;
         let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🛸';
-        let moveLeft = false, moveRight = false;
         let firePressTimer = null, isAutoFire = false;
 
         for (let i = 0; i < 45; i++) {
@@ -1706,14 +1723,14 @@
         function enableAutoFire() {
             isAutoFire = true;
             fireBtn.classList.add('auto-fire-active');
-            fireBtn.innerText = '🔥 تلقائي';
+            fireBtn.innerText = '🔥 إطلاق تلقائي';
             if (!fireInterval) { fireInterval = setInterval(fireWeapon, 120); }
         }
 
         function disableAutoFire() {
             isAutoFire = false;
             fireBtn.classList.remove('auto-fire-active');
-            fireBtn.innerText = '⚡';
+            fireBtn.innerText = '⚡ إطلاق النار';
             clearInterval(fireInterval);
             fireInterval = null;
         }
@@ -1737,17 +1754,6 @@
             gameContainer.appendChild(missile);
         }
 
-        function updatePlayerPosition() {
-            if (!isPlaying || isPaused) return;
-            const rect = gameContainer.getBoundingClientRect();
-            const step = 16;
-            if (moveLeft) playerX -= step;
-            if (moveRight) playerX += step;
-            if (playerX < 35) playerX = 35;
-            if (playerX > rect.width - 35) playerX = rect.width - 35;
-            player.style.left = playerX + 'px';
-        }
-
         function startCurrentGame() {
             score = 0;
             lives = (['ذهبي', 'بلاتيني', 'مدير النظام'].includes(currentPilotData.vipRank) || currentPilotData.isAdmin) ? 4 : 3;
@@ -1755,7 +1761,7 @@
             hasShield = (currentPilotData.vipRank !== 'عادية' || currentPilotData.isAdmin);
             isAutoFire = false;
             fireBtn.classList.remove('auto-fire-active');
-            fireBtn.innerText = '⚡';
+            fireBtn.innerText = '⚡ إطلاق النار';
             
             if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
 
@@ -1773,6 +1779,8 @@
             ui.style.display = 'flex';
             controls.style.display = 'flex';
             player.style.display = 'block';
+            playerX = gameContainer.clientWidth / 2;
+            player.style.left = playerX + 'px';
 
             isPlaying = true; isPaused = false;
             document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
@@ -1784,7 +1792,6 @@
             function gameLoop() {
                 if (!isPlaying) return;
                 if (!isPaused) {
-                    updatePlayerPosition();
                     updateGame();
                 }
                 gameAnimFrame = requestAnimationFrame(gameLoop);
@@ -1944,32 +1951,16 @@
             gameScreen.style.display = 'flex';
         }
 
-        function checkVipAccess(requiredRank = 'VIP', actionCallback) {
-            const userRank = currentPilotData.vipRank; 
-            if (currentPilotData.isAdmin || userRank !== 'عادية') {
-                if (typeof actionCallback === 'function') {
-                    actionCallback();
-                }
-            } else {
-                alert('عذراً يابطل! 🚀 هذا القسم يتطلب اشتراك VIP أو ترقية الحساب أولاً.');
-                if (typeof vipModal !== 'undefined' && vipModal) {
-                    vipModal.style.display = 'flex';
-                }
-            }
-        }
-
         function securePaymentSection() {
             const section = document.getElementById('sec-store');
             if (!section) return;
 
             section.addEventListener('contextmenu', function(e) {
                 e.preventDefault();
-                alert('عذراً، محتويات هذا القسم محمية لأسباب أمنية.');
             });
 
             section.addEventListener('copy', function(e) {
                 e.preventDefault();
-                alert('نسخ بيانات الدفع غير مسموح به.');
             });
 
             section.addEventListener('selectstart', function(e) {
@@ -1989,13 +1980,7 @@
         
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-              .then((reg) => {
-                console.log('Service Worker registered successfully: ', reg.scope);
-              })
-              .catch((err) => {
-                console.log('Service Worker registration failed: ', err);
-              });
+            navigator.serviceWorker.register('./sw.js').catch(() => {});
           });
         }
 
