@@ -1740,7 +1740,7 @@
         function updatePlayerPosition() {
             if (!isPlaying || isPaused) return;
             const rect = gameContainer.getBoundingClientRect();
-            const step = 16; // زيادة سرعة حركة الطيار للاستجابة الفورية جداً
+            const step = 16;
             if (moveLeft) playerX -= step;
             if (moveRight) playerX += step;
             if (playerX < 35) playerX = 35;
@@ -1781,7 +1781,6 @@
 
             itemInterval = setInterval(spawnItem, spawnRate);
             
-            // استخدام requestAnimationFrame لضمان أعلى سرعة وسلاسة مطلقة (60 إطار في الثانية)
             function gameLoop() {
                 if (!isPlaying) return;
                 if (!isPaused) {
@@ -1837,7 +1836,7 @@
             const projectiels = document.querySelectorAll('.laser-l1, .laser-l2, .laser-l3, .missile');
             projectiels.forEach(proj => {
                 let bottom = parseFloat(proj.style.bottom);
-                proj.style.bottom = (bottom + 24) + 'px'; // سرعة فائقة للطلقات
+                proj.style.bottom = (bottom + 24) + 'px';
                 const projRect = proj.getBoundingClientRect();
 
                 const items = document.querySelectorAll('.item');
