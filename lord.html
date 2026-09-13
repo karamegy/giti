@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lord - لودو أساطير تارزان الموسعة السينمائية</title>
+    <title>lord - لودو أساطير تارزان المجانية بالكامل</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0f2b1d">
 
@@ -29,6 +29,22 @@
             background: radial-gradient(circle at center, #09131a 0%, #010406 100%);
         }
 
+        body.theme-waterfall {
+            background: radial-gradient(circle at center, #0a2533 0%, #02070a 100%);
+        }
+        body.theme-waterfall #ludo-board {
+            background: #11293d;
+            border-color: #3498db;
+        }
+
+        body.theme-temple {
+            background: radial-gradient(circle at center, #33270a 0%, #0a0701 100%);
+        }
+        body.theme-temple #ludo-board {
+            background: #2e2411;
+            border-color: #f1c40f;
+        }
+
         .screen {
             position: absolute;
             top: 0;
@@ -42,7 +58,7 @@
             align-items: center;
             z-index: 20;
             text-align: center;
-            padding: 15px;
+            padding: 12px;
             box-sizing: border-box;
             overflow-y: auto;
         }
@@ -67,31 +83,31 @@
         }
 
         h1 {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             color: #2ecc71;
             text-shadow: 0 0 15px rgba(46, 204, 113, 0.8);
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
 
         p {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #a3e4d7;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
         .btn {
             background: linear-gradient(45deg, #2ecc71, #27ae60);
             color: #fff;
             border: none;
-            padding: 8px 16px;
-            font-size: 0.78rem;
+            padding: 7px 14px;
+            font-size: 0.75rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
-            margin: 4px auto;
+            margin: 3px auto;
             width: 90%;
-            max-width: 270px;
+            max-width: 260px;
             display: block;
             transition: transform 0.1s;
         }
@@ -100,30 +116,30 @@
         .btn-purple { background: linear-gradient(45deg, #8e44ad, #6c3483); box-shadow: 0 0 20px rgba(142, 68, 173, 0.6); }
         .btn-blue { background: linear-gradient(45deg, #3498db, #2980b9); box-shadow: 0 0 20px rgba(52, 152, 219, 0.6); }
         .btn-gold { background: linear-gradient(45deg, #f1c40f, #d4ac0d); color: #000; box-shadow: 0 0 20px rgba(241, 196, 15, 0.6); }
+        .btn-ad { background: linear-gradient(45deg, #e74c3c, #c0392b); box-shadow: 0 0 20px rgba(231, 76, 60, 0.6); }
 
         .input-field {
             background: rgba(255,255,255,0.08);
             border: 2px solid rgba(46, 204, 113, 0.5);
             color: white;
-            padding: 8px 12px;
+            padding: 7px 10px;
             border-radius: 12px;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             width: 85%;
-            max-width: 260px;
-            margin-bottom: 8px;
+            max-width: 250px;
+            margin-bottom: 6px;
             text-align: center;
             outline: none;
         }
 
-        /* لودو بورد متطور سينمائي */
         #ludo-board {
             position: relative;
-            width: 330px;
-            height: 330px;
+            width: 320px;
+            height: 320px;
             background: #112d1e;
             border: 4px solid #2ecc71;
             border-radius: 12px;
-            margin: 6px auto;
+            margin: 3px auto;
             display: grid;
             grid-template-columns: repeat(15, 1fr);
             grid-template-rows: repeat(15, 1fr);
@@ -136,7 +152,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             position: relative;
         }
 
@@ -144,8 +160,8 @@
         .base-green { background: rgba(46, 204, 113, 0.35); }
         .base-blue { background: rgba(52, 152, 219, 0.35); }
         .base-yellow { background: rgba(241, 196, 15, 0.35); }
-        .power-box { background: rgba(155, 89, 182, 0.5); border: 1px dashed #e74c3c; }
-        .mystery-box { background: rgba(241, 196, 15, 0.6); animation: pulseBox 1.2s infinite alternate; }
+        .power-box { background: rgba(155, 89, 182, 0.4); border: 1px dashed #9b59b6; }
+        .mystery-box { background: rgba(241, 196, 15, 0.5); animation: pulseBox 1.2s infinite alternate; }
 
         @keyframes pulseBox {
             0% { transform: scale(1); box-shadow: 0 0 5px #f1c40f; }
@@ -153,40 +169,51 @@
         }
 
         .pawn {
-            width: 17px;
-            height: 17px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 0.55rem;
+            font-size: 0.45rem;
             cursor: pointer;
-            box-shadow: 0 0 8px white;
+            box-shadow: 0 0 6px white;
             transition: all 0.2s;
             z-index: 10;
+            margin: 1px;
         }
 
         #ui-bar {
             position: absolute;
-            top: 8px;
+            top: 5px;
             left: 10px;
             right: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 15;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: bold;
         }
 
         .dice-box {
             background: rgba(0,0,0,0.6);
             border: 2px solid #2ecc71;
-            padding: 5px 12px;
+            padding: 4px 12px;
             border-radius: 15px;
             font-size: 1.2rem;
             cursor: pointer;
             box-shadow: 0 0 15px rgba(46,204,113,0.5);
+            transition: transform 0.2s;
+        }
+        .dice-box.rolling {
+            animation: shakeDice 0.4s ease infinite;
+        }
+        @keyframes shakeDice {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+            100% { transform: rotate(0deg); }
         }
         
         .gem-badge {
@@ -194,25 +221,25 @@
             border: 1px solid #3498db;
             padding: 3px 10px;
             border-radius: 10px;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             color: #3498db;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         .emoji-bar {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             background: rgba(0,0,0,0.5);
-            padding: 4px 10px;
+            padding: 3px 8px;
             border-radius: 20px;
             border: 1px solid rgba(46,204,113,0.4);
-            margin-top: 4px;
+            margin-top: 2px;
             z-index: 15;
         }
         .emoji-btn {
             background: none;
             border: none;
-            font-size: 1rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: transform 0.1s;
         }
@@ -220,14 +247,14 @@
 
         #achievement-toast {
             position: absolute;
-            top: 50px;
+            top: 40px;
             left: 50%;
             transform: translateX(-50%) translateY(-50px);
             background: linear-gradient(45deg, #f1c40f, #e67e22);
             color: #000;
-            padding: 5px 15px;
+            padding: 4px 14px;
             border-radius: 20px;
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             font-weight: bold;
             box-shadow: 0 0 20px rgba(241,196,15,0.8);
             z-index: 100;
@@ -246,6 +273,38 @@
             pointer-events: none;
             z-index: 50;
         }
+
+        .leaderboard-list {
+            max-height: 180px;
+            overflow-y: auto;
+            width: 90%;
+            margin: 5px auto;
+            background: rgba(0,0,0,0.4);
+            border-radius: 10px;
+            padding: 5px;
+            font-size: 0.72rem;
+            text-align: right;
+        }
+        .leaderboard-item {
+            padding: 4px 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* نافذة محاكاة إعلان أد موب */
+        #admob-modal {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 300;
+            text-align: center;
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -255,40 +314,73 @@
         <canvas id="particle-canvas"></canvas>
         <div id="achievement-toast">🏆 إنجاز عائلي جديد!</div>
 
-        <!-- 1. شاشة الدخول ومزامنة الجلسة من الـ Index -->
-        <div id="login-screen" class="screen">
-            <h1>🦁 lord - لودو أساطير تارزان</h1>
-            <p>مزامنة حساب البطل وجلسة الأدغال السحابية:</p>
-            <input type="text" id="username-input" class="input-field" placeholder="اسم بطل الأدغال..." maxlength="15">
-            <button class="btn" onclick="loginUser()">🌿 دخول الأدغال السحابي</button>
+        <!-- نافذة محاكاة إعلان أد موب (AdMob Rewarded Ad) -->
+        <div id="admob-modal">
+            <h1 style="color: #e74c3c;">📺 إعلان أد موب (AdMob Rewarded)</h1>
+            <p id="ad-timer" style="font-size: 1rem; margin: 20px 0;">جارِ عرض الإعلان المجاني... 3</p>
+            <p style="font-size: 0.65rem; color: #7f8c8d;">جميع محتويات اللعبة مجانية بالكامل وممولة عبر إعلانات أد موب</p>
         </div>
 
-        <!-- 2. شاشة اختيار وضع اللعب والعائلة والمتاجر -->
+        <!-- 1. شاشة الدخول ومزامنة الحسابات -->
+        <div id="login-screen" class="screen">
+            <h1>🦁 lord - لودو أساطير تارزان المجانية</h1>
+            <p>مزامنة حساب البطل السحابي التلقائية:</p>
+            <input type="text" id="username-input" class="input-field" placeholder="اسم بطل الأدغال..." maxlength="15">
+            <button class="btn" onclick="manualLogin()">🌿 دخول الأدغال السحابي المجاني</button>
+        </div>
+
+        <!-- 2. القائمة الرئيسية المجانية مع إعلانات أد موب -->
         <div id="mode-screen" class="screen" style="display: none;">
-            <h1>🌴 القائمة الرئيسية الموسعة (lord)</h1>
-            <div class="gem-badge" id="user-gems-display">💎 رصيد الجواهر: 0</div>
+            <h1>🌴 القائمة الرئيسية المجانية (lord)</h1>
+            <div class="gem-badge" id="user-gems-display">💎 رصيد الجواهر المجانية: 0</div>
             <p id="welcome-msg" style="color: #2ecc71; font-weight: bold;"></p>
             
-            <button class="btn btn-gold" onclick="startLudoGame('family', 2)">👨‍👩‍👧‍👦 التحدي العائلي (مساعدات الصغار والكبار)</button>
+            <button class="btn btn-gold" onclick="startLudoGame('family', 2)">👨‍👩‍👧‍👦 التحدي العائلي (مساعدات الصغار)</button>
             <button class="btn" onclick="startLudoGame('ai', 2)">🤖 اللعب مع ذكاء شيتا المتقدم</button>
-            <button class="btn btn-blue" onclick="startLudoGame('local', 2)">👥 اللعب الثنائي المحلي</button>
+            <button class="btn btn-blue" onclick="startLudoGame('local', 2)">👥 اللعب الثنائي المحلي (4 بيادق)</button>
             <button class="btn btn-orange" onclick="startLudoGame('local', 4)">👑 اللعب الرباعي العائلي الكامل</button>
-            <button class="btn btn-purple" onclick="openOnlineRoomModal()">🌐 اللعب السحابي الجماعي (Online)</button>
             
-            <div style="display: flex; gap: 8px; width: 90%; max-width: 270px; margin: 4px auto;">
-                <button class="btn btn-gold" style="margin:0; flex:1; font-size: 0.7rem;" onclick="claimDailyBonus()">🎁 الهدية اليومية</button>
-                <button class="btn btn-blue" style="margin:0; flex:1; font-size: 0.7rem;" onclick="openShopModal()">🛒 متجر الأبطال</button>
+            <div style="display: flex; gap: 6px; width: 90%; max-width: 270px; margin: 3px auto;">
+                <button class="btn btn-gold" style="margin:0; flex:1; font-size: 0.65rem;" onclick="claimDailyBonus()">🎁 الهدية اليومية</button>
+                <button class="btn btn-purple" style="margin:0; flex:1; font-size: 0.65rem;" onclick="openQuestsModal()">📜 المهام المجانية</button>
             </div>
-            <button class="btn" style="background: rgba(255,255,255,0.1); font-size: 0.68rem; padding: 5px; width: 70%;" onclick="toggleEnvironmentAtmosphere()">🌙/☀️ تبديل الأجواء</button>
+
+            <div style="display: flex; gap: 6px; width: 90%; max-width: 270px; margin: 3px auto;">
+                <button class="btn btn-ad" style="margin:0; flex:1; font-size: 0.65rem;" onclick="watchAdMobReward()">📺 مشاهدة إعلان (+50 💎)</button>
+                <button class="btn btn-orange" style="margin:0; flex:1; font-size: 0.65rem;" onclick="openLeaderboardModal()">🏆 المتصدرين</button>
+            </div>
+
+            <div style="display: flex; gap: 6px; width: 90%; max-width: 270px; margin: 3px auto;">
+                <button class="btn" style="margin:0; flex:1; font-size: 0.62rem; background: #8e44ad;" onclick="openOnlineRoomModal()">🌐 الغرف السحابية</button>
+                <button class="btn" style="margin:0; flex:1; font-size: 0.62rem; background: #e74c3c;" onclick="triggerSoundboard('tarzan')">🗣️ صرخة تارزان</button>
+            </div>
+
+            <button class="btn" style="background: rgba(255,255,255,0.1); font-size: 0.62rem; padding: 4px; width: 65%;" onclick="cycleTheme()">🎨 تغيير ثيم اللوحة</button>
         </div>
 
-        <!-- نافذة المتجر -->
-        <div id="shop-modal" class="screen" style="display: none; background: rgba(2,12,6,0.99);">
-            <h1>🛒 متجر أساطير الأدغال</h1>
-            <p>اختر مظهر أبطالك المفضل مقابل جواهرك السحابية:</p>
-            <button class="btn btn-gold" onclick="buySkin('أسد الذهب الذهبي 🦁', 30)">فتح: أسد الذهب (30 💎)</button>
-            <button class="btn btn-orange" onclick="buySkin('غوريلا الغابة الملكية 🦍', 50)">فتح: ملك الغوريلا (50 💎)</button>
-            <button class="btn btn-blue" onclick="closeShopModal()">العودة للقائمة</button>
+        <!-- نافذة المهام اليومية المجانية -->
+        <div id="quests-modal" class="screen" style="display: none; background: rgba(2,15,8,0.99);">
+            <h1>📜 تحديات الأدغال المجانية</h1>
+            <p>أجز المهام واربح جواهر مجانية لدعم اللعبة:</p>
+            <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 10px; width: 85%; margin: 5px auto; font-size: 0.72rem; text-align: right;">
+                <div>🎯 العب مباراة واحدة في وضع العائلة</div>
+                <button class="btn btn-gold" style="padding: 3px 10px; font-size: 0.62rem; margin-top: 4px;" onclick="claimQuest(1)">استلام +15 💎</button>
+            </div>
+            <div style="background: rgba(255,255,255,0.06); padding: 8px; border-radius: 10px; width: 85%; margin: 5px auto; font-size: 0.72rem; text-align: right;">
+                <div>🎁 افتح صندوق الكنوز السحري</div>
+                <button class="btn btn-gold" style="padding: 3px 10px; font-size: 0.62rem; margin-top: 4px;" onclick="claimQuest(2)">استلام +25 💎</button>
+            </div>
+            <button class="btn btn-blue" onclick="closeQuestsModal()">العودة للقائمة</button>
+        </div>
+
+        <!-- نافذة لوحة المتصدرين (Leaderboard) -->
+        <div id="leaderboard-modal" class="screen" style="display: none; background: rgba(2,15,8,0.99);">
+            <h1>🏆 لوحة شرف أبطال الأدغال</h1>
+            <p>أعظم الأبطال المجانيين في جمع الجواهر:</p>
+            <div class="leaderboard-list" id="leaderboard-container">
+                <div class="leaderboard-item"><span>جاري التحميل...</span><span>...</span></div>
+            </div>
+            <button class="btn btn-blue" onclick="closeLeaderboardModal()">العودة للقائمة</button>
         </div>
 
         <!-- نافذة الغرف السحابية -->
@@ -302,16 +394,16 @@
 
         <!-- نافذة الفوز والاحتفال السينمائي -->
         <div id="victory-modal" class="screen" style="display: none; background: rgba(2,15,8,0.98); z-index: 200;">
-            <h1 style="font-size: 1.6rem; color: #f1c40f;">👑 مبروك يا بطل الأدغال! 👑</h1>
-            <p id="victory-text" style="font-size: 0.9rem; color: #fff; margin: 15px 0;"></p>
+            <h1 style="font-size: 1.5rem; color: #f1c40f;">👑 مبروك يا بطل الأدغال! 👑</h1>
+            <p id="victory-text" style="font-size: 0.85rem; color: #fff; margin: 12px 0;"></p>
             <button class="btn btn-gold" onclick="closeVictoryModal()">استلام الجائزة والعودة</button>
         </div>
 
         <!-- 3. شاشة اللعب التفاعلية للودو -->
-        <div id="ludo-screen" class="screen" style="display: none; justify-content: flex-start; padding-top: 30px;">
+        <div id="ludo-screen" class="screen" style="display: none; justify-content: flex-start; padding-top: 20px;">
             <div id="ui-bar">
                 <span id="turn-indicator" style="color: #f1c40f;">دور اللاعب: 🦁 تارزان</span>
-                <button class="btn" style="width: auto; padding: 2px 7px; margin:0; font-size:0.65rem;" onclick="returnToMenu()">🏠 القائمة</button>
+                <button class="btn" style="width: auto; padding: 2px 7px; margin:0; font-size:0.6rem;" onclick="returnToMenu()">🏠 القائمة</button>
             </div>
 
             <div id="ludo-board"></div>
@@ -324,10 +416,10 @@
                 <button class="emoji-btn" onclick="sendReaction('🏆')">🏆</button>
             </div>
 
-            <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px; z-index: 15;">
+            <div style="display: flex; gap: 8px; align-items: center; margin-top: 3px; z-index: 15;">
                 <div class="dice-box" id="dice-btn" onclick="rollDice()">🎲 <span id="dice-val">6</span></div>
-                <div style="font-size: 0.68rem; text-align: right;">
-                    <span id="status-text" style="color: #2ecc71;">اضغط النرد! (صندوق الكنوز 🎁)</span>
+                <div style="font-size: 0.62rem; text-align: right;">
+                    <span id="status-text" style="color: #2ecc71;">اختر بيوناً أو ارمِ النرد الحقيقي!</span>
                 </div>
             </div>
         </div>
@@ -357,7 +449,10 @@
         let activePlayersCount = 2;
         let onlineRoomId = '';
         let isNightMode = false;
-        let unlockedSkins = [];
+        let isRolling = false;
+        let diceHasRolled = false;
+        let currentThemeIndex = 0;
+        const themes = ['', 'theme-waterfall', 'theme-temple'];
 
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
@@ -371,14 +466,14 @@
         resizeCanvas();
 
         function triggerCinematicExplosion(x, y) {
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 45; i++) {
                 particles.push({
                     x: x || canvas.width / 2,
                     y: y || canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 10,
-                    vy: (Math.random() - 0.5) * 10,
+                    vx: (Math.random() - 0.5) * 9,
+                    vy: (Math.random() - 0.5) * 9,
                     color: ['#f1c40f', '#2ecc71', '#e74c3c', '#3498db', '#e67e22'][Math.floor(Math.random() * 5)],
-                    life: 50
+                    life: 45
                 });
             }
         }
@@ -421,6 +516,22 @@
                     gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
                     osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+                } else if (type === 'eat') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.3);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'tarzan') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                    osc.frequency.linearRampToValueAtTime(900, audioCtx.currentTime + 0.2);
+                    osc.frequency.linearRampToValueAtTime(500, audioCtx.currentTime + 0.5);
+                    osc.frequency.linearRampToValueAtTime(800, audioCtx.currentTime + 0.8);
+                    gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.8);
                 } else if (type === 'mystery') {
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(600, audioCtx.currentTime);
@@ -432,6 +543,47 @@
             } catch(e) {}
         }
 
+        function triggerSoundboard(soundType) {
+            playJungleSound(soundType);
+            showAchievement('🗣️ عاووو! صرخة تارزان الملكية تملأ الأدغال!');
+            triggerCinematicExplosion();
+        }
+
+        function cycleTheme() {
+            document.body.classList.remove(themes[currentThemeIndex]);
+            currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+            if (themes[currentThemeIndex]) {
+                document.body.classList.add(themes[currentThemeIndex]);
+                showAchievement('🎨 تم تغيير ثيم الأدغال البصري بنجاح');
+            } else {
+                showAchievement('☀️ الثيم الافتراضي لأدغال تارزان');
+            }
+        }
+
+        // دالة محاكاة إعلان أد موب المكافئ (AdMob Rewarded Ad)
+        function watchAdMobReward() {
+            const adModal = document.getElementById('admob-modal');
+            const timerEl = document.getElementById('ad-timer');
+            adModal.style.display = 'flex';
+            let countdown = 3;
+            timerEl.innerText = `📺 جارِ عرض إعلان أد موب المجاني... ${countdown}`;
+
+            let adInterval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    timerEl.innerText = `📺 جارِ عرض إعلان أد موب المجاني... ${countdown}`;
+                } else {
+                    clearInterval(adInterval);
+                    adModal.style.display = 'none';
+                    userGems += 50;
+                    db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
+                    document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر المجانية: ${userGems}`;
+                    showAchievement('🎁 شكراً لمشاهدة إعلان أد موب! ربحت +50 جوهرة مجاناً 💎');
+                    triggerCinematicExplosion();
+                }
+            }, 1000);
+        }
+
         const playersConfig = [
             { id: 0, name: 'تارزان (الكبير/الأب)', icon: '🦁', color: '#e74c3c' },
             { id: 1, name: 'جين (الصغير/البطل)', icon: '🦍', color: '#2ecc71' },
@@ -440,25 +592,40 @@
         ];
 
         let pawns = {
-            0: [{pos: -1}, {pos: -1}],
-            1: [{pos: -1}, {pos: -1}],
-            2: [{pos: -1}, {pos: -1}],
-            3: [{pos: -1}, {pos: -1}]
+            0: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}],
+            1: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}],
+            2: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}],
+            3: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}]
         };
 
         const junglePowerBoxes = [12, 24, 38];
         const mysteryBoxPosition = 18; 
 
-        if (currentUser) {
-            fetchUserData();
-        }
+        window.addEventListener('DOMContentLoaded', () => {
+            if (currentUser) {
+                document.getElementById('username-input').value = currentUser;
+                fetchUserData();
+            }
+            loadSavedGameState();
+        });
 
-        function loginUser() {
+        function manualLogin() {
             let name = document.getElementById('username-input').value.trim();
             if (!name) { alert('الرجاء إدخال اسم البطل!'); return; }
             currentUser = name;
             localStorage.setItem('lordTarzanUser', currentUser);
+            localStorage.setItem('tarzanLudoUser', currentUser);
             fetchUserData();
+            syncUserToFirestore();
+        }
+
+        async function syncUserToFirestore() {
+            try {
+                await db.collection("lordUsers").doc(currentUser).set({ 
+                    gems: userGems, 
+                    lastActive: firebase.firestore.FieldValue.serverName ? firebase.firestore.FieldValue.serverTimestamp() : new Date()
+                }, { merge: true });
+            } catch(e) {}
         }
 
         async function fetchUserData() {
@@ -466,18 +633,16 @@
                 let doc = await db.collection("lordUsers").doc(currentUser).get();
                 if (doc.exists) {
                     userGems = doc.data().gems || 50;
-                    unlockedSkins = doc.data().skins || [];
                 } else {
                     userGems = 50;
-                    unlockedSkins = [];
-                    await db.collection("lordUsers").doc(currentUser).set({ gems: 50, skins: [] });
+                    await db.collection("lordUsers").doc(currentUser).set({ gems: 50 });
                 }
             } catch(e) { userGems = 50; }
 
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('mode-screen').style.display = 'flex';
             document.getElementById('welcome-msg').innerText = `أهلاً بك يا بطل الأدغال: ${currentUser}`;
-            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
+            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر المجانية: ${userGems}`;
         }
 
         function claimDailyBonus() {
@@ -490,60 +655,50 @@
             localStorage.setItem('lastDailyClaim_' + currentUser, today);
             userGems += 30;
             db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
-            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
-            showAchievement('🎁 حصلت على هدية اليوم: +30 جوهرة سحابية!');
+            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر المجانية: ${userGems}`;
+            showAchievement('🎁 حصلت على هدية اليوم المجانية: +30 جوهرة!');
             triggerCinematicExplosion();
         }
 
-        function openShopModal() {
+        function openQuestsModal() {
             document.getElementById('mode-screen').style.display = 'none';
-            document.getElementById('shop-modal').style.display = 'flex';
+            document.getElementById('quests-modal').style.display = 'flex';
         }
-
-        function closeShopModal() {
-            document.getElementById('shop-modal').style.display = 'none';
+        function closeQuestsModal() {
+            document.getElementById('quests-modal').style.display = 'none';
             document.getElementById('mode-screen').style.display = 'flex';
         }
-
-        async function buySkin(skinName, cost) {
-            if (userGems < cost) {
-                alert('❌ رصيدك من الجواهر غير كافٍ!');
-                return;
-            }
-            userGems -= cost;
-            unlockedSkins.push(skinName);
-            await db.collection("lordUsers").doc(currentUser).set({ gems: userGems, skins: unlockedSkins }, { merge: true });
-            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
-            showAchievement(`🎉 مبروك! تم فتح مظهر: ${skinName}`);
+        function claimQuest(questId) {
+            userGems += (questId === 1 ? 15 : 25);
+            db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
+            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر المجانية: ${userGems}`;
+            showAchievement('🎉 تم إنجاز المهمة واستلام الجواهر المجانية!');
             triggerCinematicExplosion();
         }
 
-        function toggleEnvironmentAtmosphere() {
-            isNightMode = !isNightMode;
-            document.body.classList.toggle('night-mode', isNightMode);
-            showAchievement(isNightMode ? '🌙 أجواء ليل الغابة الساحرة' : '☀️ شروق شمس الأدغال');
-        }
-
-        function sendReaction(emoji) {
-            showAchievement(`التفاعل العائلي: ${emoji} من ${currentUser}`);
-            triggerCinematicExplosion(window.innerWidth / 2, window.innerHeight / 2);
-        }
-
-        function startLudoGame(mode, count) {
-            gameMode = mode;
-            activePlayersCount = count;
-            currentTurn = 0;
-            pawns = {
-                0: [{pos: -1}, {pos: -1}],
-                1: [{pos: -1}, {pos: -1}],
-                2: [{pos: -1}, {pos: -1}],
-                3: [{pos: -1}, {pos: -1}]
-            };
+        async function openLeaderboardModal() {
             document.getElementById('mode-screen').style.display = 'none';
-            document.getElementById('ludo-screen').style.display = 'flex';
-            buildBoardGrid();
-            updateTurnUI();
-            showAchievement('🏆 انطلقت معركة لودو العائلية!');
+            document.getElementById('leaderboard-modal').style.display = 'flex';
+            let container = document.getElementById('leaderboard-container');
+            container.innerHTML = '<div class="leaderboard-item"><span>جاري تحميل الأبطال...</span></div>';
+            
+            try {
+                let snapshot = await db.collection("lordUsers").orderBy("gems", "desc").limit(5).get();
+                let html = '';
+                let rank = 1;
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    html += `<div class="leaderboard-item"><span>#${rank} ${doc.id}</span><span style="color: #f1c40f;">${data.gems || 0} 💎</span></div>`;
+                    rank++;
+                });
+                container.innerHTML = html || '<div class="leaderboard-item"><span>لا توجد بيانات بعد</span></div>';
+            } catch(e) {
+                container.innerHTML = '<div class="leaderboard-item"><span>تعذر جلب لوحة الشرف سحابياً</span></div>';
+            }
+        }
+        function closeLeaderboardModal() {
+            document.getElementById('leaderboard-modal').style.display = 'none';
+            document.getElementById('mode-screen').style.display = 'flex';
         }
 
         function openOnlineRoomModal() {
@@ -622,6 +777,45 @@
             document.getElementById('mode-screen').style.display = 'flex';
         }
 
+        function startLudoGame(mode, count) {
+            gameMode = mode;
+            activePlayersCount = count;
+            currentTurn = 0;
+            diceHasRolled = false;
+            pawns = {
+                0: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}],
+                1: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}],
+                2: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}],
+                3: [{pos: -1}, {pos: -1}, {pos: -1}, {pos: -1}]
+            };
+            document.getElementById('mode-screen').style.display = 'none';
+            document.getElementById('ludo-screen').style.display = 'flex';
+            buildBoardGrid();
+            updateTurnUI();
+            saveGameState();
+            showAchievement('🏆 انطلقت معركة لودو المجانية!');
+        }
+
+        function saveGameState() {
+            try {
+                let stateData = { pawns, currentTurn, gameMode, activePlayersCount };
+                localStorage.setItem('lord_saved_game_' + currentUser, JSON.stringify(stateData));
+            } catch(e) {}
+        }
+
+        function loadSavedGameState() {
+            try {
+                let saved = localStorage.getItem('lord_saved_game_' + currentUser);
+                if (saved) {
+                    let data = JSON.parse(saved);
+                    pawns = data.pawns;
+                    currentTurn = data.currentTurn;
+                    gameMode = data.gameMode;
+                    activePlayersCount = data.activeCount;
+                }
+            } catch(e) {}
+        }
+
         function buildBoardGrid() {
             const board = document.getElementById('ludo-board');
             board.innerHTML = '';
@@ -662,11 +856,13 @@
                     pawnEl.classList.add('pawn');
                     pawnEl.innerText = playersConfig[p].icon;
                     pawnEl.style.background = playersConfig[p].color;
+                    
+                    pawnEl.onclick = () => selectAndMovePawn(p, idx);
 
                     let targetCell;
                     if (pawnObj.pos === -1) {
-                        let baseRow = p === 0 ? 1 : (p === 1 ? 11 : (p === 2 ? 11 : 1));
-                        let baseCol = p === 0 ? (1 + idx) : (p === 1 ? 1 : (p === 2 ? 11 : 11));
+                        let baseRow = p === 0 ? (Math.floor(idx/2)*2 + 1) : (p === 1 ? (Math.floor(idx/2)*2 + 11) : (p === 2 ? (Math.floor(idx/2)*2 + 11) : (Math.floor(idx/2)*2 + 1)));
+                        let baseCol = p === 0 ? ((idx%2)*2 + 1) : (p === 1 ? ((idx%2)*2 + 1) : (p === 2 ? ((idx%2)*2 + 11) : ((idx%2)*2 + 11)));
                         targetCell = document.querySelector(`[data-row='${baseRow}'][data-col='${baseCol}']`);
                     } else {
                         let pathCoords = getPathCoordinates(p, pawnObj.pos);
@@ -695,53 +891,100 @@
         }
 
         function rollDice() {
+            if (isRolling || diceHasRolled) return;
+            isRolling = true;
+            const diceBox = document.getElementById('dice-btn');
+            diceBox.classList.add('rolling');
             playJungleSound('dice');
-            diceNumber = Math.floor(Math.random() * 6) + 1;
 
-            if (gameMode === 'family' && currentTurn === 1 && diceNumber <= 2) {
-                diceNumber += 3;
-                showAchievement('✨ مساعدة البطل الصغير الفورية!');
-            } else {
-                document.getElementById('status-text').innerText = `رمى البطل رقم ${diceNumber}!`;
-            }
+            let counter = 0;
+            let rollInterval = setInterval(() => {
+                let tempVal = Math.floor(Math.random() * 6) + 1;
+                document.getElementById('dice-val').innerText = tempVal;
+                counter++;
+                if (counter > 10) {
+                    clearInterval(rollInterval);
+                    diceBox.classList.remove('rolling');
+                    isRolling = false;
+                    diceHasRolled = true;
 
-            document.getElementById('dice-val').innerText = diceNumber;
-            executeMove(currentTurn, diceNumber);
+                    diceNumber = Math.floor(Math.random() * 6) + 1;
+
+                    if (gameMode === 'family' && currentTurn === 1 && diceNumber <= 2) {
+                        diceNumber += 3;
+                        showAchievement('✨ مساعدة البطل الصغير الفورية!');
+                    }
+
+                    document.getElementById('dice-val').innerText = diceNumber;
+                    document.getElementById('status-text').innerText = `رمى البطل رقم ${diceNumber}! اضغط على البيون للتحريك.`;
+
+                    if (gameMode === 'ai' && currentTurn === 1) {
+                        setTimeout(aiAutoPlay, 1000);
+                    }
+                }
+            }, 60);
         }
 
-        async function executeMove(playerIdx, steps) {
-            let pList = pawns[playerIdx];
-            let chosenIdx = 0;
-            for (let i = 0; i < pList.length; i++) {
-                if (pList[i].pos === -1 && (steps === 6 || (gameMode === 'family' && playerIdx === 1))) { chosenIdx = i; break; }
-                if (pList[i].pos !== -1) { chosenIdx = i; break; }
+        function selectAndMovePawn(playerIdx, pawnIdx) {
+            if (playerIdx !== currentTurn) {
+                showAchievement('⏳ ليس دورك الآن!');
+                return;
+            }
+            if (!diceHasRolled && gameMode !== 'ai') {
+                showAchievement('🎲 ارمِ النرد أولاً!');
+                return;
             }
 
-            if (pList[chosenIdx].pos === -1 && (steps === 6 || (gameMode === 'family' && playerIdx === 1))) {
-                pList[chosenIdx].pos = 0; 
-                triggerCinematicExplosion();
-            } else if (pList[chosenIdx].pos !== -1) {
-                pList[chosenIdx].pos += steps;
+            executeMove(playerIdx, pawnIdx, diceNumber);
+        }
+
+        async function executeMove(playerIdx, pawnIdx, steps) {
+            let pObj = pawns[playerIdx][pawnIdx];
+
+            if (pObj.pos === -1) {
+                if (steps === 6 || (gameMode === 'family' && playerIdx === 1)) {
+                    pObj.pos = 0;
+                    showAchievement('🎯 خرج البطل من القاعدة بنجاح!');
+                    triggerCinematicExplosion();
+                } else {
+                    showAchievement('❌ تحتاج إلى رمي رقم 6 للخروج من القاعدة!');
+                    return;
+                }
+            } else {
+                pObj.pos += steps;
                 
-                if (pList[chosenIdx].pos === mysteryBoxPosition) {
+                if (pObj.pos === mysteryBoxPosition) {
                     playJungleSound('mystery');
                     userGems += 20;
-                    showAchievement('🎁 كنز الأدغال! ربحت +20 جوهرة 💎');
+                    showAchievement('🎁 كنز الأدغال! ربحت +20 جوهرة مجانية 💎');
                     triggerCinematicExplosion();
                     try {
                         await db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
-                        document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
+                        document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر المجانية: ${userGems}`;
                     } catch(e) {}
                 }
 
-                if (junglePowerBoxes.includes(pList[chosenIdx].pos)) {
+                if (junglePowerBoxes.includes(pObj.pos)) {
                     playJungleSound('mystery');
-                    pList[chosenIdx].pos += 4;
+                    pObj.pos += 4;
                     showAchievement('🌿 قوى تارزان الخارقة دفعتك للأمام!');
                 }
 
-                if (pList[chosenIdx].pos >= 50) {
-                    pList[chosenIdx].pos = 50;
+                for (let op = 0; op < activePlayersCount; op++) {
+                    if (op === playerIdx) continue;
+                    for (let opi = 0; opi < pawns[op].length; opi++) {
+                        let enemyP = pawns[op][opi];
+                        if (enemyP.pos !== -1 && enemyP.pos === pObj.pos) {
+                            playJungleSound('eat');
+                            enemyP.pos = -1;
+                            showAchievement(`💥 تم أكل بيون ${playersConfig[op].name} وإعادته للقاعدة!`);
+                            triggerCinematicExplosion();
+                        }
+                    }
+                }
+
+                if (pObj.pos >= 50) {
+                    pObj.pos = 50;
                     triggerCinematicExplosion();
                     document.getElementById('victory-text').innerText = `فاز البطل الرائع: ${playersConfig[playerIdx].name} في مغامرة الأدغال!`;
                     document.getElementById('victory-modal').style.display = 'flex';
@@ -752,6 +995,8 @@
             }
 
             renderPawns();
+            diceHasRolled = false;
+            saveGameState();
 
             if (gameMode === 'online' && onlineRoomId) {
                 db.collection("lordLudoRooms").doc(onlineRoomId).update({
@@ -760,15 +1005,25 @@
                 });
             }
 
-            setTimeout(() => {
-                currentTurn = (currentTurn + 1) % activePlayersCount;
-                updateTurnUI();
+            currentTurn = (currentTurn + 1) % activePlayersCount;
+            updateTurnUI();
+        }
 
-                if (gameMode === 'ai' && currentTurn === 1) {
-                    document.getElementById('status-text').innerText = "دور شيتا (يفكر بذكاء)...";
-                    setTimeout(rollDice, 1300);
-                }
-            }, 900);
+        function aiAutoPlay() {
+            let pList = pawns[1];
+            let validIdx = -1;
+            for (let i = 0; i < pList.length; i++) {
+                if (pList[i].pos === -1 && diceNumber === 6) { validIdx = i; break; }
+                if (pList[i].pos !== -1) { validIdx = i; break; }
+            }
+            if (validIdx !== -1) {
+                executeMove(1, validIdx, diceNumber);
+            } else {
+                showAchievement('🤖 شيتا لم يجد حركة ممكنة، ينتقل الدور.');
+                diceHasRolled = false;
+                currentTurn = 0;
+                updateTurnUI();
+            }
         }
 
         function closeVictoryModal() {
