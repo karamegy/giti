@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة الألعاب الفضائية - الإصدار العائلي الشامل (مجاني بالكامل)</title>
+    <title>مكتبة الألعاب الفضائية - الإصدار العائلي الشامل (مع لوحة تحكم المدير)</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0b0c2a">
 
@@ -572,6 +572,18 @@
             margin-top: 4px;
             border: 1px solid #00f3ff;
         }
+        
+        .admin-user-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,243,255,0.2);
+            padding: 6px 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.75rem;
+        }
     </style>
 </head>
 <body>
@@ -595,7 +607,7 @@
             <div class="cinema-radar-box"></div>
             <h1>🌌 مكتبة الألعاب الفضائية (عائلي وآمن)</h1>
             <p>أدخل اسمك للانطلاق في مغامرات الفضاء (للأعمار من 3 إلى 30 سنة):</p>
-            <input type="text" id="username-input" class="input-field" placeholder="اسم الطيار..." maxlength="15">
+            <input type="text" id="username-input" class="input-field" placeholder="اسم الطيار (أدخل admin للمدير)..." maxlength="15">
             <input type="password" id="password-input" class="input-field" placeholder="الرقم السري (اختياري)...">
             <button class="btn" onclick="loginPlayer()">🚀 ابدأ اللعب فوراً</button>
             <button class="btn btn-register" onclick="registerNewPlayer()">✨ تسجيل حساب جديد</button>
@@ -657,7 +669,20 @@
                 </div>
             </div>
 
-            <!-- القسم الرابع: الدعم الفني والأمان -->
+            <!-- القسم الرابع: لوحة تحكم المدير (تظهر فقط للأدمين) -->
+            <div id="sec-admin" class="section-container">
+                <p style="color: #ff3838; font-size: 0.8rem; margin: 2px 0 8px 0;">🛡️ لوحة إدارة الشات والحسابات (Admin):</p>
+                <div class="info-card" style="border-color: #ff3838; background: rgba(255, 56, 56, 0.05); text-align: right;">
+                    <b style="color: #ff3838; font-size: 0.8rem;">⚙️ أدوات الحظر والتحكم:</b><br>
+                    <span style="font-size: 0.7rem; color: #fff;">• يمكنك هنا حظر المستخدمين المخالفين من الشات والتطبيق نهائياً عبر الـ ID والحساب.</span>
+                </div>
+                <div id="admin-users-list" style="margin-top: 10px; max-height: 250px; overflow-y: auto;">
+                    <p style="color: #a4b0be; font-size: 0.75rem;">جاري جلب قائمة المستخدمين...</p>
+                </div>
+                <button class="btn btn-red" style="margin-top: 10px;" onclick="loadAdminUsersList()">🔄 تحديث قائمة المستخدمين</button>
+            </div>
+
+            <!-- القسم الخامس: الدعم الفني والأمان -->
             <div id="sec-support" class="section-container">
                 <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وأمان العائلة:</p>
                 
@@ -685,6 +710,10 @@
             <button class="nav-item" onclick="switchSection('sec-chat', this)">
                 <span class="nav-icon">💬</span>
                 <span>الشات</span>
+            </button>
+            <button class="nav-item" id="nav-admin-btn" style="display: none;" onclick="switchSection('sec-admin', this); loadAdminUsersList();">
+                <span class="nav-icon">🛡️</span>
+                <span>المدير</span>
             </button>
             <button class="nav-item" onclick="switchSection('sec-support', this)">
                 <span class="nav-icon">🛠️</span>
@@ -749,13 +778,13 @@
 
     <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyDn-rNJ2ak3I0DdfzTZmXKjePDdgxhfyIY",
-            authDomain: "n2la-642d3.firebaseapp.com",
-            projectId: "n2la-642d3",
-            storageBucket: "n2la-642d3.firebasestorage.app",
-            messagingSenderId: "1085749997466",
-            appId: "1:1085749997466:web:13e5535dc6d2312397d423",
-            measurementId: "G-KH4ZYFB8LC"
+            apiKey: "AIzaSyAekw5iD-7t-BeRbrVBykXNWqtY0C7y7ug",
+            authDomain: "tarazan-284f3.firebaseapp.com",
+            projectId: "tarazan-284f3",
+            storageBucket: "tarazan-284f3.firebasestorage.app",
+            messagingSenderId: "382519802983",
+            appId: "1:382519802983:web:c5826a8cdba73335a528c2",
+            measurementId: "G-KCRSY63RTC"
         };
 
         if (!firebase.apps.length) {
@@ -792,6 +821,8 @@
         const liveGemsDisplay = document.getElementById('live-gems');
         const chatMessagesBox = document.getElementById('chat-messages-box');
         const chatTextInput = document.getElementById('chat-text-input');
+        const navAdminBtn = document.getElementById('nav-admin-btn');
+        const adminUsersList = document.getElementById('admin-users-list');
 
         const fireBtn = document.getElementById('fire-btn');
 
@@ -800,10 +831,12 @@
             name: '',
             highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
             ship: '🛸',
-            gems: 0
+            gems: 0,
+            isBanned: false,
+            isMuted: false,
+            isAdmin: false
         };
 
-        // تفعيل التحكم الحر باللمس المباشر وسحب الإصبع أو الماوس على الشاشة
         let isTouchingScreen = false;
         
         gameContainer.addEventListener('touchstart', (e) => {
@@ -869,12 +902,20 @@
 
         if (currentPlayer) {
             loadPlayerDataFromCloud(currentPlayer, (data) => {
-                if (data) currentPilotData = data;
+                if (data) {
+                    if (data.isBanned) {
+                        alert('❌ حسابك محظور نهائياً من قبل الإدارة.');
+                        logoutPlayer();
+                        return;
+                    }
+                    currentPilotData = data;
+                }
                 updateUserInterfaceProfile();
                 loginScreen.style.display = 'none';
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                checkAdminPermissions();
                 initChatListener();
             });
         }
@@ -885,6 +926,14 @@
             
             document.getElementById(sectionId).classList.add('active-section');
             btnElement.classList.add('active');
+        }
+
+        function checkAdminPermissions() {
+            if (currentPlayer === 'admin' || currentPilotData.isAdmin) {
+                navAdminBtn.style.display = 'flex';
+            } else {
+                navAdminBtn.style.display = 'none';
+            }
         }
 
         async function socialLogin(providerType) {
@@ -901,6 +950,11 @@
                 const docRef = db.collection("spacePilotsV10").doc(name);
                 let doc = await docRef.get();
 
+                if (doc.exists && doc.data().isBanned) {
+                    alert('❌ هذا الحساب محظور من دخول التطبيق.');
+                    return;
+                }
+
                 if (!doc.exists) {
                     currentPilotData = {
                         name: name,
@@ -908,6 +962,9 @@
                         highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                         ship: '🛸',
                         gems: 0,
+                        isBanned: false,
+                        isMuted: false,
+                        isAdmin: (name === 'admin'),
                         lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                     };
                     await docRef.set(currentPilotData);
@@ -925,6 +982,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                checkAdminPermissions();
                 initChatListener();
             } catch (error) {
                 alert('❌ تعذر تسجيل الدخول عبر حساب التواصل: ' + error.message);
@@ -940,19 +998,28 @@
             const docRef = db.collection("spacePilotsV10").doc(name);
             try {
                 let doc = await docRef.get();
+                if (doc.exists && doc.data().isBanned) {
+                    alert('❌ حسابك محظور نهائياً من قبل الإدارة.');
+                    return;
+                }
+
                 if (!doc.exists) {
                     currentPilotData = {
                         name: name,
                         password: pass,
                         highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                         ship: '🛸',
-                        gems: 0
+                        gems: 0,
+                        isBanned: false,
+                        isMuted: false,
+                        isAdmin: (name === 'admin')
                     };
                     await docRef.set(currentPilotData);
                 } else {
                     currentPilotData = doc.data();
                     currentPilotData.name = name;
                     if (currentPilotData.gems === undefined) currentPilotData.gems = 0;
+                    if (name === 'admin') currentPilotData.isAdmin = true;
                 }
 
                 currentPlayer = name;
@@ -963,9 +1030,9 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                checkAdminPermissions();
                 initChatListener();
             } catch (error) {
-                // وضع العمل المحلي الاحتياطي عند عدم توفر اتصال سحابي فوري
                 currentPlayer = name;
                 localStorage.setItem('currentSpacePilotV10', currentPlayer);
                 updateUserInterfaceProfile();
@@ -973,6 +1040,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                checkAdminPermissions();
             }
         }
 
@@ -987,12 +1055,21 @@
 
             const docRef = db.collection("spacePilotsV10").doc(name);
             try {
+                let doc = await docRef.get();
+                if (doc.exists && doc.data().isBanned) {
+                    alert('❌ هذا الاسم محظور ولا يمكن التسجيل به.');
+                    return;
+                }
+
                 currentPilotData = {
                     name: name,
                     password: pass,
                     highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                     ship: '🛸',
                     gems: 0,
+                    isBanned: false,
+                    isMuted: false,
+                    isAdmin: (name === 'admin'),
                     lastLogin: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
@@ -1006,6 +1083,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                checkAdminPermissions();
                 initChatListener();
             } catch (error) {
                 currentPlayer = name;
@@ -1015,6 +1093,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                checkAdminPermissions();
             }
         }
 
@@ -1038,7 +1117,7 @@
 
             profileAvatarIcon.innerText = selectedShipIcon;
             profileDisplayName.innerText = currentPlayer;
-            profileDisplayRank.innerText = 'متاح للجميع (3-30)';
+            profileDisplayRank.innerText = (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'متاح للجميع (3-30)');
         }
 
         function logoutPlayer() {
@@ -1047,6 +1126,7 @@
             mainMenu.style.display = 'none';
             bottomNavBar.style.display = 'none';
             topProfileBadge.style.display = 'none';
+            navAdminBtn.style.display = 'none';
             loginScreen.style.display = 'flex';
         }
 
@@ -1091,45 +1171,49 @@
         }
 
         async function sendChatMessage(customImgUrl = '') {
+            if (currentPilotData.isMuted || currentPilotData.isBanned) {
+                alert('❌ تم حظرك أو كتمك من إرسال الرسائل في الشات بواسطة الإدارة.');
+                return;
+            }
+
             let msg = chatTextInput.value.trim();
             if (!msg && !customImgUrl) return;
-
-            let chatObj = {
-                sender: currentPlayer,
-                rank: 'بطل الفضاء',
-                message: msg,
-                image: customImgUrl || '',
-                timestamp: new Date().toISOString()
-            };
-
-            let localChats = JSON.parse(localStorage.getItem('spaceLocalChatsV10') || '[]');
-            localChats.push(chatObj);
-            if (localChats.length > 50) localChats.shift();
-            localStorage.setItem('spaceLocalChatsV10', JSON.stringify(localChats));
 
             try {
                 await db.collection("spaceChatV10").add({
                     sender: currentPlayer,
-                    rank: 'بطل الفضاء',
+                    rank: (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'بطل الفضاء'),
                     message: msg,
                     image: customImgUrl || '',
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-            } catch (e) {}
+            } catch (e) {
+                // بديل محلي عند انقطاع الاتصال السحابي
+                let localChats = JSON.parse(localStorage.getItem('spaceLocalChatsV10') || '[]');
+                localChats.push({
+                    sender: currentPlayer,
+                    rank: (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'بطل الفضاء'),
+                    message: msg,
+                    image: customImgUrl || '',
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('spaceLocalChatsV10', JSON.stringify(localChats));
+                renderChatMessages();
+            }
 
             chatTextInput.value = '';
-            renderChatMessages();
         }
 
         function initChatListener() {
-            renderChatMessages();
-            db.collection("spaceChatV10").orderBy("timestamp", "asc").limit(40).onSnapshot(snapshot => {
+            db.collection("spaceChatV10").orderBy("timestamp", "asc").limit(50).onSnapshot(snapshot => {
                 let serverChats = [];
-                snapshot.forEach(doc => serverChats.push(doc.data()));
-                if (serverChats.length > 0) {
-                    renderCloudAndLocalChats(serverChats);
-                }
-            }, () => {});
+                snapshot.forEach(doc => {
+                    serverChats.push({ id: doc.id, ...doc.data() });
+                });
+                renderCloudAndLocalChats(serverChats);
+            }, () => {
+                renderChatMessages();
+            });
         }
 
         function renderChatMessages() {
@@ -1141,10 +1225,12 @@
             let html = '';
             chatsArray.forEach(c => {
                 let isMe = (c.sender === currentPlayer);
+                let isAdminUser = (currentPlayer === 'admin' || currentPilotData.isAdmin);
                 html += `
                     <div class="chat-msg-item ${isMe ? 'my-msg' : ''}">
                         <div style="display:flex; justify-content:space-between; margin-bottom:2px; font-size:0.65rem; color:#00f3ff;">
                             <b>${c.sender} (${c.rank || 'عضو'})</b>
+                            ${isAdminUser ? `<button onclick="deleteChatMessage('${c.id || ''}')" style="background:#ff3838; border:none; color:white; border-radius:4px; padding:1px 5px; font-size:0.6rem; cursor:pointer;">حذف</button>` : ''}
                         </div>
                         <div>${c.message || ''}</div>
                         ${c.image ? `<img src="${c.image}" class="chat-snapshot-img">` : ''}
@@ -1153,6 +1239,54 @@
             });
             chatMessagesBox.innerHTML = html || '<div style="color:#a4b0be; text-align:center;">لا توجد رسائل بعد... كن أول المتحدثين!</div>';
             chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
+        }
+
+        async function deleteChatMessage(msgId) {
+            if (!msgId) return;
+            try {
+                await db.collection("spaceChatV10").doc(msgId).delete();
+                alert('🗑️ تم حذف الرسالة بنجاح.');
+            } catch (e) {
+                alert('❌ تعذر حذف الرسالة.');
+            }
+        }
+
+        async function loadAdminUsersList() {
+            if (currentPlayer !== 'admin' && !currentPilotData.isAdmin) return;
+            adminUsersList.innerHTML = '<p style="color:#00f3ff; font-size:0.75rem;">جاري تحميل القائمة...</p>';
+            try {
+                let snapshot = await db.collection("spacePilotsV10").get();
+                let html = '';
+                snapshot.forEach(doc => {
+                    let u = doc.data();
+                    html += `
+                        <div class="admin-user-row">
+                            <span><b>${u.name}</b> ${u.isBanned ? '(محظور ❌)' : '(نشط ✅)'}</span>
+                            <div>
+                                ${u.isBanned ? 
+                                  `<button class="btn" style="width:auto; padding:3px 8px; font-size:0.65rem; background:#2ecc71;" onclick="setPlayerBanStatus('${u.name}', false)">إلغاء الحظر</button>` : 
+                                  `<button class="btn btn-red" style="width:auto; padding:3px 8px; font-size:0.65rem;" onclick="setPlayerBanStatus('${u.name}', true)">باند / حظر</button>`
+                                }
+                            </div>
+                        </div>
+                    `;
+                });
+                adminUsersList.innerHTML = html || '<p style="color:#a4b0be; font-size:0.75rem;">لا توجد حسابات مسجلة.</p>';
+            } catch (e) {
+                adminUsersList.innerHTML = '<p style="color:#ff3838; font-size:0.75rem;">تعذر جلب المستخدمين.</p>';
+            }
+        }
+
+        async function setPlayerBanStatus(username, status) {
+            try {
+                await db.collection("spacePilotsV10").doc(username).update({
+                    isBanned: status
+                });
+                alert(`✅ تم تحديث حالة الحظر للمستخدم: ${username}`);
+                loadAdminUsersList();
+            } catch (e) {
+                alert('❌ حدث خطأ أثناء تنفيذ الحظر.');
+            }
         }
 
         function takeGameSnapshot() {
@@ -1171,27 +1305,15 @@
 
             let dataUrl = canvas.toDataURL();
             switchSection('sec-chat', document.querySelectorAll('.nav-item')[2]);
-            sendChatMessage('📸 لقطة شاشة حصرية من مغامرتي الفضائية:');
+            sendChatMessage();
             sendCustomImageToChat(dataUrl);
         }
 
         async function sendCustomImageToChat(imgUrl) {
-            let chatObj = {
-                sender: currentPlayer,
-                rank: 'بطل الفضاء',
-                message: 'لقطة شاشة من داخل اللعبة 🎮',
-                image: imgUrl,
-                timestamp: new Date().toISOString()
-            };
-            let localChats = JSON.parse(localStorage.getItem('spaceLocalChatsV10') || '[]');
-            localChats.push(chatObj);
-            localStorage.setItem('spaceLocalChatsV10', JSON.stringify(localChats));
-            renderChatMessages();
-
             try {
                 await db.collection("spaceChatV10").add({
                     sender: currentPlayer,
-                    rank: 'بطل الفضاء',
+                    rank: (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'بطل الفضاء'),
                     message: 'لقطة شاشة من داخل اللعبة 🎮',
                     image: imgUrl,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
@@ -1282,6 +1404,7 @@
             mainMenu.style.display = 'flex';
             bottomNavBar.style.display = 'flex';
             topProfileBadge.style.display = 'flex';
+            checkAdminPermissions();
             updateUserInterfaceProfile();
         }
 
@@ -1321,9 +1444,9 @@
 
         function startCurrentGame() {
             score = 0;
-            lives = 4; // رصيد حياتي كريم ومناسب لجميع الأعمار لضمان متعة اللعب
+            lives = 4;
             level = 1;
-            hasShield = true; // درع مجاني بداية اللعبة لكل اللاعبين
+            hasShield = true;
             isAutoFire = false;
             fireBtn.classList.remove('auto-fire-active');
             fireBtn.innerText = '⚡ إطلاق النار';
@@ -1436,7 +1559,7 @@
                 if (itemRect.left < playerRect.right && itemRect.right > playerRect.left && itemRect.top < playerRect.bottom && itemRect.bottom > playerRect.top) {
                     let type = item.dataset.type;
                     if (type === 'good') {
-                        score += Math.round(parseInt(item.dataset.val || 15) * 2); // مكافأة نقاط مضاعفة مجانية للجميع
+                        score += Math.round(parseInt(item.dataset.val || 15) * 2);
                         scoreDisplay.innerText = score;
                         if (score >= level * 100) { level++; gameSpeed += 0.4; }
                     } else if (type === 'heart') {
@@ -1444,7 +1567,7 @@
                     } else if (type === 'shield') {
                         hasShield = true; player.classList.add('shield-active');
                     } else if (type === 'gem') {
-                        currentPilotData.gems = (currentPilotData.gems || 0) + 10; // جواهر مجانية فورية للجميع
+                        currentPilotData.gems = (currentPilotData.gems || 0) + 10;
                         liveGemsDisplay.innerText = currentPilotData.gems;
                         savePlayerDataToCloud();
                     } else {
@@ -1512,25 +1635,5 @@
           });
         }
     </script>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAekw5iD-7t-BeRbrVBykXNWqtY0C7y7ug",
-    authDomain: "tarazan-284f3.firebaseapp.com",
-    projectId: "tarazan-284f3",
-    storageBucket: "tarazan-284f3.firebasestorage.app",
-    messagingSenderId: "382519802983",
-    appId: "1:382519802983:web:c5826a8cdba73335a528c2",
-    measurementId: "G-KCRSY63RTC"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-  
-  console.log("Firebase connected successfully!");
-</script>
-
 </body>
 </html>
