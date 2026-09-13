@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lord - لودو أساطير تارزان السينمائية العائلية</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0f2b1d">
+
+    <!-- استدعاء مكتبات Firebase السحابية -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle at center, #0f2b1d 0%, #030a06 100%);
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            user-select: none;
+            touch-action: none;
+            color: white;
+            transition: background 1s ease;
+        }
+
+        body.night-mode {
+            background: radial-gradient(circle at center, #09131a 0%, #010406 100%);
+        }
+
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 20, 12, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            text-align: center;
+            padding: 15px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 480px;
+            margin: auto;
+            background: rgba(10, 30, 20, 0.98);
+            box-shadow: 0 0 50px rgba(46, 204, 113, 0.4);
+            overflow: hidden;
+        }
+
+        .jungle-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(46,204,113,0.12) 0%, transparent 80%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        h1 {
+            font-size: 1.3rem;
+            color: #2ecc71;
+            text-shadow: 0 0 15px rgba(46, 204, 113, 0.8);
+            margin-bottom: 5px;
+        }
+
+        p {
+            font-size: 0.78rem;
+            color: #a3e4d7;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
+            margin: 5px auto;
+            width: 90%;
+            max-width: 280px;
+            display: block;
+            transition: transform 0.1s;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn-orange { background: linear-gradient(45deg, #e67e22, #d35400); box-shadow: 0 0 20px rgba(230, 126, 34, 0.6); }
+        .btn-purple { background: linear-gradient(45deg, #8e44ad, #6c3483); box-shadow: 0 0 20px rgba(142, 68, 173, 0.6); }
+        .btn-blue { background: linear-gradient(45deg, #3498db, #2980b9); box-shadow: 0 0 20px rgba(52, 152, 219, 0.6); }
+        .btn-gold { background: linear-gradient(45deg, #f1c40f, #d4ac0d); color: #000; box-shadow: 0 0 20px rgba(241, 196, 15, 0.6); }
+
+        .input-field {
+            background: rgba(255,255,255,0.08);
+            border: 2px solid rgba(46, 204, 113, 0.5);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            width: 85%;
+            max-width: 260px;
+            margin-bottom: 8px;
+            text-align: center;
+            outline: none;
+        }
+
+        /* لودو بورد متطور سينمائي */
+        #ludo-board {
+            position: relative;
+            width: 330px;
+            height: 330px;
+            background: #112d1e;
+            border: 4px solid #2ecc71;
+            border-radius: 12px;
+            margin: 6px auto;
+            display: grid;
+            grid-template-columns: repeat(15, 1fr);
+            grid-template-rows: repeat(15, 1fr);
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            z-index: 5;
+        }
+
+        .ludo-cell {
+            border: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            position: relative;
+        }
+
+        .base-red { background: rgba(231, 76, 60, 0.35); }
+        .base-green { background: rgba(46, 204, 113, 0.35); }
+        .base-blue { background: rgba(52, 152, 219, 0.35); }
+        .base-yellow { background: rgba(241, 196, 15, 0.35); }
+        .power-box { background: rgba(155, 89, 182, 0.5); border: 1px dashed #e74c3c; }
+        .mystery-box { background: rgba(241, 196, 15, 0.6); animation: pulseBox 1.2s infinite alternate; }
+
+        @keyframes pulseBox {
+            0% { transform: scale(1); box-shadow: 0 0 5px #f1c40f; }
+            100% { transform: scale(1.15); box-shadow: 0 0 15px #f1c40f; }
+        }
+
+        .pawn {
+            width: 17px;
+            height: 17px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.55rem;
+            cursor: pointer;
+            box-shadow: 0 0 8px white;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+
+        #ui-bar {
+            position: absolute;
+            top: 8px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 15;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .dice-box {
+            background: rgba(0,0,0,0.6);
+            border: 2px solid #2ecc71;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(46,204,113,0.5);
+        }
+        
+        .gem-badge {
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid #3498db;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            color: #3498db;
+            margin-bottom: 8px;
+        }
+
+        /* شريط التفاعلات والإيموجي السريع */
+        .emoji-bar {
+            display: flex;
+            gap: 6px;
+            background: rgba(0,0,0,0.5);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(46,204,113,0.4);
+            margin-top: 4px;
+            z-index: 15;
+        }
+        .emoji-btn {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .emoji-btn:active { transform: scale(1.3); }
+
+        /* نافذة الإنجازات والأوسمة العائلية المنبثقة */
+        #achievement-toast {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50px);
+            background: linear-gradient(45deg, #f1c40f, #e67e22);
+            color: #000;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(241,196,15,0.8);
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+        }
+        #achievement-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* طبقة الجسيمات السينمائية */
+        #particle-canvas {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <div class="jungle-bg"></div>
+        <canvas id="particle-canvas"></canvas>
+        <div id="achievement-toast">🏆 إنجاز عائلي جديد!</div>
+
+        <!-- 1. شاشة الدخول ومزامنة الجلسة من الـ Index -->
+        <div id="login-screen" class="screen">
+            <h1>🦁 lord - لودو أساطير تارزان</h1>
+            <p>مزامنة حساب البطل وجلسة الأدغال السحابية:</p>
+            <input type="text" id="username-input" class="input-field" placeholder="اسم بطل الأدغال..." maxlength="15">
+            <button class="btn" onclick="loginUser()">🌿 دخول الأدغال السحابي</button>
+        </div>
+
+        <!-- 2. شاشة اختيار وضع اللعب والعائلة -->
+        <div id="mode-screen" class="screen" style="display: none;">
+            <h1>🌴 اختر نمط التحدي السينمائي (lord)</h1>
+            <div class="gem-badge" id="user-gems-display">💎 رصيد الجواهر: 0</div>
+            <p id="welcome-msg" style="color: #2ecc71; font-weight: bold;"></p>
+            <button class="btn btn-gold" onclick="startLudoGame('family', 2)">👨‍👩‍👧‍👦 التحدي العائلي المطور (مساعدات الصغار)</button>
+            <button class="btn" onclick="startLudoGame('ai', 2)">🤖 اللعب مع ذكاء شيتا السينمائي</button>
+            <button class="btn btn-blue" onclick="startLudoGame('local', 2)">👥 اللعب الثنائي (كبار وصغار)</button>
+            <button class="btn btn-orange" onclick="startLudoGame('local', 3)">🏕️ اللعب الثلاثي للأدغال</button>
+            <button class="btn btn-purple" onclick="startLudoGame('local', 4)">👑 اللعب الرباعي العائلي الكامل</button>
+            <button class="btn" style="background: linear-gradient(45deg, #e74c3c, #c0392b);" onclick="openOnlineRoomModal()">🌐 اللعب السحابي الجماعي (Online Rooms)</button>
+            <button class="btn btn-blue" style="background: rgba(255,255,255,0.1); font-size: 0.7rem; padding: 6px;" onclick="toggleEnvironmentAtmosphere()">🌙/☀️ تبديل أجواء الأدغال (ليل ونهار)</button>
+        </div>
+
+        <!-- نافذة الغرف السحابية -->
+        <div id="online-modal" class="screen" style="display: none; background: rgba(3,15,8,0.99);">
+            <h1>🌐 غرفة الأدغال السحابية المتزامنة</h1>
+            <input type="text" id="room-code-input" class="input-field" placeholder="أدخل كود الغرفة السحابية...">
+            <button class="btn" onclick="joinOnlineRoom()">انضمام فوري</button>
+            <button class="btn btn-orange" onclick="createOnlineRoom()">إنشاء غرفة جديدة</button>
+            <button class="btn btn-blue" onclick="closeOnlineModal()">العودة للقائمة</button>
+        </div>
+
+        <!-- 3. شاشة اللعب التفاعلية للودو مع الميزات الفائقة -->
+        <div id="ludo-screen" class="screen" style="display: none; justify-content: flex-start; padding-top: 32px;">
+            <div id="ui-bar">
+                <span id="turn-indicator" style="color: #f1c40f;">دور اللاعب: 🦁 تارزان</span>
+                <button class="btn" style="width: auto; padding: 3px 8px; margin:0;" onclick="returnToMenu()">🏠 القائمة</button>
+            </div>
+
+            <div id="ludo-board"></div>
+
+            <!-- شريط الإيموجي والتفاعلات الحية العائلية -->
+            <div class="emoji-bar">
+                <button class="emoji-btn" onclick="sendReaction('🦁')">🦁</button>
+                <button class="emoji-btn" onclick="sendReaction('🦍')">🦍</button>
+                <button class="emoji-btn" onclick="sendReaction('🍌')">🍌</button>
+                <button class="emoji-btn" onclick="sendReaction('🔥')">🔥</button>
+                <button class="emoji-btn" onclick="sendReaction('🏆')">🏆</button>
+            </div>
+
+            <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px; z-index: 15;">
+                <div class="dice-box" id="dice-btn" onclick="rollDice()">🎲 <span id="dice-val">6</span></div>
+                <div style="font-size: 0.7rem; text-align: right;">
+                    <span id="status-text" style="color: #2ecc71;">اضغط النرد للرمي! (صندوق الكنوز 🎁)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAekw5iD-7t-BeRbrVBykXNWqtY0C7y7ug",
+            authDomain: "tarazan-284f3.firebaseapp.com",
+            projectId: "tarazan-284f3",
+            storageBucket: "tarazan-284f3.firebasestorage.app",
+            messagingSenderId: "382519802983",
+            appId: "1:382519802983:web:c5826a8cdba73335a528c2",
+            measurementId: "G-KCRSY63RTC"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // استرجاع أو مزامنة جلسة الدخول من الـ Index / localStorage
+        let currentUser = localStorage.getItem('lordTarzanUser') || localStorage.getItem('tarzanLudoUser') || '';
+        let userGems = 50;
+        let gameMode = 'local'; 
+        let currentTurn = 0; 
+        let diceNumber = 6;
+        let activePlayersCount = 2;
+        let onlineRoomId = '';
+        let isNightMode = false;
+
+        // نظام الجسيمات السينمائية للبهجة عند الفوز أو الكنوز
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function triggerCinematicExplosion(x, y) {
+            for (let i = 0; i < 40; i++) {
+                particles.push({
+                    x: x || canvas.width / 2,
+                    y: y || canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    color: ['#f1c40f', '#2ecc71', '#e74c3c', '#3498db'][Math.floor(Math.random() * 4)],
+                    life: 40
+                });
+            }
+        }
+
+        function updateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                if (p.life <= 0) particles.splice(index, 1);
+            });
+            requestAnimationFrame(updateParticles);
+        }
+        updateParticles();
+
+        function showAchievement(msg) {
+            const toast = document.getElementById('achievement-toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        let audioCtx = null;
+        function playJungleSound(type) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = audioCtx.createOscillator();
+                let gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'dice') {
+                    osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(600, audioCtx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.15);
+                } else if (type === 'mystery') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.4);
+                    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+                    osc.start(); osc.stop(audioCtx.currentTime + 0.4);
+                }
+            } catch(e) {}
+        }
+
+        const playersConfig = [
+            { id: 0, name: 'تارزان (الكبير/الأب)', icon: '🦁', color: '#e74c3c' },
+            { id: 1, name: 'جين (الصغير/البطل)', icon: '🦍', color: '#2ecc71' },
+            { id: 2, name: 'شيتا', icon: '🐆', color: '#f1c40f' },
+            { id: 3, name: 'تاوكا', icon: '🦅', color: '#3498db' }
+        ];
+
+        let pawns = {
+            0: [{pos: -1}, {pos: -1}],
+            1: [{pos: -1}, {pos: -1}],
+            2: [{pos: -1}, {pos: -1}],
+            3: [{pos: -1}, {pos: -1}]
+        };
+
+        const junglePowerBoxes = [12, 24, 38];
+        const mysteryBoxPosition = 18; // صندوق الكنوز السحري العشوائي
+
+        if (currentUser) {
+            fetchUserData();
+        }
+
+        function loginUser() {
+            let name = document.getElementById('username-input').value.trim();
+            if (!name) { alert('الرجاء إدخال اسم بطل الأدغال!'); return; }
+            currentUser = name;
+            localStorage.setItem('lordTarzanUser', currentUser);
+            fetchUserData();
+        }
+
+        async function fetchUserData() {
+            try {
+                let doc = await db.collection("lordUsers").doc(currentUser).get();
+                if (doc.exists) {
+                    userGems = doc.data().gems || 50;
+                } else {
+                    userGems = 50;
+                    await db.collection("lordUsers").doc(currentUser).set({ gems: 50 });
+                }
+            } catch(e) { userGems = 50; }
+
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('mode-screen').style.display = 'flex';
+            document.getElementById('welcome-msg').innerText = `أهلاً بك يا بطل الأدغال: ${currentUser}`;
+            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
+        }
+
+        function toggleEnvironmentAtmosphere() {
+            isNightMode = !isNightMode;
+            document.body.classList.toggle('night-mode', isNightMode);
+            showAchievement(isNightMode ? '🌙 تم تفعيل أجواء ليل الغابة الساحرة' : '☀️ تم تفعيل شروق شمس الأدغال');
+        }
+
+        function sendReaction(emoji) {
+            showAchievement(`التفاعل العائلي: ${emoji} من ${currentUser}`);
+            triggerCinematicExplosion(window.innerWidth / 2, window.innerHeight / 2);
+        }
+
+        function startLudoGame(mode, count) {
+            gameMode = mode;
+            activePlayersCount = count;
+            currentTurn = 0;
+            document.getElementById('mode-screen').style.display = 'none';
+            document.getElementById('ludo-screen').style.display = 'flex';
+            buildBoardGrid();
+            updateTurnUI();
+            showAchievement('🏆 بدأت مغامرة العائلة السينمائية!');
+        }
+
+        function openOnlineRoomModal() {
+            document.getElementById('mode-screen').style.display = 'none';
+            document.getElementById('online-modal').style.display = 'flex';
+        }
+
+        function closeOnlineModal() {
+            document.getElementById('online-modal').style.display = 'none';
+            document.getElementById('mode-screen').style.display = 'flex';
+        }
+
+        async function createOnlineRoom() {
+            let code = 'lord_' + Math.floor(Math.random() * 9000 + 1000);
+            onlineRoomId = code;
+            try {
+                await db.collection("lordLudoRooms").doc(code).set({
+                    host: currentUser,
+                    currentTurn: 0,
+                    activeCount: 2,
+                    pawns: JSON.stringify(pawns),
+                    lastAction: 'تم إنشاء الغرفة بواسطة ' + currentUser
+                });
+                alert('✨ كود الغرفة السحابية المتزامنة: ' + code);
+                gameMode = 'online';
+                activePlayersCount = 2;
+                document.getElementById('online-modal').style.display = 'none';
+                document.getElementById('ludo-screen').style.display = 'flex';
+                buildBoardGrid();
+                listenToOnlineRoom();
+            } catch(e) {
+                alert('تعذر إنشاء الغرفة سحابياً.');
+            }
+        }
+
+        async function joinOnlineRoom() {
+            let code = document.getElementById('room-code-input').value.trim();
+            if (!code) { alert('أدخل كود الغرفة الصحيح!'); return; }
+            try {
+                let doc = await db.collection("lordLudoRooms").doc(code).get();
+                if (doc.exists) {
+                    onlineRoomId = code;
+                    gameMode = 'online';
+                    let data = doc.data();
+                    pawns = JSON.parse(data.pawns);
+                    activePlayersCount = data.activeCount;
+                    currentTurn = data.currentTurn;
+                    document.getElementById('online-modal').style.display = 'none';
+                    document.getElementById('ludo-screen').style.display = 'flex';
+                    buildBoardGrid();
+                    listenToOnlineRoom();
+                    alert('🎉 انضممت بنجاح للغرفة السحابية!');
+                } else {
+                    alert('❌ الغرفة غير موجودة.');
+                }
+            } catch(e) {
+                alert('خطأ في الاتصال بالسحابة.');
+            }
+        }
+
+        function listenToOnlineRoom() {
+            if (!onlineRoomId) return;
+            db.collection("lordLudoRooms").doc(onlineRoomId).onSnapshot(doc => {
+                if (doc.exists) {
+                    let data = doc.data();
+                    pawns = JSON.parse(data.pawns);
+                    currentTurn = data.currentTurn;
+                    renderPawns();
+                    updateTurnUI();
+                }
+            });
+        }
+
+        function returnToMenu() {
+            document.getElementById('ludo-screen').style.display = 'none';
+            document.getElementById('mode-screen').style.display = 'flex';
+        }
+
+        function buildBoardGrid() {
+            const board = document.getElementById('ludo-board');
+            board.innerHTML = '';
+            for (let r = 0; r < 15; r++) {
+                for (let c = 0; c < 15; c++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('ludo-cell');
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+
+                    if (r < 6 && c < 6) cell.classList.add('base-red');
+                    else if (r > 8 && c < 6) cell.classList.add('base-green');
+                    else if (r > 8 && c > 8) cell.classList.add('base-yellow');
+                    else if (r < 6 && c > 8) cell.classList.add('base-blue');
+
+                    if ((r === 6 && c === 1) || (r === 1 && c === 8) || (r === 8 && c === 13)) {
+                        cell.classList.add('power-box');
+                        cell.innerText = '🌿';
+                    }
+
+                    // صندوق الكنوز السحري بصرياً على اللوح
+                    if (r === 0 && c === 7) {
+                        cell.classList.add('mystery-box');
+                        cell.innerText = '🎁';
+                    }
+
+                    board.appendChild(cell);
+                }
+            }
+            renderPawns();
+        }
+
+        function renderPawns() {
+            document.querySelectorAll('.pawn').forEach(p => p.remove());
+
+            for (let p = 0; p < activePlayersCount; p++) {
+                pawns[p].forEach((pawnObj, idx) => {
+                    const pawnEl = document.createElement('div');
+                    pawnEl.classList.add('pawn');
+                    pawnEl.innerText = playersConfig[p].icon;
+                    pawnEl.style.background = playersConfig[p].color;
+
+                    let targetCell;
+                    if (pawnObj.pos === -1) {
+                        let baseRow = p === 0 ? 1 : (p === 1 ? 11 : (p === 2 ? 11 : 1));
+                        let baseCol = p === 0 ? (1 + idx) : (p === 1 ? 1 : (p === 2 ? 11 : 11));
+                        targetCell = document.querySelector(`[data-row='${baseRow}'][data-col='${baseCol}']`);
+                    } else {
+                        let pathCoords = getPathCoordinates(p, pawnObj.pos);
+                        targetCell = document.querySelector(`[data-row='${pathCoords.r}'][data-col='${pathCoords.c}']`);
+                    }
+
+                    if (targetCell) targetCell.appendChild(pawnEl);
+                });
+            }
+        }
+
+        function getPathCoordinates(playerIdx, step) {
+            const baseRoute = [
+                {r: 6, c: 1}, {r: 6, c: 2}, {r: 6, c: 3}, {r: 6, c: 4}, {r: 6, c: 5},
+                {r: 5, c: 6}, {r: 4, c: 6}, {r: 3, c: 6}, {r: 2, c: 6}, {r: 1, c: 6}, {r: 0, c: 6},
+                {r: 0, c: 7}, {r: 0, c: 8}, {r: 1, c: 8}, {r: 2, c: 8}, {r: 3, c: 8}, {r: 4, c: 8},
+                {r: 5, c: 8}, {r: 6, c: 9}, {r: 6, c: 10}, {r: 6, c: 11}, {r: 6, c: 12}, {r: 6, c: 13}, {r: 6, c: 14},
+                {r: 7, c: 14}, {r: 8, c: 14}, {r: 8, c: 13}, {r: 8, c: 12}, {r: 8, c: 11}, {r: 8, c: 10}, {r: 8, c: 9},
+                {r: 9, c: 8}, {r: 10, c: 8}, {r: 11, c: 8}, {r: 12, c: 8}, {r: 13, c: 8}, {r: 14, c: 8},
+                {r: 14, c: 7}, {r: 14, c: 6}, {r: 13, c: 6}, {r: 12, c: 6}, {r: 11, c: 6}, {r: 10, c: 6},
+                {r: 8, c: 5}, {r: 8, c: 4}, {r: 8, c: 3}, {r: 8, c: 2}, {r: 8, c: 1}, {r: 8, c: 0},
+                {r: 7, c: 0}, {r: 6, c: 0}
+            ];
+            let index = (step + (playerIdx * 13)) % baseRoute.length;
+            return baseRoute[index] || {r: 7, c: 7};
+        }
+
+        function rollDice() {
+            playJungleSound('dice');
+            diceNumber = Math.floor(Math.random() * 6) + 1;
+
+            // نظام توازن العائلة الذكي للصغار
+            if (gameMode === 'family' && currentTurn === 1 && diceNumber <= 2) {
+                diceNumber += 3;
+                showAchievement('✨ مساعدة البطل الصغير الفورية!');
+            } else {
+                document.getElementById('status-text').innerText = `رمى البطل رقم ${diceNumber}!`;
+            }
+
+            document.getElementById('dice-val').innerText = diceNumber;
+            executeMove(currentTurn, diceNumber);
+        }
+
+        async function executeMove(playerIdx, steps) {
+            let pList = pawns[playerIdx];
+            let chosenIdx = 0;
+            for (let i = 0; i < pList.length; i++) {
+                if (pList[i].pos === -1 && (steps === 6 || (gameMode === 'family' && playerIdx === 1))) { chosenIdx = i; break; }
+                if (pList[i].pos !== -1) { chosenIdx = i; break; }
+            }
+
+            if (pList[chosenIdx].pos === -1 && (steps === 6 || (gameMode === 'family' && playerIdx === 1))) {
+                pList[chosenIdx].pos = 0; 
+                triggerCinematicExplosion();
+            } else if (pList[chosenIdx].pos !== -1) {
+                pList[chosenIdx].pos += steps;
+                
+                // تفعيل صندوق الكنوز السحري
+                if (pList[chosenIdx].pos === mysteryBoxPosition) {
+                    playJungleSound('mystery');
+                    userGems += 20;
+                    showAchievement('🎁 كنز الأدغال السحري! ربحت +20 جوهرة سحابية 💎');
+                    triggerCinematicExplosion();
+                    try {
+                        await db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
+                        document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
+                    } catch(e) {}
+                }
+
+                if (junglePowerBoxes.includes(pList[chosenIdx].pos)) {
+                    playJungleSound('mystery');
+                    pList[chosenIdx].pos += 4;
+                    showAchievement('🌿 قوى تارزان الخارقة دفعتك للأمام!');
+                }
+
+                if (pList[chosenIdx].pos > 50) pList[chosenIdx].pos = 50;
+            }
+
+            renderPawns();
+
+            if (gameMode === 'online' && onlineRoomId) {
+                db.collection("lordLudoRooms").doc(onlineRoomId).update({
+                    pawns: JSON.stringify(pawns),
+                    currentTurn: (currentTurn + 1) % activePlayersCount
+                });
+            }
+
+            setTimeout(() => {
+                currentTurn = (currentTurn + 1) % activePlayersCount;
+                updateTurnUI();
+
+                if (gameMode === 'ai' && currentTurn === 1) {
+                    document.getElementById('status-text').innerText = "دور شيتا (يفكر بذكاء سينمائي)...";
+                    setTimeout(rollDice, 1300);
+                }
+            }, 900);
+        }
+
+        function updateTurnUI() {
+            const indicator = document.getElementById('turn-indicator');
+            indicator.innerText = `دور اللاعب: ${playersConfig[currentTurn].icon} ${playersConfig[currentTurn].name}`;
+            indicator.style.color = playersConfig[currentTurn].color;
+        }
+    </script>
+</body>
+</html>
