@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>lord - لودو أساطير تارزان السينمائية العائلية</title>
+    <title>lord - لودو أساطير تارزان الموسعة السينمائية</title>
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0f2b1d">
 
@@ -67,31 +67,31 @@
         }
 
         h1 {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             color: #2ecc71;
             text-shadow: 0 0 15px rgba(46, 204, 113, 0.8);
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
 
         p {
-            font-size: 0.78rem;
+            font-size: 0.75rem;
             color: #a3e4d7;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .btn {
             background: linear-gradient(45deg, #2ecc71, #27ae60);
             color: #fff;
             border: none;
-            padding: 9px 18px;
-            font-size: 0.8rem;
+            padding: 8px 16px;
+            font-size: 0.78rem;
             font-weight: bold;
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 0 20px rgba(46, 204, 113, 0.6);
-            margin: 5px auto;
+            margin: 4px auto;
             width: 90%;
-            max-width: 280px;
+            max-width: 270px;
             display: block;
             transition: transform 0.1s;
         }
@@ -192,14 +192,13 @@
         .gem-badge {
             background: rgba(52, 152, 219, 0.2);
             border: 1px solid #3498db;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 10px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: #3498db;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
-        /* شريط التفاعلات والإيموجي السريع */
         .emoji-bar {
             display: flex;
             gap: 6px;
@@ -219,17 +218,16 @@
         }
         .emoji-btn:active { transform: scale(1.3); }
 
-        /* نافذة الإنجازات والأوسمة العائلية المنبثقة */
         #achievement-toast {
             position: absolute;
-            top: 60px;
+            top: 50px;
             left: 50%;
             transform: translateX(-50%) translateY(-50px);
             background: linear-gradient(45deg, #f1c40f, #e67e22);
             color: #000;
-            padding: 6px 16px;
+            padding: 5px 15px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: bold;
             box-shadow: 0 0 20px rgba(241,196,15,0.8);
             z-index: 100;
@@ -242,7 +240,6 @@
             opacity: 1;
         }
 
-        /* طبقة الجسيمات السينمائية */
         #particle-canvas {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -266,18 +263,32 @@
             <button class="btn" onclick="loginUser()">🌿 دخول الأدغال السحابي</button>
         </div>
 
-        <!-- 2. شاشة اختيار وضع اللعب والعائلة -->
+        <!-- 2. شاشة اختيار وضع اللعب والعائلة والمتاجر -->
         <div id="mode-screen" class="screen" style="display: none;">
-            <h1>🌴 اختر نمط التحدي السينمائي (lord)</h1>
+            <h1>🌴 القائمة الرئيسية الموسعة (lord)</h1>
             <div class="gem-badge" id="user-gems-display">💎 رصيد الجواهر: 0</div>
             <p id="welcome-msg" style="color: #2ecc71; font-weight: bold;"></p>
-            <button class="btn btn-gold" onclick="startLudoGame('family', 2)">👨‍👩‍👧‍👦 التحدي العائلي المطور (مساعدات الصغار)</button>
-            <button class="btn" onclick="startLudoGame('ai', 2)">🤖 اللعب مع ذكاء شيتا السينمائي</button>
-            <button class="btn btn-blue" onclick="startLudoGame('local', 2)">👥 اللعب الثنائي (كبار وصغار)</button>
-            <button class="btn btn-orange" onclick="startLudoGame('local', 3)">🏕️ اللعب الثلاثي للأدغال</button>
-            <button class="btn btn-purple" onclick="startLudoGame('local', 4)">👑 اللعب الرباعي العائلي الكامل</button>
-            <button class="btn" style="background: linear-gradient(45deg, #e74c3c, #c0392b);" onclick="openOnlineRoomModal()">🌐 اللعب السحابي الجماعي (Online Rooms)</button>
-            <button class="btn btn-blue" style="background: rgba(255,255,255,0.1); font-size: 0.7rem; padding: 6px;" onclick="toggleEnvironmentAtmosphere()">🌙/☀️ تبديل أجواء الأدغال (ليل ونهار)</button>
+            
+            <button class="btn btn-gold" onclick="startLudoGame('family', 2)">👨‍👩‍👧‍👦 التحدي العائلي (مساعدات الصغار والكبار)</button>
+            <button class="btn" onclick="startLudoGame('ai', 2)">🤖 اللعب مع ذكاء شيتا المتقدم</button>
+            <button class="btn btn-blue" onclick="startLudoGame('local', 2)">👥 اللعب الثنائي المحلي</button>
+            <button class="btn btn-orange" onclick="startLudoGame('local', 4)">👑 اللعب الرباعي العائلي الكامل</button>
+            <button class="btn btn-purple" onclick="openOnlineRoomModal()">🌐 اللعب السحابي الجماعي (Online)</button>
+            
+            <div style="display: flex; gap: 8px; width: 90%; max-width: 270px; margin: 4px auto;">
+                <button class="btn btn-gold" style="margin:0; flex:1; font-size: 0.7rem;" onclick="claimDailyBonus()">🎁 الهدية اليومية</button>
+                <button class="btn btn-blue" style="margin:0; flex:1; font-size: 0.7rem;" onclick="openShopModal()">🛒 متجر الأبطال</button>
+            </div>
+            <button class="btn" style="background: rgba(255,255,255,0.1); font-size: 0.68rem; padding: 5px; width: 70%;" onclick="toggleEnvironmentAtmosphere()">🌙/☀️ تبديل الأجواء</button>
+        </div>
+
+        <!-- نافذة المتجر -->
+        <div id="shop-modal" class="screen" style="display: none; background: rgba(2,12,6,0.99);">
+            <h1>🛒 متجر أساطير الأدغال</h1>
+            <p>اختر مظهر أبطالك المفضل مقابل جواهرك السحابية:</p>
+            <button class="btn btn-gold" onclick="buySkin('أسد الذهب الذهبي 🦁', 30)">فتح: أسد الذهب (30 💎)</button>
+            <button class="btn btn-orange" onclick="buySkin('غوريلا الغابة الملكية 🦍', 50)">فتح: ملك الغوريلا (50 💎)</button>
+            <button class="btn btn-blue" onclick="closeShopModal()">العودة للقائمة</button>
         </div>
 
         <!-- نافذة الغرف السحابية -->
@@ -289,16 +300,22 @@
             <button class="btn btn-blue" onclick="closeOnlineModal()">العودة للقائمة</button>
         </div>
 
-        <!-- 3. شاشة اللعب التفاعلية للودو مع الميزات الفائقة -->
-        <div id="ludo-screen" class="screen" style="display: none; justify-content: flex-start; padding-top: 32px;">
+        <!-- نافذة الفوز والاحتفال السينمائي -->
+        <div id="victory-modal" class="screen" style="display: none; background: rgba(2,15,8,0.98); z-index: 200;">
+            <h1 style="font-size: 1.6rem; color: #f1c40f;">👑 مبروك يا بطل الأدغال! 👑</h1>
+            <p id="victory-text" style="font-size: 0.9rem; color: #fff; margin: 15px 0;"></p>
+            <button class="btn btn-gold" onclick="closeVictoryModal()">استلام الجائزة والعودة</button>
+        </div>
+
+        <!-- 3. شاشة اللعب التفاعلية للودو -->
+        <div id="ludo-screen" class="screen" style="display: none; justify-content: flex-start; padding-top: 30px;">
             <div id="ui-bar">
                 <span id="turn-indicator" style="color: #f1c40f;">دور اللاعب: 🦁 تارزان</span>
-                <button class="btn" style="width: auto; padding: 3px 8px; margin:0;" onclick="returnToMenu()">🏠 القائمة</button>
+                <button class="btn" style="width: auto; padding: 2px 7px; margin:0; font-size:0.65rem;" onclick="returnToMenu()">🏠 القائمة</button>
             </div>
 
             <div id="ludo-board"></div>
 
-            <!-- شريط الإيموجي والتفاعلات الحية العائلية -->
             <div class="emoji-bar">
                 <button class="emoji-btn" onclick="sendReaction('🦁')">🦁</button>
                 <button class="emoji-btn" onclick="sendReaction('🦍')">🦍</button>
@@ -309,8 +326,8 @@
 
             <div style="display: flex; gap: 10px; align-items: center; margin-top: 5px; z-index: 15;">
                 <div class="dice-box" id="dice-btn" onclick="rollDice()">🎲 <span id="dice-val">6</span></div>
-                <div style="font-size: 0.7rem; text-align: right;">
-                    <span id="status-text" style="color: #2ecc71;">اضغط النرد للرمي! (صندوق الكنوز 🎁)</span>
+                <div style="font-size: 0.68rem; text-align: right;">
+                    <span id="status-text" style="color: #2ecc71;">اضغط النرد! (صندوق الكنوز 🎁)</span>
                 </div>
             </div>
         </div>
@@ -332,7 +349,6 @@
         }
         const db = firebase.firestore();
 
-        // استرجاع أو مزامنة جلسة الدخول من الـ Index / localStorage
         let currentUser = localStorage.getItem('lordTarzanUser') || localStorage.getItem('tarzanLudoUser') || '';
         let userGems = 50;
         let gameMode = 'local'; 
@@ -341,8 +357,8 @@
         let activePlayersCount = 2;
         let onlineRoomId = '';
         let isNightMode = false;
+        let unlockedSkins = [];
 
-        // نظام الجسيمات السينمائية للبهجة عند الفوز أو الكنوز
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -355,14 +371,14 @@
         resizeCanvas();
 
         function triggerCinematicExplosion(x, y) {
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < 50; i++) {
                 particles.push({
                     x: x || canvas.width / 2,
                     y: y || canvas.height / 2,
-                    vx: (Math.random() - 0.5) * 8,
-                    vy: (Math.random() - 0.5) * 8,
-                    color: ['#f1c40f', '#2ecc71', '#e74c3c', '#3498db'][Math.floor(Math.random() * 4)],
-                    life: 40
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    color: ['#f1c40f', '#2ecc71', '#e74c3c', '#3498db', '#e67e22'][Math.floor(Math.random() * 5)],
+                    life: 50
                 });
             }
         }
@@ -431,7 +447,7 @@
         };
 
         const junglePowerBoxes = [12, 24, 38];
-        const mysteryBoxPosition = 18; // صندوق الكنوز السحري العشوائي
+        const mysteryBoxPosition = 18; 
 
         if (currentUser) {
             fetchUserData();
@@ -439,7 +455,7 @@
 
         function loginUser() {
             let name = document.getElementById('username-input').value.trim();
-            if (!name) { alert('الرجاء إدخال اسم بطل الأدغال!'); return; }
+            if (!name) { alert('الرجاء إدخال اسم البطل!'); return; }
             currentUser = name;
             localStorage.setItem('lordTarzanUser', currentUser);
             fetchUserData();
@@ -450,9 +466,11 @@
                 let doc = await db.collection("lordUsers").doc(currentUser).get();
                 if (doc.exists) {
                     userGems = doc.data().gems || 50;
+                    unlockedSkins = doc.data().skins || [];
                 } else {
                     userGems = 50;
-                    await db.collection("lordUsers").doc(currentUser).set({ gems: 50 });
+                    unlockedSkins = [];
+                    await db.collection("lordUsers").doc(currentUser).set({ gems: 50, skins: [] });
                 }
             } catch(e) { userGems = 50; }
 
@@ -462,10 +480,48 @@
             document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
         }
 
+        function claimDailyBonus() {
+            let lastClaim = localStorage.getItem('lastDailyClaim_' + currentUser);
+            let today = new Date().toDateString();
+            if (lastClaim === today) {
+                alert('🎁 لقد استلمت هدية اليوم بالفعل! انتظر غداً.');
+                return;
+            }
+            localStorage.setItem('lastDailyClaim_' + currentUser, today);
+            userGems += 30;
+            db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
+            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
+            showAchievement('🎁 حصلت على هدية اليوم: +30 جوهرة سحابية!');
+            triggerCinematicExplosion();
+        }
+
+        function openShopModal() {
+            document.getElementById('mode-screen').style.display = 'none';
+            document.getElementById('shop-modal').style.display = 'flex';
+        }
+
+        function closeShopModal() {
+            document.getElementById('shop-modal').style.display = 'none';
+            document.getElementById('mode-screen').style.display = 'flex';
+        }
+
+        async function buySkin(skinName, cost) {
+            if (userGems < cost) {
+                alert('❌ رصيدك من الجواهر غير كافٍ!');
+                return;
+            }
+            userGems -= cost;
+            unlockedSkins.push(skinName);
+            await db.collection("lordUsers").doc(currentUser).set({ gems: userGems, skins: unlockedSkins }, { merge: true });
+            document.getElementById('user-gems-display').innerText = `💎 رصيد الجواهر: ${userGems}`;
+            showAchievement(`🎉 مبروك! تم فتح مظهر: ${skinName}`);
+            triggerCinematicExplosion();
+        }
+
         function toggleEnvironmentAtmosphere() {
             isNightMode = !isNightMode;
             document.body.classList.toggle('night-mode', isNightMode);
-            showAchievement(isNightMode ? '🌙 تم تفعيل أجواء ليل الغابة الساحرة' : '☀️ تم تفعيل شروق شمس الأدغال');
+            showAchievement(isNightMode ? '🌙 أجواء ليل الغابة الساحرة' : '☀️ شروق شمس الأدغال');
         }
 
         function sendReaction(emoji) {
@@ -477,11 +533,17 @@
             gameMode = mode;
             activePlayersCount = count;
             currentTurn = 0;
+            pawns = {
+                0: [{pos: -1}, {pos: -1}],
+                1: [{pos: -1}, {pos: -1}],
+                2: [{pos: -1}, {pos: -1}],
+                3: [{pos: -1}, {pos: -1}]
+            };
             document.getElementById('mode-screen').style.display = 'none';
             document.getElementById('ludo-screen').style.display = 'flex';
             buildBoardGrid();
             updateTurnUI();
-            showAchievement('🏆 بدأت مغامرة العائلة السينمائية!');
+            showAchievement('🏆 انطلقت معركة لودو العائلية!');
         }
 
         function openOnlineRoomModal() {
@@ -505,7 +567,7 @@
                     pawns: JSON.stringify(pawns),
                     lastAction: 'تم إنشاء الغرفة بواسطة ' + currentUser
                 });
-                alert('✨ كود الغرفة السحابية المتزامنة: ' + code);
+                alert('✨ كود الغرفة السحابية: ' + code);
                 gameMode = 'online';
                 activePlayersCount = 2;
                 document.getElementById('online-modal').style.display = 'none';
@@ -533,12 +595,12 @@
                     document.getElementById('ludo-screen').style.display = 'flex';
                     buildBoardGrid();
                     listenToOnlineRoom();
-                    alert('🎉 انضممت بنجاح للغرفة السحابية!');
+                    alert('🎉 انضممت بنجاح للغرفة!');
                 } else {
                     alert('❌ الغرفة غير موجودة.');
                 }
             } catch(e) {
-                alert('خطأ في الاتصال بالسحابة.');
+                alert('خطأ في الاتصال.');
             }
         }
 
@@ -580,7 +642,6 @@
                         cell.innerText = '🌿';
                     }
 
-                    // صندوق الكنوز السحري بصرياً على اللوح
                     if (r === 0 && c === 7) {
                         cell.classList.add('mystery-box');
                         cell.innerText = '🎁';
@@ -637,7 +698,6 @@
             playJungleSound('dice');
             diceNumber = Math.floor(Math.random() * 6) + 1;
 
-            // نظام توازن العائلة الذكي للصغار
             if (gameMode === 'family' && currentTurn === 1 && diceNumber <= 2) {
                 diceNumber += 3;
                 showAchievement('✨ مساعدة البطل الصغير الفورية!');
@@ -663,11 +723,10 @@
             } else if (pList[chosenIdx].pos !== -1) {
                 pList[chosenIdx].pos += steps;
                 
-                // تفعيل صندوق الكنوز السحري
                 if (pList[chosenIdx].pos === mysteryBoxPosition) {
                     playJungleSound('mystery');
                     userGems += 20;
-                    showAchievement('🎁 كنز الأدغال السحري! ربحت +20 جوهرة سحابية 💎');
+                    showAchievement('🎁 كنز الأدغال! ربحت +20 جوهرة 💎');
                     triggerCinematicExplosion();
                     try {
                         await db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
@@ -681,7 +740,15 @@
                     showAchievement('🌿 قوى تارزان الخارقة دفعتك للأمام!');
                 }
 
-                if (pList[chosenIdx].pos > 50) pList[chosenIdx].pos = 50;
+                if (pList[chosenIdx].pos >= 50) {
+                    pList[chosenIdx].pos = 50;
+                    triggerCinematicExplosion();
+                    document.getElementById('victory-text').innerText = `فاز البطل الرائع: ${playersConfig[playerIdx].name} في مغامرة الأدغال!`;
+                    document.getElementById('victory-modal').style.display = 'flex';
+                    userGems += 50;
+                    db.collection("lordUsers").doc(currentUser).set({ gems: userGems }, { merge: true });
+                    return;
+                }
             }
 
             renderPawns();
@@ -698,10 +765,15 @@
                 updateTurnUI();
 
                 if (gameMode === 'ai' && currentTurn === 1) {
-                    document.getElementById('status-text').innerText = "دور شيتا (يفكر بذكاء سينمائي)...";
+                    document.getElementById('status-text').innerText = "دور شيتا (يفكر بذكاء)...";
                     setTimeout(rollDice, 1300);
                 }
             }, 900);
+        }
+
+        function closeVictoryModal() {
+            document.getElementById('victory-modal').style.display = 'none';
+            returnToMenu();
         }
 
         function updateTurnUI() {
