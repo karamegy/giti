@@ -1,23 +1,66 @@
-{
-  "name": "مكتبة الألعاب الفضائية V10.1",
-  "short_name": "السينما الفضائية",
-  "description": "منصة ألعاب الفضاء السحابية مع لوحة تحكم الإدارة ونظام VIP",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#020208",
-  "theme_color": "#0b0c2a",
-  "icons": [
-    {
-      "src": "./icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "./icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ]
-      }
+const CACHE_NAME = 'giti-space-v2-cache';
+const assetsToCache = [
+  './',
+  './index.html',
+  './lord.html',
+  './privacy.html',
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png'
+];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return Promise.allSettled(
+        assetsToCache.map(url => cache.add(url).catch(err => console.log('Failed to cache:', url)))
+      );
+    })
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+self.addEventListener('fetch', (e) => {
+  let requestURL = new URL(e.request.url);
+
+  if (e.request.mode === 'navigate' || requestURL.pathname.endsWith('.html') || requestURL.pathname === '/') {
+    e.respondWith(
+      fetch(e.request)
+        .then(networkResponse => {
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(e.request, networkResponse.clone());
+            return networkResponse;
+          });
+        })
+        .catch(() => {
+          return caches.match(e.request) || caches.match('./index.html');
+        })
+    );
+  } else {
+    e.respondWith(
+      caches.match(e.request).then((response) => {
+        return response || fetch(e.request).then(networkResponse => {
+          return caches.open(CACHE_NAME).then(cache => {
+            cache.put(e.request, networkResponse.clone());
+            return networkResponse;
+          });
+        });
+      })
+    );
+  }
+});
