@@ -200,10 +200,10 @@
         #home-btn { background: #00cec9; box-shadow: 0 0 12px rgba(0, 206, 201, 0.6); }
         #snap-btn { background: #9b59b6; box-shadow: 0 0 12px rgba(155, 89, 182, 0.6); }
 
-        /* نقل أدوات التحكم إلى الجزء العلوي تحت شريط الحالات مباشرة */
+        /* نقل أدوات التحكم إلى الجزء الأسفل وتصغير الزر ليصبح دائرياً */
         #controls {
             position: absolute;
-            top: 60px;
+            bottom: 25px;
             left: 0;
             width: 100%;
             display: flex;
@@ -280,12 +280,11 @@
         .fire-btn {
             background: linear-gradient(135deg, #ff9f43, #ee5253);
             border: 2px solid #ff3838;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            width: 100%;
-            max-width: 180px;
-            height: 48px;
-            border-radius: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
             box-shadow: 0 0 20px rgba(255, 56, 56, 0.7);
             color: white;
             cursor: pointer;
@@ -295,9 +294,10 @@
             align-items: center;
             outline: none;
             transition: all 0.2s ease;
+            padding: 0;
         }
         .fire-btn:active, .fire-btn.active-touch {
-            transform: scale(0.95);
+            transform: scale(0.90);
         }
         .fire-btn.auto-fire-active {
             background: linear-gradient(135deg, #00cec9, #0984e3) !important;
@@ -307,12 +307,12 @@
         }
         @keyframes autoFirePulse {
             from { transform: scale(1); }
-            to { transform: scale(1.06); }
+            to { transform: scale(1.1); }
         }
 
         #player {
             position: absolute;
-            bottom: 140px;
+            bottom: 110px;
             left: 50%;
             transform: translateX(-50%) translateZ(50px);
             width: 65px;
@@ -766,11 +766,11 @@
             <button class="btn btn-secondary" onclick="returnToMenu()">🏠 العودة للقائمة الرئيسية</button>
         </div>
 
-        <!-- 8. واجهة الشاشة المنقسمة التفاعلية الحقيقية (صراع المجرتين) -->
+        <!-- 8. واجهة الشاشة المنقسمة التفاعلية الحقيقية (صراع المجرتين - 12 قلب لكل لاعب) -->
         <div id="split-screen-container" class="screen" style="display: none; padding:0; background:#000;">
             <div id="p2-area" style="position:relative; width:100%; height:50%; background:rgba(35,0,15,0.95); border-bottom:3px solid #00f3ff; overflow:hidden; touch-action:none;">
                 <div style="position:absolute; top:8px; right:12px; color:#ff3838; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #ff3838;">
-                    اللاعب 2 (أعلى): ❤️ <span id="p2-lives">3</span> | 🏆 <span id="p2-score">0</span>
+                    اللاعب 2 (أعلى): ❤️ <span id="p2-lives">12</span> | 🏆 <span id="p2-score">0</span>
                 </div>
                 <button id="p2-fire-btn" style="position:absolute; top:8px; left:12px; background:linear-gradient(45deg, #ff3838, #c0392b); border:none; color:white; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #ff3838; cursor:pointer;">🔥 إطلاق P2</button>
                 <div id="p2-ship" style="position:absolute; top:45px; left:50%; transform:translateX(-50%); font-size:2.6rem; z-index:5; filter:drop-shadow(0 0 12px #ff3838); transition: left 0.05s ease;">🚀</div>
@@ -778,7 +778,7 @@
 
             <div id="p1-area" style="position:relative; width:100%; height:50%; background:rgba(0,20,45,0.95); overflow:hidden; touch-action:none;">
                 <div style="position:absolute; top:8px; right:12px; color:#00f3ff; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #00f3ff;">
-                    اللاعب 1 (أسفل): ❤️ <span id="p1-lives">3</span> | 🏆 <span id="p1-score">0</span>
+                    اللاعب 1 (أسفل): ❤️ <span id="p1-lives">12</span> | 🏆 <span id="p1-score">0</span>
                 </div>
                 <button id="p1-fire-btn" style="position:absolute; bottom:12px; right:12px; background:linear-gradient(45deg, #00f3ff, #0984e3); border:none; color:black; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #00f3ff; cursor:pointer;">⚡ إطلاق P1</button>
                 <button class="btn btn-secondary" style="position:absolute; bottom:12px; left:12px; width:auto; padding:5px 12px; font-size:0.7rem; z-index:30;" onclick="returnToMenu()">🏠 خروج</button>
@@ -788,7 +788,7 @@
 
         <div id="ui" style="display: none;">
             <div class="ui-badge">⭐ <span id="score">0</span></div>
-            <div class="ui-badge">❤️ <span id="lives">3</span></div>
+            <div class="ui-badge">❤️ <span id="lives">12</span></div>
             <div class="ui-badge">💎 <span id="live-gems">0</span></div>
             <button id="snap-btn" onclick="takeGameSnapshot()" title="لقطة شاشة للشات">📸</button>
             <button id="home-btn" onclick="returnToMenu()">🏠</button>
@@ -797,9 +797,9 @@
 
         <div id="player" style="display: none;">🛸</div>
 
-        <!-- نقل زر الإطلاق إلى الأعلى فوق المركبة ليصبح أسهل للاستخدام -->
+        <!-- زر الإطلاق الدائري المحدث في الأسفل -->
         <div id="controls" style="display: none;">
-            <button class="fire-btn" id="fire-btn">⚡ إطلاق النار (اضغط ثانية للآلي)</button>
+            <button class="fire-btn" id="fire-btn" title="إطلاق النار (اضغط مطولاً للتلقائي)">⚡</button>
         </div>
     </div>
 
@@ -936,11 +936,11 @@
         fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
         fireBtn.addEventListener('touchend', onFireButtonUp);
 
-        // تعديل زمن الضغط إلى ثانية واحدة كاملة (1000 ملي ثانية) لتفعيل الإطلاق التلقائي
+        // تعديل زمني لاستجابة الإطلاق التلقائي خلال أقل من ثانية (350 ملي ثانية)
         function onFireButtonDown() {
             if (!isPlaying || isPaused) return;
             if (isAutoFire) { disableAutoFire(); return; }
-            firePressTimer = setTimeout(() => { enableAutoFire(); }, 1000);
+            firePressTimer = setTimeout(() => { enableAutoFire(); }, 350);
         }
 
         function onFireButtonUp() {
@@ -1170,7 +1170,6 @@
         }
 
         function updateUserInterfaceProfile() {
-            // تفعيل السفينة المشتراة من المتجر تلقائياً إذا وجدت في الحقيبة
             if (currentPilotData.inventory) {
                 if (currentPilotData.inventory.includes('admin_mothership')) selectedShipIcon = '🛸👑';
                 else if (currentPilotData.inventory.includes('android_cruiser')) selectedShipIcon = '🚀';
@@ -1189,7 +1188,6 @@
             profileDisplayName.innerText = currentPlayer;
             profileDisplayRank.innerText = (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'متاح للجميع (3-30)');
 
-            // تطبيق خلفية المجرة المشتراة من المتجر تلقائياً
             if (currentPilotData.inventory) {
                 if (currentPilotData.inventory.includes('orion_nebula')) {
                     deepSpaceBg.className = 'deep-space-warp bg-orion-nebula';
@@ -1246,7 +1244,7 @@
         let splitAnimFrame = null;
         let splitSpawnInterval = null;
         let p1X = 200, p2X = 200;
-        let p1Lives = 3, p2Lives = 3;
+        let p1Lives = 12, p2Lives = 12;
         let p1Score = 0, p2Score = 0;
 
         let p1AutoFire = false, p2AutoFire = false;
@@ -1265,7 +1263,7 @@
 
         function startSplitScreenGame() {
             splitActive = true;
-            p1Lives = 3; p2Lives = 3;
+            p1Lives = 12; p2Lives = 12; // 12 قلب بدلاً من 3
             p1Score = 0; p2Score = 0;
             
             disableP1AutoFire();
@@ -1306,7 +1304,7 @@
                 p1HoldTimer = setTimeout(() => {
                     p1HoldTriggered = true;
                     toggleP1AutoFire();
-                }, 1000);
+                }, 350); // أقل من ثانية
             };
 
             const onP1Up = (e) => {
@@ -1338,7 +1336,7 @@
                 p2HoldTimer = setTimeout(() => {
                     p2HoldTriggered = true;
                     toggleP2AutoFire();
-                }, 1000);
+                }, 350); // أقل من ثانية
             };
 
             const onP2Up = (e) => {
@@ -1756,7 +1754,7 @@
             } catch (e) {}
         }
 
-        let currentGame = 1, score = 0, lives = 3, level = 1, gameSpeed = 5, spawnRate = 400;
+        let currentGame = 1, score = 0, lives = 12, level = 1, gameSpeed = 5, spawnRate = 400;
         let gameAnimFrame = null, itemInterval, fireInterval;
         let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🛸';
         let firePressTimer = null, isAutoFire = false;
@@ -1853,14 +1851,14 @@
         function enableAutoFire() {
             isAutoFire = true;
             fireBtn.classList.add('auto-fire-active');
-            fireBtn.innerText = '🔥 إطلاق تلقائي';
+            fireBtn.innerText = '🔥';
             if (!fireInterval) { fireInterval = setInterval(fireWeapon, 120); }
         }
 
         function disableAutoFire() {
             isAutoFire = false;
             fireBtn.classList.remove('auto-fire-active');
-            fireBtn.innerText = '⚡ إطلاق النار';
+            fireBtn.innerText = '⚡';
             clearInterval(fireInterval);
             fireInterval = null;
         }
@@ -1882,7 +1880,7 @@
             else { missile.classList.add('laser-l1'); }
 
             missile.style.left = (playerX - 4) + 'px';
-            missile.style.bottom = '165px';
+            missile.style.bottom = '135px';
             gameContainer.appendChild(missile);
 
             // تفعيل طائرة الدرون المرافق الذكية في حال شرائها
@@ -1890,32 +1888,31 @@
                 const droneLaser1 = document.createElement('div');
                 droneLaser1.classList.add('laser-l1');
                 droneLaser1.style.left = (playerX - 25) + 'px';
-                droneLaser1.style.bottom = '165px';
+                droneLaser1.style.bottom = '135px';
                 gameContainer.appendChild(droneLaser1);
 
                 const droneLaser2 = document.createElement('div');
                 droneLaser2.classList.add('laser-l1');
                 droneLaser2.style.left = (playerX + 20) + 'px';
-                droneLaser2.style.bottom = '165px';
+                droneLaser2.style.bottom = '135px';
                 gameContainer.appendChild(droneLaser2);
             }
         }
 
         function startCurrentGame() {
             score = 0;
-            lives = 4;
+            lives = 12; // 12 قلب
             level = 1;
             hasShield = true;
             isAutoFire = false;
             fireBtn.classList.remove('auto-fire-active');
-            fireBtn.innerText = '⚡ إطلاق النار';
+            fireBtn.innerText = '⚡';
             
             if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
 
             let speeds = { 1: 5, 2: 6.5, 3: 8, 4: 5.5, 5: 7, 6: 6.5, 7: 8.5, 8: 7, 9: 9.5, 10: 7.5 };
             const rates = { 1: 550, 2: 380, 3: 280, 4: 450, 5: 320, 6: 350, 7: 260, 8: 300, 9: 240, 10: 280 };
 
-            // تفعيل محرك الالتواء الزمني (تبطيء حركة النيازك)
             let inv = currentPilotData.inventory || [];
             let speedFactor = inv.includes('time_warp') ? 0.75 : 1.0;
 
@@ -2032,7 +2029,6 @@
                     } else if (type === 'shield') {
                         hasShield = true; player.classList.add('shield-active');
                     } else if (type === 'gem') {
-                        // مضاعف الجواهر الكوني (2x) في حال تفعيله من المتجر
                         let gemGain = inv.includes('gem_multiplier') ? 20 : 10;
                         currentPilotData.gems = (currentPilotData.gems || 0) + gemGain;
                         liveGemsDisplay.innerText = currentPilotData.gems;
