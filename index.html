@@ -56,6 +56,7 @@
             box-shadow: 0 0 80px rgba(0, 243, 255, 0.35);
             overflow: hidden;
             perspective: 900px;
+            transition: background 0.8s ease;
         }
 
         #top-profile-badge {
@@ -117,6 +118,14 @@
             background: radial-gradient(ellipse at center, rgba(10,10,40,0.4) 0%, rgba(0,0,0,0.9) 100%);
             z-index: 1;
             pointer-events: none;
+        }
+
+        /* خلفيات المجرات المشتراة من المتجر */
+        .bg-orion-nebula {
+            background: radial-gradient(circle at center, #8e44ad 0%, #2c3e50 50%, #000000 100%) !important;
+        }
+        .bg-milkyway-deep {
+            background: radial-gradient(circle at center, #002b5b 0%, #000814 60%, #000000 100%) !important;
         }
 
         .nebula {
@@ -191,9 +200,10 @@
         #home-btn { background: #00cec9; box-shadow: 0 0 12px rgba(0, 206, 201, 0.6); }
         #snap-btn { background: #9b59b6; box-shadow: 0 0 12px rgba(155, 89, 182, 0.6); }
 
+        /* نقل أدوات التحكم إلى الجزء العلوي تحت شريط الحالات مباشرة */
         #controls {
             position: absolute;
-            bottom: 75px;
+            top: 60px;
             left: 0;
             width: 100%;
             display: flex;
@@ -201,7 +211,7 @@
             align-items: center;
             padding: 0 20px;
             box-sizing: border-box;
-            z-index: 10;
+            z-index: 15;
         }
 
         #bottom-nav-bar {
@@ -270,11 +280,12 @@
         .fire-btn {
             background: linear-gradient(135deg, #ff9f43, #ee5253);
             border: 2px solid #ff3838;
-            font-size: 1.6rem;
+            font-size: 1.1rem;
+            font-weight: bold;
             width: 100%;
-            max-width: 200px;
-            height: 60px;
-            border-radius: 18px;
+            max-width: 180px;
+            height: 48px;
+            border-radius: 25px;
             box-shadow: 0 0 20px rgba(255, 56, 56, 0.7);
             color: white;
             cursor: pointer;
@@ -283,6 +294,7 @@
             justify-content: center;
             align-items: center;
             outline: none;
+            transition: all 0.2s ease;
         }
         .fire-btn:active, .fire-btn.active-touch {
             transform: scale(0.95);
@@ -341,33 +353,17 @@
             transform: translateZ(20px);
         }
 
-        .laser-l1 {
-            position: absolute;
-            width: 6px;
-            height: 24px;
-            background: #00f3ff;
-            box-shadow: 0 0 18px #00f3ff;
-            border-radius: 3px;
-            z-index: 4;
-        }
-        .laser-l2 {
-            position: absolute;
-            width: 8px;
-            height: 28px;
-            background: #ff3838;
-            box-shadow: 0 0 20px #ff3838;
-            border-radius: 4px;
-            z-index: 4;
-        }
-        .laser-l3 {
-            position: absolute;
-            width: 10px;
-            height: 30px;
-            background: #2ecc71;
-            box-shadow: 0 0 22px #2ecc71;
-            border-radius: 5px;
-            z-index: 4;
-        }
+        /* أنواع التأثيرات البصرية لليزر المشتراة من المتجر */
+        .laser-l1 { position: absolute; width: 6px; height: 24px; background: #00f3ff; box-shadow: 0 0 18px #00f3ff; border-radius: 3px; z-index: 4; }
+        .laser-l2 { position: absolute; width: 8px; height: 28px; background: #ff3838; box-shadow: 0 0 20px #ff3838; border-radius: 4px; z-index: 4; }
+        .laser-l3 { position: absolute; width: 10px; height: 30px; background: #2ecc71; box-shadow: 0 0 22px #2ecc71; border-radius: 5px; z-index: 4; }
+        
+        .laser-plasma_blue { position: absolute; width: 8px; height: 30px; background: #00f3ff; box-shadow: 0 0 25px #00f3ff, 0 0 10px #ffffff; border-radius: 4px; z-index: 4; }
+        .laser-lava_red { position: absolute; width: 9px; height: 32px; background: #ff3838; box-shadow: 0 0 25px #ff3838, 0 0 12px #f1c40f; border-radius: 5px; z-index: 4; }
+        .laser-emerald_quantum { position: absolute; width: 9px; height: 32px; background: #2ecc71; box-shadow: 0 0 25px #2ecc71, 0 0 12px #00f3ff; border-radius: 5px; z-index: 4; }
+        .laser-blackhole_purple { position: absolute; width: 11px; height: 34px; background: #8e44ad; box-shadow: 0 0 28px #8e44ad, 0 0 14px #e74c3c; border-radius: 6px; z-index: 4; }
+        .laser-supernova_gold { position: absolute; width: 12px; height: 36px; background: #f1c40f; box-shadow: 0 0 30px #f1c40f, 0 0 15px #ffffff; border-radius: 6px; z-index: 4; }
+
         .missile {
             position: absolute;
             width: 12px;
@@ -378,29 +374,9 @@
             z-index: 4;
         }
 
-        .split-laser-p1 {
-            position: absolute;
-            width: 8px;
-            height: 25px;
-            background: #00f3ff;
-            box-shadow: 0 0 15px #00f3ff;
-            border-radius: 4px;
-            z-index: 6;
-        }
-        .split-laser-p2 {
-            position: absolute;
-            width: 8px;
-            height: 25px;
-            background: #ff3838;
-            box-shadow: 0 0 15px #ff3838;
-            border-radius: 4px;
-            z-index: 6;
-        }
-        .split-meteor {
-            position: absolute;
-            font-size: 2rem;
-            z-index: 5;
-        }
+        .split-laser-p1 { position: absolute; width: 8px; height: 25px; background: #00f3ff; box-shadow: 0 0 15px #00f3ff; border-radius: 4px; z-index: 6; }
+        .split-laser-p2 { position: absolute; width: 8px; height: 25px; background: #ff3838; box-shadow: 0 0 15px #ff3838; border-radius: 4px; z-index: 6; }
+        .split-meteor { position: absolute; font-size: 2rem; z-index: 5; }
 
         .explosion {
             position: absolute;
@@ -638,7 +614,7 @@
 <body>
 
     <div id="game-container">
-        <div class="deep-space-warp"></div>
+        <div class="deep-space-warp" id="deep-space-bg"></div>
         <div class="nebula" style="top: 10%; left: -20%;"></div>
         <div class="nebula" style="bottom: 15%; right: -20%; background: radial-gradient(circle, rgba(0, 119, 255, 0.18) 0%, transparent 70%);"></div>
 
@@ -821,8 +797,9 @@
 
         <div id="player" style="display: none;">🛸</div>
 
+        <!-- نقل زر الإطلاق إلى الأعلى فوق المركبة ليصبح أسهل للاستخدام -->
         <div id="controls" style="display: none;">
-            <button class="fire-btn" id="fire-btn">⚡ إطلاق النار</button>
+            <button class="fire-btn" id="fire-btn">⚡ إطلاق النار (اضغط ثانية للآلي)</button>
         </div>
     </div>
 
@@ -843,7 +820,27 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
+        // قاموس أسماء المقتنيات والعناصر لمنع ظهور الأكواد الإنجليزية
+        const ITEM_TRANSLATIONS = {
+            'plasma_blue': '⚡ ليزر البلازما الأزرق القوسي',
+            'lava_red': '🔥 ليزر الحمم البركانية الحمراء',
+            'emerald_quantum': '💚 ليزر الزمرد الكمومي الفائق',
+            'blackhole_purple': '💜 ليزر الثقب الأسود البنفسجي',
+            'supernova_gold': '🟡 ليزر السوبرنوفا الذهبي المتفجر',
+            'admin_mothership': '🛸 مركبة الأدمين القائدة الملكية',
+            'android_cruiser': '🚀 صاروخ مجرة الأندرويد الفاخر',
+            'alien_destroyer': '👾 مدمرة الفضاء الأجنبية',
+            'orion_nebula': '✨ خلفية سديم أوريون النجمي',
+            'milkyway_deep': '🌌 خلفية ثقب درب التبانة العميق',
+            'time_warp': '⏳ محرك الالتواء الزمني',
+            'gem_multiplier': '🌟 مضاعف الجواهر الكوني (2x)',
+            'ai_drone': '🛸 طائرة الدرون المرافق الذكية',
+            'golden_emperor': '👑 خوذة الإمبراطور الذهبية الملكية',
+            'cyber_mind': '🔮 خوذة العقل السيبراني'
+        };
+
         const gameContainer = document.getElementById('game-container');
+        const deepSpaceBg = document.getElementById('deep-space-bg');
         const loginScreen = document.getElementById('login-screen');
         const mainMenu = document.getElementById('main-menu');
         const bottomNavBar = document.getElementById('bottom-nav-bar');
@@ -883,6 +880,8 @@
             highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
             ship: '🛸',
             gems: 0,
+            stars: 0,
+            inventory: [],
             isBanned: false,
             isMuted: false,
             isAdmin: false
@@ -937,10 +936,11 @@
         fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
         fireBtn.addEventListener('touchend', onFireButtonUp);
 
+        // تعديل زمن الضغط إلى ثانية واحدة كاملة (1000 ملي ثانية) لتفعيل الإطلاق التلقائي
         function onFireButtonDown() {
             if (!isPlaying || isPaused) return;
             if (isAutoFire) { disableAutoFire(); return; }
-            firePressTimer = setTimeout(() => { enableAutoFire(); }, 300);
+            firePressTimer = setTimeout(() => { enableAutoFire(); }, 1000);
         }
 
         function onFireButtonUp() {
@@ -1011,6 +1011,8 @@
                         highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                         ship: '🛸',
                         gems: 0,
+                        stars: 0,
+                        inventory: [],
                         isBanned: false,
                         isMuted: false,
                         isAdmin: (name === 'admin'),
@@ -1060,6 +1062,8 @@
                         highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                         ship: '🛸',
                         gems: 0,
+                        stars: 0,
+                        inventory: [],
                         isBanned: false,
                         isMuted: false,
                         isAdmin: (name === 'admin')
@@ -1069,6 +1073,7 @@
                     currentPilotData = doc.data();
                     currentPilotData.name = name;
                     if (currentPilotData.gems === undefined) currentPilotData.gems = 0;
+                    if (currentPilotData.inventory === undefined) currentPilotData.inventory = [];
                     if (name === 'admin') currentPilotData.isAdmin = true;
                 }
 
@@ -1119,6 +1124,8 @@
                     highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
                     ship: '🛸',
                     gems: 0,
+                    stars: 0,
+                    inventory: [],
                     isBanned: false,
                     isMuted: false,
                     isAdmin: (name === 'admin'),
@@ -1163,7 +1170,16 @@
         }
 
         function updateUserInterfaceProfile() {
-            selectedShipIcon = currentPilotData.ship || '🛸';
+            // تفعيل السفينة المشتراة من المتجر تلقائياً إذا وجدت في الحقيبة
+            if (currentPilotData.inventory) {
+                if (currentPilotData.inventory.includes('admin_mothership')) selectedShipIcon = '🛸👑';
+                else if (currentPilotData.inventory.includes('android_cruiser')) selectedShipIcon = '🚀';
+                else if (currentPilotData.inventory.includes('alien_destroyer')) selectedShipIcon = '👾';
+                else selectedShipIcon = currentPilotData.ship || '🛸';
+            } else {
+                selectedShipIcon = currentPilotData.ship || '🛸';
+            }
+
             player.innerText = selectedShipIcon;
             welcomeTitle.innerText = `مرحباً بك يا بطل: ${currentPlayer}`;
             userStatusDesc.innerHTML = `الوضع: <span style="color:#2ecc71;">مجاني بالكامل لجميع الأعمار (3-30)</span> | رصيد الجواهر: 💎 ${currentPilotData.gems || 0}`;
@@ -1172,6 +1188,15 @@
             profileAvatarIcon.innerText = selectedShipIcon;
             profileDisplayName.innerText = currentPlayer;
             profileDisplayRank.innerText = (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'متاح للجميع (3-30)');
+
+            // تطبيق خلفية المجرة المشتراة من المتجر تلقائياً
+            if (currentPilotData.inventory) {
+                if (currentPilotData.inventory.includes('orion_nebula')) {
+                    deepSpaceBg.className = 'deep-space-warp bg-orion-nebula';
+                } else if (currentPilotData.inventory.includes('milkyway_deep')) {
+                    deepSpaceBg.className = 'deep-space-warp bg-milkyway-deep';
+                }
+            }
         }
 
         function logoutPlayer() {
@@ -1281,7 +1306,7 @@
                 p1HoldTimer = setTimeout(() => {
                     p1HoldTriggered = true;
                     toggleP1AutoFire();
-                }, 2000);
+                }, 1000);
             };
 
             const onP1Up = (e) => {
@@ -1313,7 +1338,7 @@
                 p2HoldTimer = setTimeout(() => {
                     p2HoldTriggered = true;
                     toggleP2AutoFire();
-                }, 2000);
+                }, 1000);
             };
 
             const onP2Up = (e) => {
@@ -1810,7 +1835,7 @@
             cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
             cancelAnimationFrame(splitAnimFrame); clearInterval(splitSpawnInterval);
 
-            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion, .split-laser-p1, .split-laser-p2, .split-meteor').forEach(el => el.remove());
+            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .laser-plasma_blue, .laser-lava_red, .laser-emerald_quantum, .laser-blackhole_purple, .laser-supernova_gold, .missile, .explosion, .split-laser-p1, .split-laser-p2, .split-meteor').forEach(el => el.remove());
             
             gameScreen.style.display = 'none';
             splitScreenContainer.style.display = 'none';
@@ -1840,23 +1865,40 @@
             fireInterval = null;
         }
 
+        // إطلاق السلاح وتطبيق أنواع الليزر والدرون الذكي المشتراة من المتجر
         function fireWeapon() {
             if (!isPlaying || isPaused) return;
             const missile = document.createElement('div');
             
-            if (currentGame === 8 || currentGame === 10 || level >= 4) {
-                missile.classList.add('missile'); 
-            } else if (level === 3) {
-                missile.classList.add('laser-l3'); 
-            } else if (level === 2) {
-                missile.classList.add('laser-l2'); 
-            } else {
-                missile.classList.add('laser-l1'); 
-            }
+            let inv = currentPilotData.inventory || [];
+            if (inv.includes('supernova_gold')) { missile.classList.add('laser-supernova_gold'); }
+            else if (inv.includes('blackhole_purple')) { missile.classList.add('laser-blackhole_purple'); }
+            else if (inv.includes('emerald_quantum')) { missile.classList.add('laser-emerald_quantum'); }
+            else if (inv.includes('lava_red')) { missile.classList.add('laser-lava_red'); }
+            else if (inv.includes('plasma_blue')) { missile.classList.add('laser-plasma_blue'); }
+            else if (currentGame === 8 || currentGame === 10 || level >= 4) { missile.classList.add('missile'); }
+            else if (level === 3) { missile.classList.add('laser-l3'); }
+            else if (level === 2) { missile.classList.add('laser-l2'); }
+            else { missile.classList.add('laser-l1'); }
 
             missile.style.left = (playerX - 4) + 'px';
             missile.style.bottom = '165px';
             gameContainer.appendChild(missile);
+
+            // تفعيل طائرة الدرون المرافق الذكية في حال شرائها
+            if (inv.includes('ai_drone')) {
+                const droneLaser1 = document.createElement('div');
+                droneLaser1.classList.add('laser-l1');
+                droneLaser1.style.left = (playerX - 25) + 'px';
+                droneLaser1.style.bottom = '165px';
+                gameContainer.appendChild(droneLaser1);
+
+                const droneLaser2 = document.createElement('div');
+                droneLaser2.classList.add('laser-l1');
+                droneLaser2.style.left = (playerX + 20) + 'px';
+                droneLaser2.style.bottom = '165px';
+                gameContainer.appendChild(droneLaser2);
+            }
         }
 
         function startCurrentGame() {
@@ -1870,10 +1912,14 @@
             
             if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
 
-            const speeds = { 1: 5, 2: 6.5, 3: 8, 4: 5.5, 5: 7, 6: 6.5, 7: 8.5, 8: 7, 9: 9.5, 10: 7.5 };
+            let speeds = { 1: 5, 2: 6.5, 3: 8, 4: 5.5, 5: 7, 6: 6.5, 7: 8.5, 8: 7, 9: 9.5, 10: 7.5 };
             const rates = { 1: 550, 2: 380, 3: 280, 4: 450, 5: 320, 6: 350, 7: 260, 8: 300, 9: 240, 10: 280 };
 
-            gameSpeed = speeds[currentGame] || 5;
+            // تفعيل محرك الالتواء الزمني (تبطيء حركة النيازك)
+            let inv = currentPilotData.inventory || [];
+            let speedFactor = inv.includes('time_warp') ? 0.75 : 1.0;
+
+            gameSpeed = (speeds[currentGame] || 5) * speedFactor;
             spawnRate = rates[currentGame] || 500;
 
             scoreDisplay.innerText = score;
@@ -1888,7 +1934,7 @@
             player.style.left = playerX + 'px';
 
             isPlaying = true; isPaused = false;
-            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
+            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .laser-plasma_blue, .laser-lava_red, .laser-emerald_quantum, .laser-blackhole_purple, .laser-supernova_gold, .missile, .explosion').forEach(el => el.remove());
             cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
             fireInterval = null;
 
@@ -1945,7 +1991,7 @@
         }
 
         function updateGame() {
-            const projectiels = document.querySelectorAll('.laser-l1, .laser-l2, .laser-l3, .missile');
+            const projectiels = document.querySelectorAll('.laser-l1, .laser-l2, .laser-l3, .laser-plasma_blue, .laser-lava_red, .laser-emerald_quantum, .laser-blackhole_purple, .laser-supernova_gold, .missile');
             projectiels.forEach(proj => {
                 let bottom = parseFloat(proj.style.bottom);
                 proj.style.bottom = (bottom + 24) + 'px';
@@ -1975,6 +2021,8 @@
 
                 if (itemRect.left < playerRect.right && itemRect.right > playerRect.left && itemRect.top < playerRect.bottom && itemRect.bottom > playerRect.top) {
                     let type = item.dataset.type;
+                    let inv = currentPilotData.inventory || [];
+
                     if (type === 'good') {
                         score += Math.round(parseInt(item.dataset.val || 15) * 2);
                         scoreDisplay.innerText = score;
@@ -1984,7 +2032,9 @@
                     } else if (type === 'shield') {
                         hasShield = true; player.classList.add('shield-active');
                     } else if (type === 'gem') {
-                        currentPilotData.gems = (currentPilotData.gems || 0) + 10;
+                        // مضاعف الجواهر الكوني (2x) في حال تفعيله من المتجر
+                        let gemGain = inv.includes('gem_multiplier') ? 20 : 10;
+                        currentPilotData.gems = (currentPilotData.gems || 0) + gemGain;
                         liveGemsDisplay.innerText = currentPilotData.gems;
                         savePlayerDataToCloud();
                     } else {
