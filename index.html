@@ -802,7 +802,7 @@
                 <div style="position:absolute; top:8px; right:12px; color:#ff3838; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #ff3838;">
                     اللاعب 2 (أعلى): ❤️ <span id="p2-lives">3</span> | 🏆 <span id="p2-score">0</span>
                 </div>
-                <button id="p2-fire-btn" onclick="fireSplitLaserP2()" style="position:absolute; top:8px; left:12px; background:linear-gradient(45deg, #ff3838, #c0392b); border:none; color:white; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #ff3838; cursor:pointer;">🔥 إطلاق P2</button>
+                <button id="p2-fire-btn" style="position:absolute; top:8px; left:12px; background:linear-gradient(45deg, #ff3838, #c0392b); border:none; color:white; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #ff3838; cursor:pointer;">🔥 إطلاق P2</button>
                 <div id="p2-ship" style="position:absolute; top:45px; left:50%; transform:translateX(-50%); font-size:2.6rem; z-index:5; filter:drop-shadow(0 0 12px #ff3838); transition: left 0.05s ease;">🚀</div>
             </div>
 
@@ -811,7 +811,7 @@
                 <div style="position:absolute; top:8px; right:12px; color:#00f3ff; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #00f3ff;">
                     اللاعب 1 (أسفل): ❤️ <span id="p1-lives">3</span> | 🏆 <span id="p1-score">0</span>
                 </div>
-                <button id="p1-fire-btn" onclick="fireSplitLaserP1()" style="position:absolute; bottom:12px; right:12px; background:linear-gradient(45deg, #00f3ff, #0984e3); border:none; color:black; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #00f3ff; cursor:pointer;">⚡ إطلاق P1</button>
+                <button id="p1-fire-btn" style="position:absolute; bottom:12px; right:12px; background:linear-gradient(45deg, #00f3ff, #0984e3); border:none; color:black; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #00f3ff; cursor:pointer;">⚡ إطلاق P1</button>
                 <button class="btn btn-secondary" style="position:absolute; bottom:12px; left:12px; width:auto; padding:5px 12px; font-size:0.7rem; z-index:30;" onclick="returnToMenu()">🏠 خروج</button>
                 <div id="p1-ship" style="position:absolute; bottom:45px; left:50%; transform:translateX(-50%); font-size:2.6rem; z-index:5; filter:drop-shadow(0 0 12px #00f3ff); transition: left 0.05s ease;">🛸</div>
             </div>
@@ -1229,7 +1229,7 @@
         }
 
         /* -------------------------------------------------------------
-           تطوير المحرك الشامل للعبة "صراع المجرّتين" (مواجهة حقيقية 1v1)
+           تطوير المحرك الشامل للعبة "صراع المجرّتين" (مواجهة حقيقية 1v1 + آلي بالضغط المطول)
         ------------------------------------------------------------- */
         let splitActive = false;
         let splitAnimFrame = null;
@@ -1237,6 +1237,12 @@
         let p1X = 200, p2X = 200;
         let p1Lives = 3, p2Lives = 3;
         let p1Score = 0, p2Score = 0;
+
+        // متغيرات التفعيل التلقائي لمدة 2 ثانية لزرّي P1 و P2
+        let p1AutoFire = false, p2AutoFire = false;
+        let p1FireInterval = null, p2FireInterval = null;
+        let p1HoldTimer = null, p2HoldTimer = null;
+        let p1HoldTriggered = false, p2HoldTriggered = false;
 
         function openSplitScreenGame() {
             mainMenu.style.display = 'none';
@@ -1252,6 +1258,9 @@
             p1Lives = 3; p2Lives = 3;
             p1Score = 0; p2Score = 0;
             
+            disableP1AutoFire();
+            disableP2AutoFire();
+
             document.getElementById('p1-lives').innerText = p1Lives;
             document.getElementById('p2-lives').innerText = p2Lives;
             document.getElementById('p1-score').innerText = p1Score;
@@ -1263,14 +1272,141 @@
             document.getElementById('p1-ship').style.left = p1X + 'px';
             document.getElementById('p2-ship').style.left = p2X + 'px';
 
-            // تنظيف أي عناصر قديمة
             document.querySelectorAll('.split-laser-p1, .split-laser-p2, .split-meteor').forEach(el => el.remove());
             
             if (splitSpawnInterval) clearInterval(splitSpawnInterval);
             splitSpawnInterval = setInterval(spawnSplitMeteor, 1200);
 
+            bindSplitFireButtons();
+
             cancelAnimationFrame(splitAnimFrame);
             splitGameLoop();
+        }
+
+        /* تهيئة أزرار الإطلاق بدعم الضغط المطول (2 ثانية) */
+        function bindSplitFireButtons() {
+            const p1Btn = document.getElementById('p1-fire-btn');
+            const p2Btn = document.getElementById('p2-fire-btn');
+
+            if (!p1Btn || !p2Btn) return;
+
+            // أحداث اللاعب 1 (أسفل)
+            const onP1Down = (e) => {
+                if (e) e.preventDefault();
+                if (!splitActive) return;
+                p1HoldTriggered = false;
+                p1HoldTimer = setTimeout(() => {
+                    p1HoldTriggered = true;
+                    toggleP1AutoFire();
+                }, 2000); // 2000ms = 2 ثانية
+            };
+
+            const onP1Up = (e) => {
+                if (e) e.preventDefault();
+                if (!splitActive) return;
+                if (p1HoldTimer) {
+                    clearTimeout(p1HoldTimer);
+                    p1HoldTimer = null;
+                }
+                if (!p1HoldTriggered) {
+                    if (p1AutoFire) {
+                        disableP1AutoFire();
+                    } else {
+                        fireSplitLaserP1();
+                    }
+                }
+            };
+
+            p1Btn.onmousedown = onP1Down;
+            p1Btn.onmouseup = onP1Up;
+            p1Btn.onmouseleave = onP1Up;
+            p1Btn.ontouchstart = onP1Down;
+            p1Btn.ontouchend = onP1Up;
+
+            // أحداث اللاعب 2 (أعلى)
+            const onP2Down = (e) => {
+                if (e) e.preventDefault();
+                if (!splitActive) return;
+                p2HoldTriggered = false;
+                p2HoldTimer = setTimeout(() => {
+                    p2HoldTriggered = true;
+                    toggleP2AutoFire();
+                }, 2000); // 2000ms = 2 ثانية
+            };
+
+            const onP2Up = (e) => {
+                if (e) e.preventDefault();
+                if (!splitActive) return;
+                if (p2HoldTimer) {
+                    clearTimeout(p2HoldTimer);
+                    p2HoldTimer = null;
+                }
+                if (!p2HoldTriggered) {
+                    if (p2AutoFire) {
+                        disableP2AutoFire();
+                    } else {
+                        fireSplitLaserP2();
+                    }
+                }
+            };
+
+            p2Btn.onmousedown = onP2Down;
+            p2Btn.onmouseup = onP2Up;
+            p2Btn.onmouseleave = onP2Up;
+            p2Btn.ontouchstart = onP2Down;
+            p2Btn.ontouchend = onP2Up;
+        }
+
+        function toggleP1AutoFire() {
+            if (p1AutoFire) { disableP1AutoFire(); } else { enableP1AutoFire(); }
+        }
+
+        function enableP1AutoFire() {
+            p1AutoFire = true;
+            const btn = document.getElementById('p1-fire-btn');
+            if (btn) {
+                btn.innerText = '⚡ آلي P1 🔥';
+                btn.style.background = 'linear-gradient(45deg, #00cec9, #0984e3)';
+                btn.style.boxShadow = '0 0 25px #00f3ff';
+            }
+            if (!p1FireInterval) { p1FireInterval = setInterval(fireSplitLaserP1, 150); }
+        }
+
+        function disableP1AutoFire() {
+            p1AutoFire = false;
+            const btn = document.getElementById('p1-fire-btn');
+            if (btn) {
+                btn.innerText = '⚡ إطلاق P1';
+                btn.style.background = 'linear-gradient(45deg, #00f3ff, #0984e3)';
+                btn.style.boxShadow = '0 0 12px #00f3ff';
+            }
+            if (p1FireInterval) { clearInterval(p1FireInterval); p1FireInterval = null; }
+        }
+
+        function toggleP2AutoFire() {
+            if (p2AutoFire) { disableP2AutoFire(); } else { enableP2AutoFire(); }
+        }
+
+        function enableP2AutoFire() {
+            p2AutoFire = true;
+            const btn = document.getElementById('p2-fire-btn');
+            if (btn) {
+                btn.innerText = '🔥 آلي P2 🔥';
+                btn.style.background = 'linear-gradient(45deg, #e17055, #d63031)';
+                btn.style.boxShadow = '0 0 25px #ff3838';
+            }
+            if (!p2FireInterval) { p2FireInterval = setInterval(fireSplitLaserP2, 150); }
+        }
+
+        function disableP2AutoFire() {
+            p2AutoFire = false;
+            const btn = document.getElementById('p2-fire-btn');
+            if (btn) {
+                btn.innerText = '🔥 إطلاق P2';
+                btn.style.background = 'linear-gradient(45deg, #ff3838, #c0392b)';
+                btn.style.boxShadow = '0 0 12px #ff3838';
+            }
+            if (p2FireInterval) { clearInterval(p2FireInterval); p2FireInterval = null; }
         }
 
         // دعم اللمس المتعدد على الشاشة المنقسمة
@@ -1284,11 +1420,9 @@
                 const relX = touch.clientX - containerRect.left;
                 
                 if (relY < containerRect.height / 2) {
-                    // النصف العلوي -> اللاعب 2
                     p2X = Math.max(30, Math.min(containerRect.width - 30, relX));
                     document.getElementById('p2-ship').style.left = p2X + 'px';
                 } else {
-                    // النصف السفلي -> اللاعب 1
                     p1X = Math.max(30, Math.min(containerRect.width - 30, relX));
                     document.getElementById('p1-ship').style.left = p1X + 'px';
                 }
@@ -1351,7 +1485,6 @@
             const width = splitScreenContainer.clientWidth;
             meteor.style.left = (Math.random() * (width - 40)) + 'px';
             
-            // ظهور إما بالنصف العلوي أو السفلي
             if (Math.random() > 0.5) {
                 meteor.style.top = '10px';
                 meteor.dataset.dir = 'down';
@@ -1386,7 +1519,6 @@
                 laser.style.top = top + 'px';
                 const lRect = laser.getBoundingClientRect();
 
-                // التحقق من اصطدام ليزر P1 بسفينة P2
                 if (lRect.left < p2Rect.right && lRect.right > p2Rect.left && lRect.top < p2Rect.bottom && lRect.bottom > p2Rect.top) {
                     p2Lives--;
                     p1Score += 100;
@@ -1407,7 +1539,6 @@
                 laser.style.top = top + 'px';
                 const lRect = laser.getBoundingClientRect();
 
-                // التحقق من اصطدام ليزر P2 بسفينة P1
                 if (lRect.left < p1Rect.right && lRect.right > p1Rect.left && lRect.top < p1Rect.bottom && lRect.bottom > p1Rect.top) {
                     p1Lives--;
                     p2Score += 100;
@@ -1432,7 +1563,6 @@
                 meteor.style.top = top + 'px';
                 const mRect = meteor.getBoundingClientRect();
 
-                // اصطدام مع P1
                 if (mRect.left < p1Rect.right && mRect.right > p1Rect.left && mRect.top < p1Rect.bottom && mRect.bottom > p1Rect.top) {
                     p1Lives--;
                     document.getElementById('p1-lives').innerText = p1Lives;
@@ -1440,7 +1570,6 @@
                     meteor.remove();
                     if (p1Lives <= 0) checkSplitWinner('اللاعب 2 (المجرة الحمراء)');
                 }
-                // اصطدام مع P2
                 else if (mRect.left < p2Rect.right && mRect.right > p2Rect.left && mRect.top < p2Rect.bottom && mRect.bottom > p2Rect.top) {
                     p2Lives--;
                     document.getElementById('p2-lives').innerText = p2Lives;
@@ -1459,6 +1588,8 @@
 
         function checkSplitWinner(winnerName) {
             splitActive = false;
+            disableP1AutoFire();
+            disableP2AutoFire();
             cancelAnimationFrame(splitAnimFrame);
             clearInterval(splitSpawnInterval);
 
@@ -1700,6 +1831,7 @@
 
         function returnToMenu() {
             isPlaying = false; isPaused = false; isAutoFire = false; splitActive = false;
+            disableP1AutoFire(); disableP2AutoFire();
             cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
             cancelAnimationFrame(splitAnimFrame); clearInterval(splitSpawnInterval);
 
