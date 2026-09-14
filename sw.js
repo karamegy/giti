@@ -1,4 +1,4 @@
-const CACHE_NAME = 'giti-space-v3-cache';
+const CACHE_NAME = 'giti-space-v4-cache';
 const assetsToCache = [
   './',
   './index.html',
