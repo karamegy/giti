@@ -2149,9 +2149,14 @@
 
         initFabDrag();
 
+        // تسجيل الـ Service Worker وتفعيل الفحص التلقائي للتحديث v4
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
+            navigator.serviceWorker.register('./sw.js').then((registration) => {
+              registration.update();
+            }).catch((err) => {
+              console.log('فشل تسجيل ServiceWorker:', err);
+            });
           });
         }
     </script>
