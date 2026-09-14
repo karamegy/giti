@@ -584,6 +584,35 @@
             margin-bottom: 6px;
             font-size: 0.75rem;
         }
+
+        /* تنسيق الزر العائم المتحرك */
+        .floating-fab {
+            position: fixed;
+            bottom: 25px;
+            right: 20px;
+            background: linear-gradient(45deg, #00f3ff, #009432);
+            color: white;
+            border: none;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+            cursor: pointer;
+            z-index: 9999;
+            animation: floatingAnim 2.5s ease-in-out infinite;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        @keyframes floatingAnim {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .floating-fab:active {
+            transform: scale(0.9);
+        }
     </style>
 </head>
 <body>
@@ -592,6 +621,9 @@
         <div class="deep-space-warp"></div>
         <div class="nebula" style="top: 10%; left: -20%;"></div>
         <div class="nebula" style="bottom: 15%; right: -20%; background: radial-gradient(circle, rgba(0, 119, 255, 0.18) 0%, transparent 70%);"></div>
+
+        <!-- الزر العائم المتحرك للوصول السريع للمتجر (يظهر حصراً بعد تسجيل الدخول) -->
+        <button id="floating-store-btn" class="floating-fab" onclick="openStoreFromIndex()" title="متجر أساطير الفضاء">🛒</button>
 
         <!-- أداة البروفايل الدائرية في الأعلى -->
         <div id="top-profile-badge">
@@ -682,10 +714,18 @@
                 <button class="btn btn-red" style="margin-top: 10px;" onclick="loadAdminUsersList()">🔄 تحديث قائمة المستخدمين</button>
             </div>
 
-            <!-- القسم الخامس: الدعم الفني والأمان -->
+            <!-- القسم الخامس: الدعم الفني وأمان العائلة والمؤسس -->
             <div id="sec-support" class="section-container">
-                <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وأمان العائلة:</p>
+                <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وأمان العائلة والمؤسس:</p>
                 
+                <!-- بطاقة معلومات المؤسس والمطور -->
+                <div class="info-card" style="border-color: #00f3ff; background: rgba(0, 243, 255, 0.05);">
+                    <b style="color: #00f3ff; font-size: 0.8rem;">👨‍💻 معلومات المؤسس والمطور:</b><br>
+                    <span style="font-size: 0.75rem; color: #fff;">• المؤسس والمطور: كرم حمدي (Malak Haret)</span><br>
+                    <span style="font-size: 0.75rem; color: #a4b0be;">• رائد أعمال ومطور برمجيات وأنظمة لوجستية وتطبيقات ألعاب الفضاء.</span><br>
+                    <span style="font-size: 0.75rem; color: #2ecc71;">• مقر العمل: جمهورية مصر العربية 🇪🇬</span>
+                </div>
+
                 <div class="info-card" style="border-color: #2ecc71; background: rgba(46, 204, 113, 0.05);">
                     <b style="color: #2ecc71; font-size: 0.8rem;">🌟 الإصدار العائلي الآمن (All Ages):</b><br>
                     <span style="font-size: 0.75rem; color: #fff;">• مصمم خصيصاً ليتناسب مع الأطفال والكبار من سن 3 إلى 30 سنة.</span><br>
@@ -804,6 +844,7 @@
         const ui = document.getElementById('ui');
         const controls = document.getElementById('controls');
         const player = document.getElementById('player');
+        const floatingStoreBtn = document.getElementById('floating-store-btn');
 
         const usernameInput = document.getElementById('username-input');
         const passwordInput = document.getElementById('password-input');
@@ -915,6 +956,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                floatingStoreBtn.style.display = 'flex';
                 checkAdminPermissions();
                 initChatListener();
             });
@@ -982,6 +1024,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                floatingStoreBtn.style.display = 'flex';
                 checkAdminPermissions();
                 initChatListener();
             } catch (error) {
@@ -1030,6 +1073,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                floatingStoreBtn.style.display = 'flex';
                 checkAdminPermissions();
                 initChatListener();
             } catch (error) {
@@ -1040,6 +1084,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                floatingStoreBtn.style.display = 'flex';
                 checkAdminPermissions();
             }
         }
@@ -1083,6 +1128,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                floatingStoreBtn.style.display = 'flex';
                 checkAdminPermissions();
                 initChatListener();
             } catch (error) {
@@ -1093,6 +1139,7 @@
                 mainMenu.style.display = 'flex';
                 bottomNavBar.style.display = 'flex';
                 topProfileBadge.style.display = 'flex';
+                floatingStoreBtn.style.display = 'flex';
                 checkAdminPermissions();
             }
         }
@@ -1126,14 +1173,22 @@
             mainMenu.style.display = 'none';
             bottomNavBar.style.display = 'none';
             topProfileBadge.style.display = 'none';
+            floatingStoreBtn.style.display = 'none';
             navAdminBtn.style.display = 'none';
             loginScreen.style.display = 'flex';
+        }
+
+        function openStoreFromIndex() {
+            let activePilot = localStorage.getItem('currentSpacePilotV10') || 'admin';
+            localStorage.setItem('currentSpacePilotV10', activePilot);
+            window.location.href = 'lord.html';
         }
 
         function openCockpitSimulation() {
             isPlaying = false;
             isPaused = true;
             topProfileBadge.style.display = 'none';
+            floatingStoreBtn.style.display = 'none';
             
             screenTitle.innerText = "🛸 محاكاة قمرة القيادة التفاعلية";
             screenDesc.innerHTML = `<h2 id="sim-timer" style="color: #00f3ff; font-size: 1.6rem;">10</h2><p>استمتع برؤية رادار الفضاء المذهل المصمم لجميع الأعمار!</p>`;
@@ -1159,6 +1214,7 @@
             mainMenu.style.display = 'none';
             bottomNavBar.style.display = 'none';
             topProfileBadge.style.display = 'none';
+            floatingStoreBtn.style.display = 'none';
             splitScreenContainer.style.display = 'flex';
             startSplitScreenGame();
         }
@@ -1188,7 +1244,6 @@
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
             } catch (e) {
-                // بديل محلي عند انقطاع الاتصال السحابي
                 let localChats = JSON.parse(localStorage.getItem('spaceLocalChatsV10') || '[]');
                 localChats.push({
                     sender: currentPlayer,
@@ -1341,6 +1396,7 @@
             mainMenu.style.display = 'none';
             bottomNavBar.style.display = 'none';
             topProfileBadge.style.display = 'none';
+            floatingStoreBtn.style.display = 'none';
             shopModal.style.display = 'flex';
         }
         function closeShop() {
@@ -1348,6 +1404,7 @@
             mainMenu.style.display = 'flex';
             bottomNavBar.style.display = 'flex';
             topProfileBadge.style.display = 'flex';
+            floatingStoreBtn.style.display = 'flex';
             currentPilotData.ship = selectedShipIcon;
             savePlayerDataToCloud();
             updateUserInterfaceProfile();
@@ -1363,6 +1420,7 @@
             mainMenu.style.display = 'none';
             bottomNavBar.style.display = 'none';
             topProfileBadge.style.display = 'none';
+            floatingStoreBtn.style.display = 'none';
             gameScreen.style.display = 'flex';
             let highScore = (currentPilotData.highScores && currentPilotData.highScores[currentGame]) || 0;
             highScoreText.innerText = `أعلى نتيجة سحابية: ${highScore}`;
@@ -1404,6 +1462,7 @@
             mainMenu.style.display = 'flex';
             bottomNavBar.style.display = 'flex';
             topProfileBadge.style.display = 'flex';
+            floatingStoreBtn.style.display = 'flex';
             checkAdminPermissions();
             updateUserInterfaceProfile();
         }
@@ -1635,60 +1694,5 @@
           });
         }
     </script>
-    <!-- الزر العائم المتحرك للحقيبة أو المتجر (مخفي افتراضياً ولا يظهر في واجهة الدخول) -->
-<button id="floating-store-btn" onclick="openStoreFromIndex()" title="متجر أساطير الفضاء" style="
-    position: fixed;
-    bottom: 25px;
-    right: 20px;
-    background: linear-gradient(45deg, #00f3ff, #009432);
-    color: white;
-    border: none;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    display: none; /* مخفي مبدئياً ولا يظهر في واجهة تسجيل الدخول */
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
-    cursor: pointer;
-    z-index: 9999;
-    animation: floatingAnim 2.5s ease-in-out infinite;
-    transition: transform 0.2s, box-shadow 0.2s;
-">🛒</button>
-
-<style>
-    /* تأثير الحركة العائمة المستمرة للزر */
-    @keyframes floatingAnim {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
-    }
-    #floating-store-btn:active {
-        transform: scale(0.9);
-    }
-</style>
-
-<script>
-    // فحص حالة تسجيل الدخول لإظهار أو إخفاء الزر العائم في الـ index
-    window.addEventListener('DOMContentLoaded', () => {
-        let activePilot = localStorage.getItem('currentSpacePilotV10');
-        const floatBtn = document.getElementById('floating-store-btn');
-        
-        // إذا كان هناك طيار مسجل دخول، يظهر الزر العائم المتحرك
-        if (activePilot && activePilot.trim() !== '') {
-            floatBtn.style.display = 'flex';
-        } else {
-            floatBtn.style.display = 'none';
-        }
-    });
-
-    // دالة الانتقال السريع للمتجر مع الحفاظ على اسم الطيار ومزامنة التقدم
-    function openStoreFromIndex() {
-        let activePilot = localStorage.getItem('currentSpacePilotV10') || 'admin';
-        localStorage.setItem('currentSpacePilotV10', activePilot);
-        window.location.href = 'lord.html';
-    }
-</script>
-</style>
 </body>
 </html>
