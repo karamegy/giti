@@ -378,7 +378,6 @@
             z-index: 4;
         }
 
-        /* تنسيقات الشاشة المنقسمة الحديثة للصراع الحقيقي */
         .split-laser-p1 {
             position: absolute;
             width: 8px;
@@ -506,8 +505,6 @@
         .btn-red { background: linear-gradient(45deg, #c0392b, #78281f); }
         .btn-register { background: linear-gradient(45deg, #2ecc71, #27ae60); color: #fff; box-shadow: 0 0 20px rgba(46, 204, 113, 0.7); }
         .btn-google { background: linear-gradient(45deg, #db4437, #c53829); color: #fff; box-shadow: 0 0 20px rgba(219, 68, 55, 0.7); }
-        .btn-facebook { background: linear-gradient(45deg, #3b5998, #2d4373); color: #fff; box-shadow: 0 0 20px rgba(59, 89, 152, 0.7); }
-        .btn-twitter { background: linear-gradient(45deg, #1da1f2, #0d8ecf); color: #fff; box-shadow: 0 0 20px rgba(29, 161, 242, 0.7); }
 
         .ship-options {
             display: flex;
@@ -666,9 +663,7 @@
             <button class="btn btn-register" onclick="registerNewPlayer()">✨ تسجيل حساب جديد</button>
             
             <div style="margin: 8px 0; width: 100%; display: flex; flex-direction: column; gap: 4px; align-items: center;">
-                <button class="btn btn-google" onclick="socialLogin('google')">🌐 الدخول باستخدام Google</button>
-                <button class="btn btn-facebook" onclick="socialLogin('facebook')">📘 الدخول باستخدام Facebook</button>
-                <button class="btn btn-twitter" onclick="socialLogin('twitter')">🐦 الدخول باستخدام X (Twitter)</button>
+                <button class="btn btn-google" onclick="googleLogin()">🌐 الدخول باستخدام Google</button>
             </div>
         </div>
 
@@ -797,7 +792,6 @@
 
         <!-- 8. واجهة الشاشة المنقسمة التفاعلية الحقيقية (صراع المجرتين) -->
         <div id="split-screen-container" class="screen" style="display: none; padding:0; background:#000;">
-            <!-- النصف العلوي: اللاعب 2 (المجرة الحمراء) -->
             <div id="p2-area" style="position:relative; width:100%; height:50%; background:rgba(35,0,15,0.95); border-bottom:3px solid #00f3ff; overflow:hidden; touch-action:none;">
                 <div style="position:absolute; top:8px; right:12px; color:#ff3838; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #ff3838;">
                     اللاعب 2 (أعلى): ❤️ <span id="p2-lives">3</span> | 🏆 <span id="p2-score">0</span>
@@ -806,7 +800,6 @@
                 <div id="p2-ship" style="position:absolute; top:45px; left:50%; transform:translateX(-50%); font-size:2.6rem; z-index:5; filter:drop-shadow(0 0 12px #ff3838); transition: left 0.05s ease;">🚀</div>
             </div>
 
-            <!-- النصف السفلي: اللاعب 1 (المجرة الزرقاء) -->
             <div id="p1-area" style="position:relative; width:100%; height:50%; background:rgba(0,20,45,0.95); overflow:hidden; touch-action:none;">
                 <div style="position:absolute; top:8px; right:12px; color:#00f3ff; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #00f3ff;">
                     اللاعب 1 (أسفل): ❤️ <span id="p1-lives">3</span> | 🏆 <span id="p1-score">0</span>
@@ -996,12 +989,8 @@
             }
         }
 
-        async function socialLogin(providerType) {
-            let provider;
-            if (providerType === 'google') provider = new firebase.auth.GoogleAuthProvider();
-            else if (providerType === 'facebook') provider = new firebase.auth.FacebookAuthProvider();
-            else if (providerType === 'twitter') provider = new firebase.auth.TwitterAuthProvider();
-
+        async function googleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
             try {
                 let result = await auth.signInWithPopup(provider);
                 let user = result.user;
@@ -1036,7 +1025,7 @@
                 currentPlayer = name;
                 localStorage.setItem('currentSpacePilotV10', currentPlayer);
 
-                alert(`🎉 أهلاً بك يا ${name}! تم تسجيل الدخول بنجاح.`);
+                alert(`🎉 أهلاً بك يا ${name}! تم تسجيل الدخول بنجاح عبر Google.`);
                 updateUserInterfaceProfile();
                 loginScreen.style.display = 'none';
                 mainMenu.style.display = 'flex';
@@ -1046,7 +1035,7 @@
                 checkAdminPermissions();
                 initChatListener();
             } catch (error) {
-                alert('❌ تعذر تسجيل الدخول عبر حساب التواصل: ' + error.message);
+                alert('❌ تعذر تسجيل الدخول عبر Google: ' + error.message);
             }
         }
 
@@ -1228,9 +1217,6 @@
             }, 1000);
         }
 
-        /* -------------------------------------------------------------
-           تطوير المحرك الشامل للعبة "صراع المجرّتين" (مواجهة حقيقية 1v1 + آلي بالضغط المطول)
-        ------------------------------------------------------------- */
         let splitActive = false;
         let splitAnimFrame = null;
         let splitSpawnInterval = null;
@@ -1238,7 +1224,6 @@
         let p1Lives = 3, p2Lives = 3;
         let p1Score = 0, p2Score = 0;
 
-        // متغيرات التفعيل التلقائي لمدة 2 ثانية لزرّي P1 و P2
         let p1AutoFire = false, p2AutoFire = false;
         let p1FireInterval = null, p2FireInterval = null;
         let p1HoldTimer = null, p2HoldTimer = null;
@@ -1283,14 +1268,12 @@
             splitGameLoop();
         }
 
-        /* تهيئة أزرار الإطلاق بدعم الضغط المطول (2 ثانية) */
         function bindSplitFireButtons() {
             const p1Btn = document.getElementById('p1-fire-btn');
             const p2Btn = document.getElementById('p2-fire-btn');
 
             if (!p1Btn || !p2Btn) return;
 
-            // أحداث اللاعب 1 (أسفل)
             const onP1Down = (e) => {
                 if (e) e.preventDefault();
                 if (!splitActive) return;
@@ -1298,7 +1281,7 @@
                 p1HoldTimer = setTimeout(() => {
                     p1HoldTriggered = true;
                     toggleP1AutoFire();
-                }, 2000); // 2000ms = 2 ثانية
+                }, 2000);
             };
 
             const onP1Up = (e) => {
@@ -1323,7 +1306,6 @@
             p1Btn.ontouchstart = onP1Down;
             p1Btn.ontouchend = onP1Up;
 
-            // أحداث اللاعب 2 (أعلى)
             const onP2Down = (e) => {
                 if (e) e.preventDefault();
                 if (!splitActive) return;
@@ -1331,7 +1313,7 @@
                 p2HoldTimer = setTimeout(() => {
                     p2HoldTriggered = true;
                     toggleP2AutoFire();
-                }, 2000); // 2000ms = 2 ثانية
+                }, 2000);
             };
 
             const onP2Up = (e) => {
@@ -1409,7 +1391,6 @@
             if (p2FireInterval) { clearInterval(p2FireInterval); p2FireInterval = null; }
         }
 
-        // دعم اللمس المتعدد على الشاشة المنقسمة
         function handleSplitTouch(e) {
             if (!splitActive) return;
             const containerRect = splitScreenContainer.getBoundingClientRect();
@@ -1432,11 +1413,9 @@
         splitScreenContainer.addEventListener('touchstart', handleSplitTouch, {passive: true});
         splitScreenContainer.addEventListener('touchmove', handleSplitTouch, {passive: true});
 
-        // دعم لوحة المفاتيح للكمبيوتر
         window.addEventListener('keydown', (e) => {
             if (!splitActive) return;
             const containerRect = splitScreenContainer.getBoundingClientRect();
-            // اللاعب 1: الأسهم + Space
             if (e.key === 'ArrowLeft') {
                 p1X = Math.max(30, p1X - 25);
                 document.getElementById('p1-ship').style.left = p1X + 'px';
@@ -1447,7 +1426,6 @@
                 fireSplitLaserP1();
             }
 
-            // اللاعب 2: A/D + W
             if (e.key === 'a' || e.key === 'A') {
                 p2X = Math.max(30, p2X - 25);
                 document.getElementById('p2-ship').style.left = p2X + 'px';
@@ -1512,7 +1490,6 @@
             const p1Rect = p1ShipEl.getBoundingClientRect();
             const p2Rect = p2ShipEl.getBoundingClientRect();
 
-            // تحريك ليزر P1 للأعلى
             document.querySelectorAll('.split-laser-p1').forEach(laser => {
                 let top = parseFloat(laser.style.top);
                 top -= 12;
@@ -1532,7 +1509,6 @@
                 }
             });
 
-            // تحريك ليزر P2 لأسفل
             document.querySelectorAll('.split-laser-p2').forEach(laser => {
                 let top = parseFloat(laser.style.top);
                 top += 12;
@@ -1552,7 +1528,6 @@
                 }
             });
 
-            // تحريك النيازك
             document.querySelectorAll('.split-meteor').forEach(meteor => {
                 let top = parseFloat(meteor.style.top);
                 if (meteor.dataset.dir === 'down') {
@@ -2051,7 +2026,6 @@
             gameScreen.style.display = 'flex';
         }
 
-        // تحريك الزر العائم للسحب والإفلات
         let isDraggingFab = false;
         let fabStartTouchX = 0, fabStartTouchY = 0;
         let fabStartLeft = 0, fabStartTop = 0;
