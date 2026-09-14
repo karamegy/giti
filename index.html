@@ -1635,6 +1635,60 @@
           });
         }
     </script>
+    <!-- الزر العائم المتحرك للحقيبة أو المتجر (مخفي افتراضياً ولا يظهر في واجهة الدخول) -->
+<button id="floating-store-btn" onclick="openStoreFromIndex()" title="متجر أساطير الفضاء" style="
+    position: fixed;
+    bottom: 25px;
+    right: 20px;
+    background: linear-gradient(45deg, #00f3ff, #009432);
+    color: white;
+    border: none;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    display: none; /* مخفي مبدئياً ولا يظهر في واجهة تسجيل الدخول */
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
+    cursor: pointer;
+    z-index: 9999;
+    animation: floatingAnim 2.5s ease-in-out infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
+">🛒</button>
+
+<style>
+    /* تأثير الحركة العائمة المستمرة للزر */
+    @keyframes floatingAnim {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+    #floating-store-btn:active {
+        transform: scale(0.9);
+    }
+</style>
+
+<script>
+    // فحص حالة تسجيل الدخول لإظهار أو إخفاء الزر العائم في الـ index
+    window.addEventListener('DOMContentLoaded', () => {
+        let activePilot = localStorage.getItem('currentSpacePilotV10');
+        const floatBtn = document.getElementById('floating-store-btn');
+        
+        // إذا كان هناك طيار مسجل دخول، يظهر الزر العائم المتحرك
+        if (activePilot && activePilot.trim() !== '') {
+            floatBtn.style.display = 'flex';
+        } else {
+            floatBtn.style.display = 'none';
+        }
+    });
+
+    // دالة الانتقال السريع للمتجر مع الحفاظ على اسم الطيار ومزامنة التقدم
+    function openStoreFromIndex() {
+        let activePilot = localStorage.getItem('currentSpacePilotV10') || 'admin';
+        localStorage.setItem('currentSpacePilotV10', activePilot);
+        window.location.href = 'lord.html';
+    }
+</script>
 </style>
 </body>
 </html>
