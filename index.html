@@ -378,6 +378,31 @@
             z-index: 4;
         }
 
+        /* تنسيقات الشاشة المنقسمة الحديثة للصراع الحقيقي */
+        .split-laser-p1 {
+            position: absolute;
+            width: 8px;
+            height: 25px;
+            background: #00f3ff;
+            box-shadow: 0 0 15px #00f3ff;
+            border-radius: 4px;
+            z-index: 6;
+        }
+        .split-laser-p2 {
+            position: absolute;
+            width: 8px;
+            height: 25px;
+            background: #ff3838;
+            box-shadow: 0 0 15px #ff3838;
+            border-radius: 4px;
+            z-index: 6;
+        }
+        .split-meteor {
+            position: absolute;
+            font-size: 2rem;
+            z-index: 5;
+        }
+
         .explosion {
             position: absolute;
             width: 90px;
@@ -585,7 +610,6 @@
             font-size: 0.75rem;
         }
 
-        /* تنسيق الزر العائم المتحرك بالسحب باللمس */
         .floating-fab {
             position: absolute;
             bottom: 80px;
@@ -621,10 +645,8 @@
         <div class="nebula" style="top: 10%; left: -20%;"></div>
         <div class="nebula" style="bottom: 15%; right: -20%; background: radial-gradient(circle, rgba(0, 119, 255, 0.18) 0%, transparent 70%);"></div>
 
-        <!-- الزر العائم المتحرك للوصول السريع للمتجر (يظهر حصراً بعد تسجيل الدخول) -->
         <button id="floating-store-btn" class="floating-fab" onclick="openStoreFromIndex()" title="متجر أساطير الفضاء">🛒</button>
 
-        <!-- أداة البروفايل الدائرية في الأعلى -->
         <div id="top-profile-badge">
             <div class="profile-avatar-circle" id="profile-avatar-icon">🛸</div>
             <div class="profile-info-text">
@@ -650,12 +672,11 @@
             </div>
         </div>
 
-        <!-- 2. الشاشة الرئيسية مع الأقسام المتعددة المتاحة للجميع -->
+        <!-- 2. الشاشة الرئيسية مع الأقسام المتعددة -->
         <div id="main-menu" class="screen" style="display: none; padding-bottom: 70px;">
             <h1 id="welcome-title">مرحباً بك يا بطل الفضاء</h1>
             <p id="user-status-desc" style="color: #2ecc71; font-weight: bold; margin-bottom: 5px;">الوضع: مجاني بالكامل لجميع الأعمار 🌟 | الجواهر: 💎 0</p>
 
-            <!-- القسم الأول: الألعاب (متاحة بالكامل للجميع بدون قيود) -->
             <div id="sec-games" class="section-container active-section">
                 <p style="color: #00f3ff; font-size: 0.8rem; margin: 2px 0 8px 0;">🎮 الأقسام الرئيسية للألعاب الفضائية (متاحة للجميع):</p>
                 <button class="btn" onclick="openGame(1)">⭐ 1. صائد النجوم الكلاسيكي</button>
@@ -668,10 +689,9 @@
                 <button class="btn btn-orange" onclick="openGame(8)">🔥 8. حرب الليزر والصواريخ</button>
                 <button class="btn btn-red" onclick="openGame(9)">👑 9. معركة الزعيم الأخير (Boss)</button>
                 <button class="btn" style="background: linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openGame(10)">🔒 10. معركة الحصار الفضائي (مفتوحة للجميع!)</button>
-                <button class="btn" style="background: linear-gradient(45deg, #3498db, #9b59b6);" onclick="openSplitScreenGame()">👥 11. صراع المجرّتين (لعب ثنائي شاشة منقسمة)</button>
+                <button class="btn" style="background: linear-gradient(45deg, #3498db, #9b59b6);" onclick="openSplitScreenGame()">👥 11. صراع المجرّتين (لعب ثنائي مواجهة حقيقية 1v1)</button>
             </div>
 
-            <!-- القسم الثاني: المتاجر والتقنيات المجانية -->
             <div id="sec-store" class="section-container">
                 <p style="color: #2ecc71; font-size: 0.8rem; margin: 2px 0 8px 0;">🌟 مرآب المركبات والمحاكاة الترفيهية (مجاني 100%):</p>
                 
@@ -685,7 +705,6 @@
                 <button class="btn" style="background: linear-gradient(45deg, #fdcb6e, #e17055);" onclick="openShop()">🛸 مرآب المركبات الفضائية المجاني</button>
             </div>
 
-            <!-- القسم الثالث: الشات العام -->
             <div id="sec-chat" class="section-container">
                 <p style="color: #00f3ff; font-size: 0.8rem; margin: 2px 0 8px 0;">💬 شات الطيارين العام (آمن ومراقب):</p>
                 <div class="chat-box-container">
@@ -700,7 +719,6 @@
                 </div>
             </div>
 
-            <!-- القسم الرابع: لوحة تحكم المدير (تظهر فقط للأدمين) -->
             <div id="sec-admin" class="section-container">
                 <p style="color: #ff3838; font-size: 0.8rem; margin: 2px 0 8px 0;">🛡️ لوحة إدارة الشات والحسابات (Admin):</p>
                 <div class="info-card" style="border-color: #ff3838; background: rgba(255, 56, 56, 0.05); text-align: right;">
@@ -713,11 +731,8 @@
                 <button class="btn btn-red" style="margin-top: 10px;" onclick="loadAdminUsersList()">🔄 تحديث قائمة المستخدمين</button>
             </div>
 
-            <!-- القسم الخامس: الدعم الفني وأمان العائلة والمؤسس -->
             <div id="sec-support" class="section-container">
                 <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وأمان العائلة والمؤسس:</p>
-                
-                <!-- بطاقة معلومات المؤسس والمطور -->
                 <div class="info-card" style="border-color: #00f3ff; background: rgba(0, 243, 255, 0.05);">
                     <b style="color: #00f3ff; font-size: 0.8rem;">👨‍💻 معلومات المؤسس والمطور:</b><br>
                     <span style="font-size: 0.75rem; color: #fff;">• المؤسس والمطور: كرم حمدي (Malak Haret)</span><br>
@@ -736,7 +751,6 @@
             </div>
         </div>
 
-        <!-- قائمة التنقل السفلية -->
         <div id="bottom-nav-bar" style="display: none;">
             <button class="nav-item active" onclick="switchSection('sec-games', this)">
                 <span class="nav-icon">🎮</span>
@@ -760,7 +774,6 @@
             </button>
         </div>
 
-        <!-- 6. مرآب المركبات الفضائية المجاني -->
         <div id="shop-modal" class="screen" style="display: none;">
             <h2>مرآب مركبات المستقبل (مجاني للجميع)</h2>
             <p>اختر طراز سفينتك الفضائية المفضلة:</p>
@@ -774,7 +787,6 @@
             <button class="btn" onclick="closeShop()">حفظ والعودة للمكتبة</button>
         </div>
 
-        <!-- 7. شاشة تفاصيل تفاعل اللعبة -->
         <div id="game-screen" class="screen" style="display: none;">
             <h1 id="screen-title">عنوان اللعبة</h1>
             <p id="screen-desc">تعليمات اللعب...</p>
@@ -783,20 +795,28 @@
             <button class="btn btn-secondary" onclick="returnToMenu()">🏠 العودة للقائمة الرئيسية</button>
         </div>
 
-        <!-- 8. واجهة الشاشة المنقسمة -->
+        <!-- 8. واجهة الشاشة المنقسمة التفاعلية الحقيقية (صراع المجرتين) -->
         <div id="split-screen-container" class="screen" style="display: none; padding:0; background:#000;">
-            <div id="p2-area" style="position:relative; width:100%; height:50%; background:rgba(20,0,40,0.9); border-bottom:3px solid #00f3ff; overflow:hidden;">
-                <div style="position:absolute; top:5px; right:10px; color:#ff3838; font-weight:bold; font-size:0.75rem;">اللاعب 2 (أعلى) - النتيجة: <span id="p2-score">0</span></div>
-                <div id="p2-ship" style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); font-size:2.5rem;">🚀</div>
+            <!-- النصف العلوي: اللاعب 2 (المجرة الحمراء) -->
+            <div id="p2-area" style="position:relative; width:100%; height:50%; background:rgba(35,0,15,0.95); border-bottom:3px solid #00f3ff; overflow:hidden; touch-action:none;">
+                <div style="position:absolute; top:8px; right:12px; color:#ff3838; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #ff3838;">
+                    اللاعب 2 (أعلى): ❤️ <span id="p2-lives">3</span> | 🏆 <span id="p2-score">0</span>
+                </div>
+                <button id="p2-fire-btn" onclick="fireSplitLaserP2()" style="position:absolute; top:8px; left:12px; background:linear-gradient(45deg, #ff3838, #c0392b); border:none; color:white; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #ff3838; cursor:pointer;">🔥 إطلاق P2</button>
+                <div id="p2-ship" style="position:absolute; top:45px; left:50%; transform:translateX(-50%); font-size:2.6rem; z-index:5; filter:drop-shadow(0 0 12px #ff3838); transition: left 0.05s ease;">🚀</div>
             </div>
-            <div id="p1-area" style="position:relative; width:100%; height:50%; background:rgba(0,20,40,0.9); overflow:hidden;">
-                <div style="position:absolute; top:5px; right:10px; color:#00f3ff; font-weight:bold; font-size:0.75rem;">اللاعب 1 (أسفل) - النتيجة: <span id="p1-score">0</span></div>
-                <div id="p1-ship" style="position:absolute; bottom:20px; left:50%; transform:translateX(-50%); font-size:2.5rem;">🛸</div>
-                <button class="btn btn-secondary" style="position:absolute; bottom:10px; left:10px; width:auto; padding:4px 10px; font-size:0.7rem; z-index:30;" onclick="returnToMenu()">خروج</button>
+
+            <!-- النصف السفلي: اللاعب 1 (المجرة الزرقاء) -->
+            <div id="p1-area" style="position:relative; width:100%; height:50%; background:rgba(0,20,45,0.95); overflow:hidden; touch-action:none;">
+                <div style="position:absolute; top:8px; right:12px; color:#00f3ff; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #00f3ff;">
+                    اللاعب 1 (أسفل): ❤️ <span id="p1-lives">3</span> | 🏆 <span id="p1-score">0</span>
+                </div>
+                <button id="p1-fire-btn" onclick="fireSplitLaserP1()" style="position:absolute; bottom:12px; right:12px; background:linear-gradient(45deg, #00f3ff, #0984e3); border:none; color:black; font-size:0.85rem; font-weight:bold; padding:6px 14px; border-radius:12px; z-index:20; box-shadow:0 0 12px #00f3ff; cursor:pointer;">⚡ إطلاق P1</button>
+                <button class="btn btn-secondary" style="position:absolute; bottom:12px; left:12px; width:auto; padding:5px 12px; font-size:0.7rem; z-index:30;" onclick="returnToMenu()">🏠 خروج</button>
+                <div id="p1-ship" style="position:absolute; bottom:45px; left:50%; transform:translateX(-50%); font-size:2.6rem; z-index:5; filter:drop-shadow(0 0 12px #00f3ff); transition: left 0.05s ease;">🛸</div>
             </div>
         </div>
 
-        <!-- واجهة اللعب الحية -->
         <div id="ui" style="display: none;">
             <div class="ui-badge">⭐ <span id="score">0</span></div>
             <div class="ui-badge">❤️ <span id="lives">3</span></div>
@@ -806,10 +826,8 @@
             <button id="pause-btn" onclick="togglePause()">⏸️</button>
         </div>
 
-        <!-- اللاعب -->
         <div id="player" style="display: none;">🛸</div>
 
-        <!-- لوحة التحكم السفلي أثناء اللعب -->
         <div id="controls" style="display: none;">
             <button class="fire-btn" id="fire-btn">⚡ إطلاق النار</button>
         </div>
@@ -881,13 +899,14 @@
         
         gameContainer.addEventListener('touchstart', (e) => {
             if (!isPlaying || isPaused) return;
-            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn')) return;
+            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn') || e.target.closest('#split-screen-container')) return;
             isTouchingScreen = true;
             updateTouchPosition(e.touches[0].clientX);
         });
 
         gameContainer.addEventListener('touchmove', (e) => {
             if (!isPlaying || isPaused || !isTouchingScreen) return;
+            if (e.target.closest('#split-screen-container')) return;
             updateTouchPosition(e.touches[0].clientX);
         });
 
@@ -897,7 +916,7 @@
 
         gameContainer.addEventListener('mousedown', (e) => {
             if (!isPlaying || isPaused) return;
-            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn')) return;
+            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn') || e.target.closest('#split-screen-container')) return;
             isTouchingScreen = true;
             updateTouchPosition(e.clientX);
         });
@@ -1209,6 +1228,16 @@
             }, 1000);
         }
 
+        /* -------------------------------------------------------------
+           تطوير المحرك الشامل للعبة "صراع المجرّتين" (مواجهة حقيقية 1v1)
+        ------------------------------------------------------------- */
+        let splitActive = false;
+        let splitAnimFrame = null;
+        let splitSpawnInterval = null;
+        let p1X = 200, p2X = 200;
+        let p1Lives = 3, p2Lives = 3;
+        let p1Score = 0, p2Score = 0;
+
         function openSplitScreenGame() {
             mainMenu.style.display = 'none';
             bottomNavBar.style.display = 'none';
@@ -1216,6 +1245,227 @@
             floatingStoreBtn.style.display = 'none';
             splitScreenContainer.style.display = 'flex';
             startSplitScreenGame();
+        }
+
+        function startSplitScreenGame() {
+            splitActive = true;
+            p1Lives = 3; p2Lives = 3;
+            p1Score = 0; p2Score = 0;
+            
+            document.getElementById('p1-lives').innerText = p1Lives;
+            document.getElementById('p2-lives').innerText = p2Lives;
+            document.getElementById('p1-score').innerText = p1Score;
+            document.getElementById('p2-score').innerText = p2Score;
+
+            const rect = splitScreenContainer.getBoundingClientRect();
+            p1X = rect.width / 2;
+            p2X = rect.width / 2;
+            document.getElementById('p1-ship').style.left = p1X + 'px';
+            document.getElementById('p2-ship').style.left = p2X + 'px';
+
+            // تنظيف أي عناصر قديمة
+            document.querySelectorAll('.split-laser-p1, .split-laser-p2, .split-meteor').forEach(el => el.remove());
+            
+            if (splitSpawnInterval) clearInterval(splitSpawnInterval);
+            splitSpawnInterval = setInterval(spawnSplitMeteor, 1200);
+
+            cancelAnimationFrame(splitAnimFrame);
+            splitGameLoop();
+        }
+
+        // دعم اللمس المتعدد على الشاشة المنقسمة
+        function handleSplitTouch(e) {
+            if (!splitActive) return;
+            const containerRect = splitScreenContainer.getBoundingClientRect();
+            for (let i = 0; i < e.touches.length; i++) {
+                const touch = e.touches[i];
+                if (touch.target.tagName === 'BUTTON') continue;
+                const relY = touch.clientY - containerRect.top;
+                const relX = touch.clientX - containerRect.left;
+                
+                if (relY < containerRect.height / 2) {
+                    // النصف العلوي -> اللاعب 2
+                    p2X = Math.max(30, Math.min(containerRect.width - 30, relX));
+                    document.getElementById('p2-ship').style.left = p2X + 'px';
+                } else {
+                    // النصف السفلي -> اللاعب 1
+                    p1X = Math.max(30, Math.min(containerRect.width - 30, relX));
+                    document.getElementById('p1-ship').style.left = p1X + 'px';
+                }
+            }
+        }
+
+        splitScreenContainer.addEventListener('touchstart', handleSplitTouch, {passive: true});
+        splitScreenContainer.addEventListener('touchmove', handleSplitTouch, {passive: true});
+
+        // دعم لوحة المفاتيح للكمبيوتر
+        window.addEventListener('keydown', (e) => {
+            if (!splitActive) return;
+            const containerRect = splitScreenContainer.getBoundingClientRect();
+            // اللاعب 1: الأسهم + Space
+            if (e.key === 'ArrowLeft') {
+                p1X = Math.max(30, p1X - 25);
+                document.getElementById('p1-ship').style.left = p1X + 'px';
+            } else if (e.key === 'ArrowRight') {
+                p1X = Math.min(containerRect.width - 30, p1X + 25);
+                document.getElementById('p1-ship').style.left = p1X + 'px';
+            } else if (e.key === ' ' || e.code === 'Space') {
+                fireSplitLaserP1();
+            }
+
+            // اللاعب 2: A/D + W
+            if (e.key === 'a' || e.key === 'A') {
+                p2X = Math.max(30, p2X - 25);
+                document.getElementById('p2-ship').style.left = p2X + 'px';
+            } else if (e.key === 'd' || e.key === 'D') {
+                p2X = Math.min(containerRect.width - 30, p2X + 25);
+                document.getElementById('p2-ship').style.left = p2X + 'px';
+            } else if (e.key === 'w' || e.key === 'W') {
+                fireSplitLaserP2();
+            }
+        });
+
+        function fireSplitLaserP1() {
+            if (!splitActive) return;
+            const laser = document.createElement('div');
+            laser.classList.add('split-laser-p1');
+            laser.style.left = (p1X - 4) + 'px';
+            laser.style.top = (splitScreenContainer.clientHeight - 80) + 'px';
+            splitScreenContainer.appendChild(laser);
+        }
+
+        function fireSplitLaserP2() {
+            if (!splitActive) return;
+            const laser = document.createElement('div');
+            laser.classList.add('split-laser-p2');
+            laser.style.left = (p2X - 4) + 'px';
+            laser.style.top = '70px';
+            splitScreenContainer.appendChild(laser);
+        }
+
+        function spawnSplitMeteor() {
+            if (!splitActive) return;
+            const meteor = document.createElement('div');
+            meteor.classList.add('split-meteor');
+            meteor.innerText = '☄️';
+            const width = splitScreenContainer.clientWidth;
+            meteor.style.left = (Math.random() * (width - 40)) + 'px';
+            
+            // ظهور إما بالنصف العلوي أو السفلي
+            if (Math.random() > 0.5) {
+                meteor.style.top = '10px';
+                meteor.dataset.dir = 'down';
+            } else {
+                meteor.style.top = (splitScreenContainer.clientHeight - 40) + 'px';
+                meteor.dataset.dir = 'up';
+            }
+            splitScreenContainer.appendChild(meteor);
+        }
+
+        function createExplosionAt(x, y) {
+            const exp = document.createElement('div');
+            exp.classList.add('explosion');
+            exp.style.left = x + 'px';
+            exp.style.top = y + 'px';
+            splitScreenContainer.appendChild(exp);
+            setTimeout(() => exp.remove(), 350);
+        }
+
+        function splitGameLoop() {
+            if (!splitActive) return;
+
+            const p1ShipEl = document.getElementById('p1-ship');
+            const p2ShipEl = document.getElementById('p2-ship');
+            const p1Rect = p1ShipEl.getBoundingClientRect();
+            const p2Rect = p2ShipEl.getBoundingClientRect();
+
+            // تحريك ليزر P1 للأعلى
+            document.querySelectorAll('.split-laser-p1').forEach(laser => {
+                let top = parseFloat(laser.style.top);
+                top -= 12;
+                laser.style.top = top + 'px';
+                const lRect = laser.getBoundingClientRect();
+
+                // التحقق من اصطدام ليزر P1 بسفينة P2
+                if (lRect.left < p2Rect.right && lRect.right > p2Rect.left && lRect.top < p2Rect.bottom && lRect.bottom > p2Rect.top) {
+                    p2Lives--;
+                    p1Score += 100;
+                    document.getElementById('p2-lives').innerText = p2Lives;
+                    document.getElementById('p1-score').innerText = p1Score;
+                    createExplosionAt(p2Rect.left + 20, p2Rect.top + 20);
+                    laser.remove();
+                    if (p2Lives <= 0) checkSplitWinner('اللاعب 1 (المجرة الزرقاء)');
+                } else if (top < 0) {
+                    laser.remove();
+                }
+            });
+
+            // تحريك ليزر P2 لأسفل
+            document.querySelectorAll('.split-laser-p2').forEach(laser => {
+                let top = parseFloat(laser.style.top);
+                top += 12;
+                laser.style.top = top + 'px';
+                const lRect = laser.getBoundingClientRect();
+
+                // التحقق من اصطدام ليزر P2 بسفينة P1
+                if (lRect.left < p1Rect.right && lRect.right > p1Rect.left && lRect.top < p1Rect.bottom && lRect.bottom > p1Rect.top) {
+                    p1Lives--;
+                    p2Score += 100;
+                    document.getElementById('p1-lives').innerText = p1Lives;
+                    document.getElementById('p2-score').innerText = p2Score;
+                    createExplosionAt(p1Rect.left + 20, p1Rect.top + 20);
+                    laser.remove();
+                    if (p1Lives <= 0) checkSplitWinner('اللاعب 2 (المجرة الحمراء)');
+                } else if (top > splitScreenContainer.clientHeight) {
+                    laser.remove();
+                }
+            });
+
+            // تحريك النيازك
+            document.querySelectorAll('.split-meteor').forEach(meteor => {
+                let top = parseFloat(meteor.style.top);
+                if (meteor.dataset.dir === 'down') {
+                    top += 4;
+                } else {
+                    top -= 4;
+                }
+                meteor.style.top = top + 'px';
+                const mRect = meteor.getBoundingClientRect();
+
+                // اصطدام مع P1
+                if (mRect.left < p1Rect.right && mRect.right > p1Rect.left && mRect.top < p1Rect.bottom && mRect.bottom > p1Rect.top) {
+                    p1Lives--;
+                    document.getElementById('p1-lives').innerText = p1Lives;
+                    createExplosionAt(p1Rect.left + 20, p1Rect.top + 20);
+                    meteor.remove();
+                    if (p1Lives <= 0) checkSplitWinner('اللاعب 2 (المجرة الحمراء)');
+                }
+                // اصطدام مع P2
+                else if (mRect.left < p2Rect.right && mRect.right > p2Rect.left && mRect.top < p2Rect.bottom && mRect.bottom > p2Rect.top) {
+                    p2Lives--;
+                    document.getElementById('p2-lives').innerText = p2Lives;
+                    createExplosionAt(p2Rect.left + 20, p2Rect.top + 20);
+                    meteor.remove();
+                    if (p2Lives <= 0) checkSplitWinner('اللاعب 1 (المجرة الزرقاء)');
+                } else if (top < -40 || top > splitScreenContainer.clientHeight + 40) {
+                    meteor.remove();
+                }
+            });
+
+            if (splitActive) {
+                splitAnimFrame = requestAnimationFrame(splitGameLoop);
+            }
+        }
+
+        function checkSplitWinner(winnerName) {
+            splitActive = false;
+            cancelAnimationFrame(splitAnimFrame);
+            clearInterval(splitSpawnInterval);
+
+            setTimeout(() => {
+                alert(`🎉 انتصر ${winnerName} في صراع المجرّتين!\n\n🏆 النتيجة:\nاللاعب 1: ${p1Score}\nاللاعب 2: ${p2Score}`);
+                returnToMenu();
+            }, 100);
         }
 
         function insertEmoji(e) {
@@ -1449,9 +1699,11 @@
         }
 
         function returnToMenu() {
-            isPlaying = false; isPaused = false; isAutoFire = false;
+            isPlaying = false; isPaused = false; isAutoFire = false; splitActive = false;
             cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
-            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion').forEach(el => el.remove());
+            cancelAnimationFrame(splitAnimFrame); clearInterval(splitSpawnInterval);
+
+            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .missile, .explosion, .split-laser-p1, .split-laser-p2, .split-meteor').forEach(el => el.remove());
             
             gameScreen.style.display = 'none';
             splitScreenContainer.style.display = 'none';
@@ -1642,26 +1894,6 @@
             });
         }
 
-        function startSplitScreenGame() {
-            let p1Score = 0, p2Score = 0;
-            const p1Ship = document.getElementById('p1-ship');
-            const p2Ship = document.getElementById('p2-ship');
-            const p1ScoreEl = document.getElementById('p1-score');
-            const p2ScoreEl = document.getElementById('p2-score');
-
-            let p1X = 200, p2X = 200;
-            let splitInterval = setInterval(() => {
-                p1Score += 15; p2Score += 15;
-                p1ScoreEl.innerText = p1Score;
-                p2ScoreEl.innerText = p2Score;
-                p1X += (Math.random() - 0.5) * 35;
-                p2X += (Math.random() - 0.5) * 35;
-                p1Ship.style.left = Math.max(20, Math.min(380, p1X)) + 'px';
-                p2Ship.style.left = Math.max(20, Math.min(380, p2X)) + 'px';
-            }, 100);
-            window.activeSplitInterval = splitInterval;
-        }
-
         function triggerShake() {
             gameContainer.classList.add('shake');
             setTimeout(() => gameContainer.classList.remove('shake'), 300);
@@ -1687,7 +1919,7 @@
             gameScreen.style.display = 'flex';
         }
 
-        // تفعيل تحريك الزر العائم بالسحب باللمس والماوس مع الحفاظ على النقر لفتح المتجر
+        // تحريك الزر العائم للسحب والإفلات
         let isDraggingFab = false;
         let fabStartTouchX = 0, fabStartTouchY = 0;
         let fabStartLeft = 0, fabStartTop = 0;
@@ -1735,7 +1967,6 @@
                 let newLeft = fabStartLeft + deltaX;
                 let newTop = fabStartTop + deltaY;
 
-                // التقييد داخل حدود شاشة اللعبة
                 newLeft = Math.max(10, Math.min(containerRect.width - 66, newLeft));
                 newTop = Math.max(10, Math.min(containerRect.height - 66, newTop));
 
@@ -1755,7 +1986,6 @@
             window.addEventListener('mousemove', onDragMove);
             window.addEventListener('mouseup', onDragEnd);
 
-            // منع فتح المتجر عند السحب، وفتحه فقط عند النقر البسيط
             fab.addEventListener('click', (e) => {
                 if (fabHasDragged) {
                     e.stopImmediatePropagation();
