@@ -585,11 +585,11 @@
             font-size: 0.75rem;
         }
 
-        /* تنسيق الزر العائم المتحرك */
+        /* تنسيق الزر العائم المتحرك بالسحب باللمس */
         .floating-fab {
-            position: fixed;
-            bottom: 25px;
-            right: 20px;
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
             background: linear-gradient(45deg, #00f3ff, #009432);
             color: white;
             border: none;
@@ -601,17 +601,16 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
-            cursor: pointer;
+            cursor: grab;
             z-index: 9999;
-            animation: floatingAnim 2.5s ease-in-out infinite;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        @keyframes floatingAnim {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: transform 0.1s, box-shadow 0.2s;
         }
         .floating-fab:active {
-            transform: scale(0.9);
+            transform: scale(0.92);
+            cursor: grabbing;
         }
     </style>
 </head>
@@ -882,7 +881,7 @@
         
         gameContainer.addEventListener('touchstart', (e) => {
             if (!isPlaying || isPaused) return;
-            if (e.target.closest('#controls') || e.target.closest('#ui')) return;
+            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn')) return;
             isTouchingScreen = true;
             updateTouchPosition(e.touches[0].clientX);
         });
@@ -898,7 +897,7 @@
 
         gameContainer.addEventListener('mousedown', (e) => {
             if (!isPlaying || isPaused) return;
-            if (e.target.closest('#controls') || e.target.closest('#ui')) return;
+            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn')) return;
             isTouchingScreen = true;
             updateTouchPosition(e.clientX);
         });
@@ -1687,6 +1686,86 @@
             startBtn.innerText = "العب مرة أخرى";
             gameScreen.style.display = 'flex';
         }
+
+        // تفعيل تحريك الزر العائم بالسحب باللمس والماوس مع الحفاظ على النقر لفتح المتجر
+        let isDraggingFab = false;
+        let fabStartTouchX = 0, fabStartTouchY = 0;
+        let fabStartLeft = 0, fabStartTop = 0;
+        let fabHasDragged = false;
+
+        function initFabDrag() {
+            const fab = document.getElementById('floating-store-btn');
+            if (!fab) return;
+
+            const onDragStart = (e) => {
+                isDraggingFab = true;
+                fabHasDragged = false;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                fabStartTouchX = clientX;
+                fabStartTouchY = clientY;
+                
+                const rect = fab.getBoundingClientRect();
+                const containerRect = gameContainer.getBoundingClientRect();
+
+                fabStartLeft = rect.left - containerRect.left;
+                fabStartTop = rect.top - containerRect.top;
+
+                fab.style.position = 'absolute';
+                fab.style.bottom = 'auto';
+                fab.style.right = 'auto';
+                fab.style.left = fabStartLeft + 'px';
+                fab.style.top = fabStartTop + 'px';
+            };
+
+            const onDragMove = (e) => {
+                if (!isDraggingFab) return;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+                const deltaX = clientX - fabStartTouchX;
+                const deltaY = clientY - fabStartTouchY;
+
+                if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+                    fabHasDragged = true;
+                }
+
+                const containerRect = gameContainer.getBoundingClientRect();
+                let newLeft = fabStartLeft + deltaX;
+                let newTop = fabStartTop + deltaY;
+
+                // التقييد داخل حدود شاشة اللعبة
+                newLeft = Math.max(10, Math.min(containerRect.width - 66, newLeft));
+                newTop = Math.max(10, Math.min(containerRect.height - 66, newTop));
+
+                fab.style.left = newLeft + 'px';
+                fab.style.top = newTop + 'px';
+            };
+
+            const onDragEnd = () => {
+                isDraggingFab = false;
+            };
+
+            fab.addEventListener('touchstart', onDragStart, { passive: true });
+            window.addEventListener('touchmove', onDragMove, { passive: true });
+            window.addEventListener('touchend', onDragEnd);
+
+            fab.addEventListener('mousedown', onDragStart);
+            window.addEventListener('mousemove', onDragMove);
+            window.addEventListener('mouseup', onDragEnd);
+
+            // منع فتح المتجر عند السحب، وفتحه فقط عند النقر البسيط
+            fab.addEventListener('click', (e) => {
+                if (fabHasDragged) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    fabHasDragged = false;
+                }
+            }, true);
+        }
+
+        initFabDrag();
 
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
