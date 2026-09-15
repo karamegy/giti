@@ -57,6 +57,7 @@
             overflow: hidden;
             perspective: 900px;
             transition: background 0.8s ease;
+            will-change: transform;
         }
 
         #top-profile-badge {
@@ -120,7 +121,6 @@
             pointer-events: none;
         }
 
-        /* خلفيات المجرات المشتراة من المتجر */
         .bg-orion-nebula {
             background: radial-gradient(circle at center, #8e44ad 0%, #2c3e50 50%, #000000 100%) !important;
         }
@@ -136,6 +136,7 @@
             border-radius: 50%;
             z-index: 1;
             animation: rotateNebula 30s linear infinite;
+            will-change: transform;
         }
         @keyframes rotateNebula {
             from { transform: rotate(0deg) scale(1); }
@@ -148,6 +149,7 @@
             border-radius: 50%;
             animation: moveStar linear infinite;
             z-index: 2;
+            will-change: transform;
         }
         @keyframes moveStar {
             from { transform: translateZ(0) translateY(-10px); opacity: 0.2; }
@@ -200,7 +202,6 @@
         #home-btn { background: #00cec9; box-shadow: 0 0 12px rgba(0, 206, 201, 0.6); }
         #snap-btn { background: #9b59b6; box-shadow: 0 0 12px rgba(155, 89, 182, 0.6); }
 
-        /* نقل أدوات التحكم إلى الجزء الأسفل وتصغير الزر ليصبح دائرياً */
         #controls {
             position: absolute;
             bottom: 25px;
@@ -314,7 +315,7 @@
             position: absolute;
             bottom: 110px;
             left: 50%;
-            transform: translateX(-50%) translateZ(50px);
+            transform: translateX(-50%) translateZ(0);
             width: 65px;
             height: 65px;
             font-size: 3.2rem;
@@ -323,6 +324,7 @@
             z-index: 5;
             filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.8));
             transition: transform 0.05s ease-out;
+            will-change: transform, left;
         }
         #player::after {
             content: '🔥';
@@ -350,19 +352,19 @@
             text-align: center;
             line-height: 45px;
             z-index: 4;
-            transform: translateZ(20px);
+            transform: translateZ(0);
+            will-change: transform, top;
         }
 
-        /* أنواع التأثيرات البصرية لليزر المشتراة من المتجر */
-        .laser-l1 { position: absolute; width: 6px; height: 24px; background: #00f3ff; box-shadow: 0 0 18px #00f3ff; border-radius: 3px; z-index: 4; }
-        .laser-l2 { position: absolute; width: 8px; height: 28px; background: #ff3838; box-shadow: 0 0 20px #ff3838; border-radius: 4px; z-index: 4; }
-        .laser-l3 { position: absolute; width: 10px; height: 30px; background: #2ecc71; box-shadow: 0 0 22px #2ecc71; border-radius: 5px; z-index: 4; }
+        .laser-l1 { position: absolute; width: 6px; height: 24px; background: #00f3ff; box-shadow: 0 0 18px #00f3ff; border-radius: 3px; z-index: 4; will-change: bottom; }
+        .laser-l2 { position: absolute; width: 8px; height: 28px; background: #ff3838; box-shadow: 0 0 20px #ff3838; border-radius: 4px; z-index: 4; will-change: bottom; }
+        .laser-l3 { position: absolute; width: 10px; height: 30px; background: #2ecc71; box-shadow: 0 0 22px #2ecc71; border-radius: 5px; z-index: 4; will-change: bottom; }
         
-        .laser-plasma_blue { position: absolute; width: 8px; height: 30px; background: #00f3ff; box-shadow: 0 0 25px #00f3ff, 0 0 10px #ffffff; border-radius: 4px; z-index: 4; }
-        .laser-lava_red { position: absolute; width: 9px; height: 32px; background: #ff3838; box-shadow: 0 0 25px #ff3838, 0 0 12px #f1c40f; border-radius: 5px; z-index: 4; }
-        .laser-emerald_quantum { position: absolute; width: 9px; height: 32px; background: #2ecc71; box-shadow: 0 0 25px #2ecc71, 0 0 12px #00f3ff; border-radius: 5px; z-index: 4; }
-        .laser-blackhole_purple { position: absolute; width: 11px; height: 34px; background: #8e44ad; box-shadow: 0 0 28px #8e44ad, 0 0 14px #e74c3c; border-radius: 6px; z-index: 4; }
-        .laser-supernova_gold { position: absolute; width: 12px; height: 36px; background: #f1c40f; box-shadow: 0 0 30px #f1c40f, 0 0 15px #ffffff; border-radius: 6px; z-index: 4; }
+        .laser-plasma_blue { position: absolute; width: 8px; height: 30px; background: #00f3ff; box-shadow: 0 0 25px #00f3ff, 0 0 10px #ffffff; border-radius: 4px; z-index: 4; will-change: bottom; }
+        .laser-lava_red { position: absolute; width: 9px; height: 32px; background: #ff3838; box-shadow: 0 0 25px #ff3838, 0 0 12px #f1c40f; border-radius: 5px; z-index: 4; will-change: bottom; }
+        .laser-emerald_quantum { position: absolute; width: 9px; height: 32px; background: #2ecc71; box-shadow: 0 0 25px #2ecc71, 0 0 12px #00f3ff; border-radius: 5px; z-index: 4; will-change: bottom; }
+        .laser-blackhole_purple { position: absolute; width: 11px; height: 34px; background: #8e44ad; box-shadow: 0 0 28px #8e44ad, 0 0 14px #e74c3c; border-radius: 6px; z-index: 4; will-change: bottom; }
+        .laser-supernova_gold { position: absolute; width: 12px; height: 36px; background: #f1c40f; box-shadow: 0 0 30px #f1c40f, 0 0 15px #ffffff; border-radius: 6px; z-index: 4; will-change: bottom; }
 
         .missile {
             position: absolute;
@@ -372,11 +374,12 @@
             box-shadow: 0 0 28px #f1c40f;
             border-radius: 6px;
             z-index: 4;
+            will-change: bottom;
         }
 
-        .split-laser-p1 { position: absolute; width: 8px; height: 25px; background: #00f3ff; box-shadow: 0 0 15px #00f3ff; border-radius: 4px; z-index: 6; }
-        .split-laser-p2 { position: absolute; width: 8px; height: 25px; background: #ff3838; box-shadow: 0 0 15px #ff3838; border-radius: 4px; z-index: 6; }
-        .split-meteor { position: absolute; font-size: 2rem; z-index: 5; }
+        .split-laser-p1 { position: absolute; width: 8px; height: 25px; background: #00f3ff; box-shadow: 0 0 15px #00f3ff; border-radius: 4px; z-index: 6; will-change: top; }
+        .split-laser-p2 { position: absolute; width: 8px; height: 25px; background: #ff3838; box-shadow: 0 0 15px #ff3838; border-radius: 4px; z-index: 6; will-change: top; }
+        .split-meteor { position: absolute; font-size: 2rem; z-index: 5; will-change: top; }
 
         .explosion {
             position: absolute;
@@ -387,6 +390,7 @@
             z-index: 6;
             transform: translate(-50%, -50%);
             animation: explodeAnim 0.35s forwards;
+            pointer-events: none;
         }
         @keyframes explodeAnim {
             0% { transform: scale(0.2); opacity: 1; }
@@ -496,11 +500,14 @@
             border-radius: 14px;
             cursor: pointer;
             border: 2px solid transparent;
+            transition: transform 0.15s ease, border-color 0.15s ease;
         }
+        .ship-option:hover { transform: scale(1.1); }
         .ship-option.selected {
             border-color: #00f3ff;
             background: rgba(0, 243, 255, 0.2);
             box-shadow: 0 0 12px #00f3ff;
+            transform: scale(1.15);
         }
 
         .info-card {
@@ -749,7 +756,7 @@
             <h2>مرآب مركبات المستقبل (مجاني للجميع)</h2>
             <p>اختر طراز سفينتك الفضائية المفضلة:</p>
             <div class="ship-options">
-                <div class="ship-option selected" onclick="selectShip('🛸', this)">🛸</div>
+                <div class="ship-option" onclick="selectShip('🛸', this)">🛸</div>
                 <div class="ship-option" onclick="selectShip('🚀', this)">🚀</div>
                 <div class="ship-option" onclick="selectShip('🛰️', this)">🛰️</div>
                 <div class="ship-option" onclick="selectShip('👽', this)">👽</div>
@@ -820,23 +827,18 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // قاموس أسماء المقتنيات والعناصر لمنع ظهور الأكواد الإنجليزية
-        const ITEM_TRANSLATIONS = {
-            'plasma_blue': '⚡ ليزر البلازما الأزرق القوسي',
-            'lava_red': '🔥 ليزر الحمم البركانية الحمراء',
-            'emerald_quantum': '💚 ليزر الزمرد الكمومي الفائق',
-            'blackhole_purple': '💜 ليزر الثقب الأسود البنفسجي',
-            'supernova_gold': '🟡 ليزر السوبرنوفا الذهبي المتفجر',
-            'admin_mothership': '🛸 مركبة الأدمين القائدة الملكية',
-            'android_cruiser': '🚀 صاروخ مجرة الأندرويد الفاخر',
-            'alien_destroyer': '👾 مدمرة الفضاء الأجنبية',
-            'orion_nebula': '✨ خلفية سديم أوريون النجمي',
-            'milkyway_deep': '🌌 خلفية ثقب درب التبانة العميق',
-            'time_warp': '⏳ محرك الالتواء الزمني',
-            'gem_multiplier': '🌟 مضاعف الجواهر الكوني (2x)',
-            'ai_drone': '🛸 طائرة الدرون المرافق الذكية',
-            'golden_emperor': '👑 خوذة الإمبراطور الذهبية الملكية',
-            'cyber_mind': '🔮 خوذة العقل السيبراني'
+        // معالج أداء اللعبة وسلاسة الإطارات (Game Performance Processor)
+        const GamePerformanceOptimizer = {
+            lastFrameTime: performance.now(),
+            fps: 60,
+            targetDelta: 1000 / 60,
+            cleanUpThreshold: 40,
+            optimizeDOM() {
+                const garbage = document.querySelectorAll('.explosion, .laser-l1:not([style*="bottom"]), .item:not([style*="top"])');
+                if (garbage.length > 20) {
+                    garbage.forEach(el => el.remove());
+                }
+            }
         };
 
         const gameContainer = document.getElementById('game-container');
@@ -888,23 +890,22 @@
         };
 
         let isTouchingScreen = false;
+        let selectedShipIcon = '🛸';
         
         gameContainer.addEventListener('touchstart', (e) => {
             if (!isPlaying || isPaused) return;
             if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn') || e.target.closest('#split-screen-container')) return;
             isTouchingScreen = true;
             updateTouchPosition(e.touches[0].clientX);
-        });
+        }, { passive: true });
 
         gameContainer.addEventListener('touchmove', (e) => {
             if (!isPlaying || isPaused || !isTouchingScreen) return;
             if (e.target.closest('#split-screen-container')) return;
             updateTouchPosition(e.touches[0].clientX);
-        });
+        }, { passive: true });
 
-        gameContainer.addEventListener('touchend', () => {
-            isTouchingScreen = false;
-        });
+        gameContainer.addEventListener('touchend', () => { isTouchingScreen = false; });
 
         gameContainer.addEventListener('mousedown', (e) => {
             if (!isPlaying || isPaused) return;
@@ -918,16 +919,16 @@
             updateTouchPosition(e.clientX);
         });
 
-        window.addEventListener('mouseup', () => {
-            isTouchingScreen = false;
-        });
+        window.addEventListener('mouseup', () => { isTouchingScreen = false; });
 
         function updateTouchPosition(clientX) {
-            const rect = gameContainer.getBoundingClientRect();
-            playerX = clientX - rect.left;
-            if (playerX < 35) playerX = 35;
-            if (playerX > rect.width - 35) playerX = rect.width - 35;
-            player.style.left = playerX + 'px';
+            requestAnimationFrame(() => {
+                const rect = gameContainer.getBoundingClientRect();
+                playerX = clientX - rect.left;
+                if (playerX < 35) playerX = 35;
+                if (playerX > rect.width - 35) playerX = rect.width - 35;
+                player.style.left = playerX + 'px';
+            });
         }
 
         fireBtn.addEventListener('mousedown', onFireButtonDown);
@@ -936,7 +937,6 @@
         fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
         fireBtn.addEventListener('touchend', onFireButtonUp);
 
-        // تعديل زمني لاستجابة الإطلاق التلقائي خلال أقل من ثانية (350 ملي ثانية)
         function onFireButtonDown() {
             if (!isPlaying || isPaused) return;
             if (isAutoFire) { disableAutoFire(); return; }
@@ -1169,15 +1169,9 @@
             db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true }).catch(() => {});
         }
 
+        // تم إصلاح الدالة لحفظ وتطبيق شكل السفينة فوراً بدون تداخل
         function updateUserInterfaceProfile() {
-            if (currentPilotData.inventory) {
-                if (currentPilotData.inventory.includes('admin_mothership')) selectedShipIcon = '🛸👑';
-                else if (currentPilotData.inventory.includes('android_cruiser')) selectedShipIcon = '🚀';
-                else if (currentPilotData.inventory.includes('alien_destroyer')) selectedShipIcon = '👾';
-                else selectedShipIcon = currentPilotData.ship || '🛸';
-            } else {
-                selectedShipIcon = currentPilotData.ship || '🛸';
-            }
+            selectedShipIcon = currentPilotData.ship || '🛸';
 
             player.innerText = selectedShipIcon;
             welcomeTitle.innerText = `مرحباً بك يا بطل: ${currentPlayer}`;
@@ -1263,7 +1257,7 @@
 
         function startSplitScreenGame() {
             splitActive = true;
-            p1Lives = 12; p2Lives = 12; // 12 قلب بدلاً من 3
+            p1Lives = 12; p2Lives = 12;
             p1Score = 0; p2Score = 0;
             
             disableP1AutoFire();
@@ -1304,7 +1298,7 @@
                 p1HoldTimer = setTimeout(() => {
                     p1HoldTriggered = true;
                     toggleP1AutoFire();
-                }, 350); // أقل من ثانية
+                }, 350);
             };
 
             const onP1Up = (e) => {
@@ -1336,7 +1330,7 @@
                 p2HoldTimer = setTimeout(() => {
                     p2HoldTriggered = true;
                     toggleP2AutoFire();
-                }, 350); // أقل من ثانية
+                }, 350);
             };
 
             const onP2Up = (e) => {
@@ -1756,17 +1750,18 @@
 
         let currentGame = 1, score = 0, lives = 12, level = 1, gameSpeed = 5, spawnRate = 400;
         let gameAnimFrame = null, itemInterval, fireInterval;
-        let isPlaying = false, isPaused = false, playerX = 240, hasShield = false, selectedShipIcon = '🛸';
+        let isPlaying = false, isPaused = false, playerX = 240, hasShield = false;
         let firePressTimer = null, isAutoFire = false;
 
-        for (let i = 0; i < 45; i++) {
+        // توليد الخلفية النجمية الخفيفة لزيادة السلاسة
+        for (let i = 0; i < 25; i++) {
             let star = document.createElement('div');
             star.classList.add('star-bg');
             star.style.left = Math.random() * 100 + 'vw';
             star.style.top = Math.random() * 100 + 'vh';
-            let size = Math.random() * 3 + 1;
+            let size = Math.random() * 2 + 1;
             star.style.width = size + 'px'; star.style.height = size + 'px';
-            star.style.animationDuration = (Math.random() * 3 + 1.5) + 's';
+            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
             gameContainer.appendChild(star);
         }
 
@@ -1776,21 +1771,38 @@
             topProfileBadge.style.display = 'none';
             floatingStoreBtn.style.display = 'none';
             shopModal.style.display = 'flex';
+
+            document.querySelectorAll('.ship-option').forEach(o => {
+                if(o.innerText === (currentPilotData.ship || '🛸')) {
+                    o.classList.add('selected');
+                } else {
+                    o.classList.remove('selected');
+                }
+            });
         }
+
         function closeShop() {
             shopModal.style.display = 'none';
             mainMenu.style.display = 'flex';
             bottomNavBar.style.display = 'flex';
             topProfileBadge.style.display = 'flex';
             floatingStoreBtn.style.display = 'flex';
-            currentPilotData.ship = selectedShipIcon;
+            
             savePlayerDataToCloud();
             updateUserInterfaceProfile();
         }
+
+        // تم إصلاح اختيار شكل المركبة ليتطبق فوراً سحابياً ومحلياً وفي شاشة اللعب
         function selectShip(icon, el) {
-            selectedShipIcon = icon; player.innerText = icon;
+            selectedShipIcon = icon;
+            currentPilotData.ship = icon;
+            player.innerText = icon;
+            profileAvatarIcon.innerText = icon;
+            
             document.querySelectorAll('.ship-option').forEach(o => o.classList.remove('selected'));
-            el.classList.add('selected');
+            if(el) el.classList.add('selected');
+            
+            savePlayerDataToCloud();
         }
 
         function openGame(gameNum) {
@@ -1863,7 +1875,6 @@
             fireInterval = null;
         }
 
-        // إطلاق السلاح وتطبيق أنواع الليزر والدرون الذكي المشتراة من المتجر
         function fireWeapon() {
             if (!isPlaying || isPaused) return;
             const missile = document.createElement('div');
@@ -1883,7 +1894,6 @@
             missile.style.bottom = '135px';
             gameContainer.appendChild(missile);
 
-            // تفعيل طائرة الدرون المرافق الذكية في حال شرائها
             if (inv.includes('ai_drone')) {
                 const droneLaser1 = document.createElement('div');
                 droneLaser1.classList.add('laser-l1');
@@ -1901,12 +1911,15 @@
 
         function startCurrentGame() {
             score = 0;
-            lives = 12; // 12 قلب
+            lives = 12;
             level = 1;
             hasShield = true;
             isAutoFire = false;
             fireBtn.classList.remove('auto-fire-active');
             fireBtn.innerText = '⚡';
+
+            // تطبيق شكل المركبة المختار فوراً وبشكل مؤكد
+            player.innerText = currentPilotData.ship || selectedShipIcon || '🛸';
             
             if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
 
@@ -1941,6 +1954,7 @@
                 if (!isPlaying) return;
                 if (!isPaused) {
                     updateGame();
+                    GamePerformanceOptimizer.optimizeDOM();
                 }
                 gameAnimFrame = requestAnimationFrame(gameLoop);
             }
@@ -2149,14 +2163,12 @@
 
         initFabDrag();
 
-        // تسجيل الـ Service Worker وتفعيل الفحص التلقائي للتحديث v4
+        // تسجيل الـ Service Worker
         if ('serviceWorker' in navigator) {
           window.addEventListener('load', () => {
             navigator.serviceWorker.register('./sw.js').then((registration) => {
               registration.update();
-            }).catch((err) => {
-              console.log('فشل تسجيل ServiceWorker:', err);
-            });
+            }).catch((err) => {});
           });
         }
     </script>
