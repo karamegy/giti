@@ -3,48 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>سياسة الخصوصية - لعبة السينكا والفضاء</title>
+    <title>سياسة الخصوصية - مكتبة الألعاب الفضائية</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0b0c2a">
     <style>
-        body { font-family: Tahoma, sans-serif; line-height: 1.8; padding: 20px; max-width: 800px; margin: auto; color: #333; background: #f4f6f9; }
-        h1, h2 { color: #4a148c; }
-        .container { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        ul { padding-right: 20px; }
-        li { margin-bottom: 8px; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0a0b1e 0%, #020208 100%);
+            color: #e0e6ed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            padding: 20px 15px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(10, 12, 36, 0.92);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(15px);
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #00f3ff;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+        }
+
+        .header p {
+            color: #a4b0be;
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        section {
+            margin-bottom: 22px;
+        }
+
+        h2 {
+            color: #00f3ff;
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p, ul {
+            font-size: 0.9rem;
+            color: #c8d6e5;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-right: 15px;
+        }
+
+        ul li {
+            position: relative;
+            margin-bottom: 8px;
+            padding-right: 18px;
+        }
+
+        ul li::before {
+            content: "✦";
+            position: absolute;
+            right: 0;
+            color: #00f3ff;
+        }
+
+        .info-box {
+            background: rgba(0, 243, 255, 0.05);
+            border-right: 4px solid #00f3ff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .btn-back {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            margin: 30px auto 10px auto;
+            text-align: center;
+            background: linear-gradient(45deg, #00f3ff, #0984e3);
+            color: #000;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-back:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.7);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem;
+            color: #8395a7;
+        }
+
+        a { color: #00f3ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
+
     <div class="container">
-        <h1>سياسة الخصوصية لـ لعبة السينكا والفضاء</h1>
-        <p>تاريخ التحديث: سبتمبر 2026</p>
-        
-        <h2>1. مقدمة</h2>
-        <p>نحن في لعبة "السينكا والفضاء" نولي اهتماماً بالغاً بخصوصية مستخدمينا، وخاصة الأطفال أولياء الأمور. تم تصميم هذه اللعبة لتكون بيئة آمنة وممتعة للأطفال، ونحن نلتزم بحماية أي بيانات وعدم مشاركتها بشكل مخالف للمعايير الدولية لحماية خصوصية الأطفال عبر الإنترنت (مثل قانون COPPA).</p>
-        
-        <h2>2. البيانات التي لا نقوم بجمعها</h2>
-        <p>بما أن لعبة "السينكا والفضاء" مخصصة للأطفال ومجانية:</p>
-        <ul>
-            <li>نحن لا نطلب أو نجمع أي بيانات شخصية مباشرة من الأطفال (مثل الأسماء، أرقام الهواتف، العناوين البريدية، أو عناوين البريد الإلكتروني).</li>
-            <li>لا تتطلب اللعبة إنشاء حساب شخصي أو تسجيل دخول يتطلب معلومات حساسة.</li>
-        </ul>
+        <div class="header">
+            <h1>🌌 سياسة الخصوصية (Privacy Policy)</h1>
+            <p>تطبيق ومكتبة الألعاب الفضائية - الإصدار العائلي الشامل</p>
+            <div class="badge">🛡️ آمن ومناسب لجميع الفئات العمرية (3 - 30 سنة)</div>
+        </div>
 
-        <h2>3. المعلومات التقنية المحدودة</h2>
-        <p>قد يتم جمع بعض البيانات التقنية غير الشخصية تلقائياً لأغراض تشغيل اللعبة وتحسينها، وتشمل:</p>
-        <ul>
-            <li>نوع الجهاز ونظام التشغيل الخاص بالهاتف أو الجهاز اللوحي.</li>
-            <li>بيانات الأداء التقني وسجلات الأعطال لضمان عمل اللعبة بسلاسة ودون تقطيع.</li>
-        </ul>
+        <section>
+            <h2>1. مقدمة ونطاق الخدمة</h2>
+            <p>نرحب بكم في <b>مكتبة الألعاب الفضائية</b>. نحن نلتزم بأعلى معايير حماية الخصوصية والأمان لمستخدمينا. تم تصميم هذا التطبيق ليكون بيئة ترفيهية عائلية ونظيفة تماماً ومناسبة لكافة الأعمار من سن 3 وحتى 30 سنة.</p>
+            <p>توضح هذه السياسة كيفية جمع البيانات واستخدامها وحمايتها عند استخدامك للتطبيق أو خدماتنا المرتبطة بها.</p>
+        </section>
 
-        <h2>4. الإعلانات والخدمات التابعة لجهات خارجية</h2>
-        <p>إذا كانت اللعبة مجانية وتتضمن إعلانات أو خدمات تحليلية، فإننا نتحقق من أن تكون هذه الإعلانات ملائمة للأطفال (Family-friendly) ولا تستهدف جمع بيانات شخصية لسلوك المستخدم.</p>
+        <section>
+            <h2>2. البيانات التي نجمعها</h2>
+            <p>نحن نجمع الحد الأدنى من البيانات الضرورية لتشغيل التطبيق وحفظ تقدمك في اللعبة:</p>
+            <ul>
+                <li><b>معلومات الحساب والتسجيل:</b> اسم الطيار أو اسم المستخدم الذي تختاره، والبريد الإلكتروني والصورة عند الدخول عبر حساب Google (Google Auth).</li>
+                <li><b>بيانات اللعب والإنجازات:</b> النقاط القياسية (High Scores)، عدد الجواهر المكتسبة، والمركبات المفضلة، حيث يتم حفظها سحابياً لضمان عدم ضياع تقدمك.</li>
+                <li><b>محادثات الشات العام:</b> الرسائل واللقطات المتبادلة داخل شات الطيارين، مع مراقبتها آلياً ودورياً لمنع أي محتوى غير لائق.</li>
+            </ul>
+        </section>
 
-        <h2>5. أمان البيانات</h2>
-        <p>نطبق إجراءات أمنية تقنية وتنظيمية مناسبة للحفاظ على أمان البيانات التقنية المحدودة ومنع أي وصول غير مصرح به.</p>
+        <section>
+            <h2>3. خدمات الطرف الثالث (Third-Party Services)</h2>
+            <p>يعتمد التطبيق على خدمات سحابية موثوقة من شركة Google لتوفير أفضل تجربة لعب:</p>
+            
+            <div class="info-box">
+                <b>🔥 خدمات Google Firebase:</b><br>
+                نستخدم <b>Firebase Authentication</b> لتأمين عملية تسجيل الدخول، و <b>Cloud Firestore</b> لتخزين نتائج الألعاب ورسائل الشات بصورة آمنة ومشفرة.
+            </div>
 
-        <h2>6. التغييرات على سياسة الخصوصية</h2>
-        <p>قد نقوم بتحديث سياسة الخصوصية هذه من وقت لآخر لتتوافق مع أي تغييرات في المتطلبات القانونية أو ميزات اللعبة، وسيتم نشر النسخة المحدثة على هذه الصفحة.</p>
+            <div class="info-box">
+                <b>📢 إعلانات Google AdSense:</b><br>
+                قد يحتوي التطبيق على إعلانات غير مزعجة يتم تقديمها عبر شبكة Google AdSense (معرّف الناشر: <code>ca-pub-6651309355082807</code>). تقوم جوجل باستخدام ملفات تعريف الارتباط (Cookies) لعرض الإعلانات بناءً على زيارات المستخدم السابقة للتطبيق أو المواقع الأخرى.
+            </div>
+        </section>
 
-        <h2>7. تواصل معنا</h2>
-        <p>إذا كانت لديك أي أسئلة أو استفسارات حول سياسة الخصوصية أو محتوى لعبة "السينكا والفضاء"، يمكنك التواصل معنا عبر البريد الإلكتروني أو من خلال قنوات الدعم الخاصة بمتجر التطبيقات.</p>
+        <section>
+            <h2>4. ملفات تعريف الارتباط (Cookies)</h2>
+            <p>نستخدم ملفات تعريف الارتباط وتقنيات التخزين المحلي (LocalStorage) في متصفحك من أجل:</p>
+            <ul>
+                <li>الحفاظ على تسجيل دخولك في اللعبة.</li>
+                <li>حفظ إعدادات الصوت وتفضيلات المركبات محلياً.</li>
+                <li>تمكين خدمات إعلانات جوجل لتقديم إعلانات ملاءمة وآمنة.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>5. أمان الأطفال والعائلة (COPPA & Family Policy)</h2>
+            <p>نولي اهتماماً خاصاً بحماية الأطفال والقُصّر:</p>
+            <ul>
+                <li>التطبيق خالي تماماً من أي معاملات مادية أو اشتراكات مدفوعة (مجاني 100%).</li>
+                <li>محتوى الألعاب خالي من العنف أو أي مشاهد غير لائقة.</li>
+                <li>يتم الإشراف على الشات العام لحظر أي مستخدم يخالف القواعد السلوكية فوراً.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>6. حذف الحساب والبيانات</h2>
+            <p>يحق لك في أي وقت طلب حذف حسابك وكافة البيانات المرتبطة بك (النقاط، الرسائل، والإنجازات) من قواعد بياناتنا السحابية. يمكنك القيام بذلك عبر التواصل مع إدارة التطبيق عبر الدعم الفني داخل اللعبة أو البريد الإلكتروني.</p>
+        </section>
+
+        <section>
+            <h2>7. معلومات المطور والمالك</h2>
+            <div class="info-box" style="border-right-color: #2ecc71;">
+                <b>👨‍💻 المطور والمؤسس:</b> كرم حمدي (Malak Haret)<br>
+                <b>المقر:</b> جمهورية مصر العربية 🇪🇬<br>
+                <b>التخصص:</b> تطوير البرمجيات والأنظمة اللوجستية وتطبيقات الفضاء.
+            </div>
+        </section>
+
+        <a href="./index.html" class="btn-back">🚀 العودة إلى اللعبة</a>
+
+        <footer>
+            جميع الحقوق محفوظة © 2026 - مكتبة الألعاب الفضائية (تطبيق عائلي وآمن)
+        </footer>
     </div>
+
 </body>
 </html>
