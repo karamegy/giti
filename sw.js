@@ -1,4 +1,4 @@
-const CACHE_NAME = 'giti-space-v6-cache';
+const CACHE_NAME = 'giti-space-v7-cache';
 const assetsToCache = [
   './',
   './index.html',
@@ -9,7 +9,7 @@ const assetsToCache = [
   './icon-512.png'
   './sitemap.xml',
   './robots.txt',
-
+  './googleeb8d677c7529419b.html',
 ];
 
 self.addEventListener('install', (e) => {
