@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://karamegy.github.io/giti/sitemap.xml
