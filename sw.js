@@ -6,10 +6,10 @@ const assetsToCache = [
   './privacy.html',
   './manifest.json',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
   './sitemap.xml',
   './robots.txt',
-  './googleeb8d677c7529419b.html',
+  './googleeb8d677c7529419b.html'
 ];
 
 self.addEventListener('install', (e) => {
