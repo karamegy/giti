@@ -30,11 +30,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Setup Java JDK 21
+      - name: Setup Java JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '21'
+          java-version: '17'
 
       - name: Build Android App with Capacitor & Gradle
         env:
@@ -46,13 +46,14 @@ jobs:
         run: |
           set -e
 
-          # 1. تجهيز مجلد الويب www
+          # 1. تنظيف وتجهيز مجلد الويب www
           rm -rf www
           mkdir -p www
-          cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
-          rm -rf www/android www/node_modules www/.git www/.github
+          
+          # نسخ الملفات الأساسية بأمان دون الدخول في دوامة تكرار المجلدات
+          find . -maxdepth 1 -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.json" -o -name "*.png" \) -exec cp {} www/ \; || true
 
-          # 2. إنشاء ملف capacitor.config.json مع إضافة إعدادات GoogleAuth
+          # 2. إنشاء ملف capacitor.config.json مع تفعيل إضافة GoogleAuth
           PKG_NAME="${PACKAGE_NAME:-io.github.karamegy.giti}"
           cat << EOF > capacitor.config.json
           {
@@ -69,14 +70,14 @@ jobs:
           }
           EOF
 
-          # 3. تثبيت حزم Capacitor مع إضافة Google Auth الرسمية للأندرويد
+          # 3. تثبيت حزم Capacitor وإضافة تسجيل الدخول عبر جوجل للأندرويد
           npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets @capacitor-community/google-auth --save-dev
 
-          # 4. إعادة إضافة منصة أندرويد
+          # 4. إعادة بناء مشروع أندرويد
           rm -rf android
           npx cap add android
 
-          # 5. توليد الأيقونات
+          # 5. توليد الأيقونات وصور الشاشات
           mkdir -p assets
           if [ -f "icon-512.png" ]; then
             cp icon-512.png assets/icon.png
@@ -87,12 +88,12 @@ jobs:
           fi
           npx @capacitor/assets generate --android || true
 
-          # 6. نسخ google-services.json إن وجد
+          # 6. نسخ google-services.json إن وجد لتأكيد الربط مع Firebase
           if [ -f "google-services.json" ]; then
             cp google-services.json android/app/
           fi
 
-          # 7. إعداد ملفات الأذونات والـ AndroidManifest
+          # 7. إعداد مسارات الملفات والـ AndroidManifest للتوافق الكامل
           mkdir -p android/app/src/main/res/xml/
           cat << 'EOF_PATHS' > android/app/src/main/res/xml/file_paths.xml
           <?xml version="1.0" encoding="utf-8"?>
@@ -106,8 +107,7 @@ jobs:
           cat << EOF_MANIFEST > android/app/src/main/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
           <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              package="$PKG_NAME">
+              xmlns:tools="http://schemas.android.com/tools">
 
               <uses-permission android:name="android.permission.INTERNET" />
               <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -127,7 +127,7 @@ jobs:
 
                   <activity
                       android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
-                      android:name="$PKG_NAME.MainActivity"
+                      android:name="io.github.karamegy.giti.MainActivity"
                       android:label="@string/title_activity_main"
                       android:theme="@style/AppTheme.NoActionBarLaunch"
                       android:launchMode="singleTask"
@@ -142,7 +142,7 @@ jobs:
 
                   <provider
                       android:name="androidx.core.content.FileProvider"
-                      android:authorities="$PKG_NAME.fileprovider"
+                      android:authorities="${applicationId}.fileprovider"
                       android:exported="false"
                       android:grantUriPermissions="true">
                       <meta-data
@@ -154,37 +154,36 @@ jobs:
           </manifest>
           EOF_MANIFEST
 
-          # 8. استخراج شهادة التوقيع
+          # 8. فك تشفير مفتاح التوقيع (Keystore)
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > android/app/signing.keystore
           fi
 
-          # 9. إعداد التوقيع وتوافق Java 21 في build.gradle
-          cat << 'EOF_GRADLE' >> android/app/build.gradle
+          # 9. ضبظ التوقيع ومعايير الإصدار في build.gradle
+          cat << EOF_GRADLE >> android/app/build.gradle
 
           android {
+              namespace "$PKG_NAME"
               defaultConfig {
-                  applicationId System.getenv('PACKAGE_NAME') ?: 'io.github.karamegy.giti'
+                  applicationId "$PKG_NAME"
                   minSdkVersion 24
                   targetSdkVersion 34
                   versionCode 10010
                   versionName "10.1.0"
               }
-              compileOptions {
-                  sourceCompatibility JavaVersion.VERSION_21
-                  targetCompatibility JavaVersion.VERSION_21
-              }
               signingConfigs {
                   release {
-                      storeFile file('signing.keystore')
-                      storePassword System.getenv('KEYSTORE_PASSWORD') ?: ''
-                      keyAlias System.getenv('KEY_ALIAS') ?: ''
-                      keyPassword System.getenv('KEY_PASSWORD') ?: ''
+                      if (file('signing.keystore').exists()) {
+                          storeFile file('signing.keystore')
+                          storePassword System.getenv('KEYSTORE_PASSWORD') ?: ''
+                          keyAlias System.getenv('KEY_ALIAS') ?: ''
+                          keyPassword System.getenv('KEY_PASSWORD') ?: ''
+                      }
                   }
               }
               buildTypes {
                   release {
-                      if (file('signing.keystore').exists() && file('signing.keystore').length() > 0) {
+                      if (file('signing.keystore').exists()) {
                           signingConfig signingConfigs.release
                       }
                       minifyEnabled false
@@ -194,7 +193,7 @@ jobs:
           }
           EOF_GRADLE
 
-          # 10. مزامنة البناء والتنفيذ
+          # 10. مزامنة Capacitor وبناء حزم الإصدار APK و AAB
           npx cap sync android
           cd android
           chmod +x gradlew
