@@ -1,0 +1,24 @@
+{
+  "packageId": "io.github.karamegy.giti",
+  "host": "karamegy.github.io",
+  "name": "مكتبة الألعاب الفضائية V10.1",
+  "launcherName": "السينما الفضائية",
+  "display": "standalone",
+  "themeColor": "#0b0c2a",
+  "navigationColor": "#0b0c2a",
+  "backgroundColor": "#020208",
+  "enableNotifications": true,
+  "startUrl": "/index.html?pwa=space",
+  "iconUrl": "https://karamegy.github.io/icon-512.png",
+  "maskableIconUrl": "https://karamegy.github.io/icon-512.png",
+  "appVersionName": "10.1.0",
+  "appVersionCode": 10,
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://karamegy.github.io/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  }
+}
