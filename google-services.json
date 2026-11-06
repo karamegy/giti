@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "382519802983-l2pe04jbt9ctorpsvrjnrjhfe53tr7an.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.karamegy.giti",
+            "certificate_hash": "65211a1c468b46fb70fb3fe898460ecb71b9635a"
+          }
+        },
+        {
+          "client_id": "382519802983-tcmcqct91s58kc5ov3o2enhvq7hk6tlo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "io.github.karamegy.giti",
+            "certificate_hash": "845e50d3275754e194b106d4d0e1efde65783305"
+          }
+        },
+        {
           "client_id": "382519802983-2fbeclnmfvs335qgu6tpdk4tmsg4r8om.apps.googleusercontent.com",
           "client_type": 3
         }
