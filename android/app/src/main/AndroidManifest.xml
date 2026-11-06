@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="io.github.karamegy.giti">
+
+    <!-- 1. إذونات الاتصال بالإنترنت والشبكة (ضروري لشات Firebase والإعلانات) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- 2. إذن إرسال الإشعارات (مطلوب لأندرويد 13 فما فوق) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- 3. إذن الاهتزاز (لإعطاء تأثير اهتزاز عند إطلاق النار أو الانفجارات) -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- 4. إذن إبقاء الشاشة مضاءة أثناء اللعب (Prevent Screen Sleep) -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="مكتبة الألعاب الفضائية"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection"
+            android:screenOrientation="portrait">
+            
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>
