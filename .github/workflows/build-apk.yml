@@ -46,12 +46,14 @@ jobs:
         run: |
           set -e
 
-          # 1. تجهيز مجلد www وتفريغه من الملفات غير المطلوبة
+          # 1. تهيئة package.json وإعداد مجلد www
+          [ -f package.json ] || npm init -y
           rm -rf www
           mkdir -p www
-          cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || true
+          cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
+          rm -rf www/android www/node_modules www/.git www/.github
 
-          # 2. إنشاء ملف capacitor.config.json بشكل مباشر ومضمون بدون سكريبتات Node مدمجة
+          # 2. إنشاء ملف capacitor.config.json بشكل آمن
           PKG_NAME="${PACKAGE_NAME:-io.github.karamegy.giti}"
           cat << EOF > capacitor.config.json
           {
@@ -61,10 +63,10 @@ jobs:
           }
           EOF
 
-          # 3. تثبيت كافة حزم Capacitor المطلوبة (شاملة @capacitor/android)
+          # 3. تثبيت حزم Capacitor المكتملة (شاملة @capacitor/android)
           npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets --save-dev
 
-          # 4. إعادة إضافة منصة الأندرويد
+          # 4. إعادة إنشاء منصة أندرويد
           rm -rf android
           npx cap add android
 
@@ -84,15 +86,74 @@ jobs:
             cp google-services.json android/app/
           fi
 
-          # 7. مزامنة الملفات مع مشروع الأندرويد
-          npx cap sync android
+          # 7. إدراج ملفات الأذونات والـ AndroidManifest الخاصة بلعبتك
+          mkdir -p android/app/src/main/res/xml/
+          cat << 'EOF_PATHS' > android/app/src/main/res/xml/file_paths.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <paths xmlns:android="http://schemas.android.com/apk/res/android">
+              <external-path name="external_files" path="." />
+              <cache-path name="cache_files" path="." />
+              <files-path name="files_path" path="." />
+          </paths>
+          EOF_PATHS
 
-          # 8. فك تشفير الـ Keystore
+          cat << EOF_MANIFEST > android/app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              package="$PKG_NAME">
+
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+              <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+              <uses-permission android:name="android.permission.VIBRATE" />
+              <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+              <application
+                  android:allowBackup="true"
+                  android:icon="@mipmap/ic_launcher"
+                  android:label="@string/app_name"
+                  android:roundIcon="@mipmap/ic_launcher_round"
+                  android:supportsRtl="true"
+                  android:usesCleartextTraffic="true"
+                  android:theme="@style/AppTheme"
+                  tools:overrideLibrary="com.getcapacitor.android">
+
+                  <activity
+                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+                      android:name="$PKG_NAME.MainActivity"
+                      android:label="@string/title_activity_main"
+                      android:theme="@style/AppTheme.NoActionBarLaunch"
+                      android:launchMode="singleTask"
+                      android:screenOrientation="portrait"
+                      android:exported="true">
+
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+
+                  <provider
+                      android:name="androidx.core.content.FileProvider"
+                      android:authorities="$PKG_NAME.fileprovider"
+                      android:exported="false"
+                      android:grantUriPermissions="true">
+                      <meta-data
+                          android:name="android.support.FILE_PROVIDER_PATHS"
+                          android:resource="@xml/file_paths" />
+                  </provider>
+
+              </application>
+          </manifest>
+          EOF_MANIFEST
+
+          # 8. استخراج شهادة التوقيع Keystore
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > android/app/signing.keystore
           fi
 
-          # 9. إعداد التوقيع و Gradle بشكل آمن
+          # 9. إعداد التوقيع و Gradle بشرط فحص وجود الشهادة لتفادي انهيار البناء
           cat << 'EOF_GRADLE' >> android/app/build.gradle
 
           android {
@@ -113,7 +174,9 @@ jobs:
               }
               buildTypes {
                   release {
-                      signingConfig signingConfigs.release
+                      if (file('signing.keystore').exists() && file('signing.keystore').length() > 0) {
+                          signingConfig signingConfigs.release
+                      }
                       minifyEnabled false
                       shrinkResources false
                   }
@@ -121,7 +184,8 @@ jobs:
           }
           EOF_GRADLE
 
-          # 10. تنفيذ البناء
+          # 10. تنفيذ المزامنة والبناء الرسمي
+          npx cap sync android
           cd android
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
