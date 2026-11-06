@@ -46,29 +46,25 @@ jobs:
         run: |
           set -e
 
-          # 1. إعداد مجلد الويب www وتجنب نسخ المجلدات غير المطلوبة
+          # 1. تجهيز مجلد www وتفريغه من الملفات غير المطلوبة
           rm -rf www
           mkdir -p www
-          cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
-          rm -rf www/android www/node_modules www/.git www/.github
+          cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || true
 
-          # 2. إعداد وتحديث ملف capacitor.config.json
+          # 2. إنشاء ملف capacitor.config.json بشكل مباشر ومضمون بدون سكريبتات Node مدمجة
           PKG_NAME="${PACKAGE_NAME:-io.github.karamegy.giti}"
-          node -e "
-            const fs = require('fs');
-            let cfg = { appId: '$PKG_NAME', appName: 'مكتبة الألعاب الفضائية V10.1', webDir: 'www' };
-            if (fs.existsSync('capacitor.config.json')) {
-              try { cfg = { ...cfg, ...JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8')); } catch(e){}
-            }
-            cfg.webDir = 'www';
-            cfg.appId = '$PKG_NAME';
-            fs.writeFileSync('capacitor.config.json', JSON.stringify(cfg, null, 2));
-          "
+          cat << EOF > capacitor.config.json
+          {
+            "appId": "$PKG_NAME",
+            "appName": "مكتبة الألعاب الفضائية V10.1",
+            "webDir": "www"
+          }
+          EOF
 
-          # 3. تثبيت حزم Capacitor المكتملة (بما فيها @capacitor/android)
+          # 3. تثبيت كافة حزم Capacitor المطلوبة (شاملة @capacitor/android)
           npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets --save-dev
 
-          # 4. إضافة منصة أندرويد
+          # 4. إعادة إضافة منصة الأندرويد
           rm -rf android
           npx cap add android
 
@@ -83,20 +79,20 @@ jobs:
           fi
           npx @capacitor/assets generate --android || true
 
-          # 6. نسخ ملف google-services.json إن وجد
+          # 6. نسخ google-services.json إن وجد
           if [ -f "google-services.json" ]; then
             cp google-services.json android/app/
           fi
 
-          # 7. مزامنة Capacitor
+          # 7. مزامنة الملفات مع مشروع الأندرويد
           npx cap sync android
 
-          # 8. فك تشفير الـ Keystore من الـ Secrets
+          # 8. فك تشفير الـ Keystore
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > android/app/signing.keystore
           fi
 
-          # 9. إضافة إعدادات التوقيع والـ Build Types إلى android/app/build.gradle
+          # 9. إعداد التوقيع و Gradle بشكل آمن
           cat << 'EOF_GRADLE' >> android/app/build.gradle
 
           android {
@@ -125,7 +121,7 @@ jobs:
           }
           EOF_GRADLE
 
-          # 10. تنفيذ عملية البناء لملفات APK و AAB
+          # 10. تنفيذ البناء
           cd android
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
