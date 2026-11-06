@@ -15,6 +15,15 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 const auth = firebase.auth();
 
+// 1. التحقق من نتيجة إعادة التوجيه عند فتح التطبيق (خاصة بتطبيقات الموبايل والـ WebView)
+auth.getRedirectResult().then(async (result) => {
+    if (result && result.user) {
+        await processGoogleUser(result.user);
+    }
+}).catch((error) => {
+    console.error("خطأ في استكمال تسجيل الدخول عبر Google:", error);
+});
+
 // تحسين أداء اللعبة وتنظيف العناصر (DOM Garbage Collector)
 const GamePerformanceOptimizer = {
     lastFrameTime: performance.now(),
@@ -183,58 +192,83 @@ function checkAdminPermissions() {
     }
 }
 
+// 2. دالة معالجة بيانات المستخدم بعد نجاح تسجيل الدخول من Google
+async function processGoogleUser(user) {
+    let name = user.displayName || user.email.split('@')[0];
+
+    const docRef = db.collection("spacePilotsV10").doc(name);
+    let doc = await docRef.get();
+
+    if (doc.exists && doc.data().isBanned) {
+        alert('❌ هذا الحساب محظور من دخول التطبيق.');
+        return;
+    }
+
+    if (!doc.exists) {
+        currentPilotData = {
+            name: name,
+            password: '',
+            highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
+            ship: '🛸',
+            gems: 1500,
+            stars: 3500,
+            inventory: [],
+            isBanned: false,
+            isMuted: false,
+            isAdmin: (name === 'admin'),
+            lastLogin: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        await docRef.set(currentPilotData);
+    } else {
+        currentPilotData = doc.data();
+        currentPilotData.name = name;
+        if (currentPilotData.gems === undefined) currentPilotData.gems = 1500;
+        if (currentPilotData.stars === undefined) currentPilotData.stars = 3500;
+    }
+
+    currentPlayer = name;
+    localStorage.setItem('currentSpacePilotV10', currentPlayer);
+
+    alert(`🎉 أهلاً بك يا ${name}! تم تسجيل الدخول بنجاح عبر Google.`);
+    checkKidsAccountAndApplyTheme(currentPlayer);
+    updateUserInterfaceProfile();
+    loginScreen.style.display = 'none';
+    mainMenu.style.display = 'flex';
+    bottomNavBar.style.display = 'flex';
+    topProfileBadge.style.display = 'flex';
+    floatingStoreBtn.style.display = 'flex';
+    checkAdminPermissions();
+    initChatListener();
+}
+
+// 3. دالة فتح نافذة Google الرسمية مع التبديل التلقائي لبيئة الموبايل
 async function googleLogin() {
     const provider = new firebase.auth.GoogleAuthProvider();
+    
+    // إجبار جوجل على إظهار نافذة اختيار الحساب الرسمية (Select Account Window)
+    provider.setCustomParameters({
+        prompt: 'select_account'
+    });
+
     try {
+        // المحاولة الأولى عبر النافذة المنبثقة (Popup)
         let result = await auth.signInWithPopup(provider);
-        let user = result.user;
-        let name = user.displayName || user.email.split('@')[0];
-
-        const docRef = db.collection("spacePilotsV10").doc(name);
-        let doc = await docRef.get();
-
-        if (doc.exists && doc.data().isBanned) {
-            alert('❌ هذا الحساب محظور من دخول التطبيق.');
-            return;
+        if (result && result.user) {
+            await processGoogleUser(result.user);
         }
-
-        if (!doc.exists) {
-            currentPilotData = {
-                name: name,
-                password: '',
-                highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
-                ship: '🛸',
-                gems: 1500,
-                stars: 3500,
-                inventory: [],
-                isBanned: false,
-                isMuted: false,
-                isAdmin: (name === 'admin'),
-                lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            await docRef.set(currentPilotData);
-        } else {
-            currentPilotData = doc.data();
-            currentPilotData.name = name;
-            if (currentPilotData.gems === undefined) currentPilotData.gems = 1500;
-            if (currentPilotData.stars === undefined) currentPilotData.stars = 3500;
-        }
-
-        currentPlayer = name;
-        localStorage.setItem('currentSpacePilotV10', currentPlayer);
-
-        alert(`🎉 أهلاً بك يا ${name}! تم تسجيل الدخول بنجاح عبر Google.`);
-        checkKidsAccountAndApplyTheme(currentPlayer);
-        updateUserInterfaceProfile();
-        loginScreen.style.display = 'none';
-        mainMenu.style.display = 'flex';
-        bottomNavBar.style.display = 'flex';
-        topProfileBadge.style.display = 'flex';
-        floatingStoreBtn.style.display = 'flex';
-        checkAdminPermissions();
-        initChatListener();
     } catch (error) {
-        alert('❌ تعذر تسجيل الدخول عبر Google: ' + error.message);
+        // في حال تم حظر النافذة المنبثقة داخل الأندرويد/WebView أو المتصفح، يتم التحويل لنموذج Redirect المعتمد
+        if (error.code === 'auth/popup-blocked' || 
+            error.code === 'auth/operation-not-supported-in-this-environment' || 
+            error.code === 'auth/popup-closed-by-user') {
+            try {
+                await auth.signInWithRedirect(provider);
+            } catch (redirectErr) {
+                alert('❌ تعذر فتح نافذة تسجيل الدخول: ' + redirectErr.message);
+            }
+        } else {
+            alert('❌ تعذر تسجيل الدخول عبر Google: ' + error.message);
+        }
     }
 }
 
