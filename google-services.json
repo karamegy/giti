@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "382519802983",
+    "project_id": "tarazan-284f3",
+    "storage_bucket": "tarazan-284f3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:382519802983:android:b215759970d61d4da528c2",
+        "android_client_info": {
+          "package_name": "io.github.karamegy.giti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "382519802983-2fbeclnmfvs335qgu6tpdk4tmsg4r8om.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-khgTpjFuzsSEldacKHAVtkj70OeIETQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "382519802983-2fbeclnmfvs335qgu6tpdk4tmsg4r8om.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
