@@ -15,7 +15,7 @@ if (!firebase.apps.length) {
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// 1. التحقق من نتيجة إعادة التوجيه عند فتح التطبيق (خاصة بتطبيقات الموبايل والـ WebView)
+// 1. التحقق من نتيجة إعادة التوجيه عند فتح التطبيق
 auth.getRedirectResult().then(async (result) => {
     if (result && result.user) {
         await processGoogleUser(result.user);
@@ -241,33 +241,41 @@ async function processGoogleUser(user) {
     initChatListener();
 }
 
-// 3. دالة فتح نافذة Google الرسمية مع التبديل التلقائي لبيئة الموبايل
+// 3. دالة فتح نافذة Google الرسمية بالأندرويد أو الويب
 async function googleLogin() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    
-    // إجبار جوجل على إظهار نافذة اختيار الحساب الرسمية (Select Account Window)
-    provider.setCustomParameters({
-        prompt: 'select_account'
-    });
-
     try {
-        // المحاولة الأولى عبر النافذة المنبثقة (Popup)
-        let result = await auth.signInWithPopup(provider);
-        if (result && result.user) {
-            await processGoogleUser(result.user);
-        }
-    } catch (error) {
-        // في حال تم حظر النافذة المنبثقة داخل الأندرويد/WebView أو المتصفح، يتم التحويل لنموذج Redirect المعتمد
-        if (error.code === 'auth/popup-blocked' || 
-            error.code === 'auth/operation-not-supported-in-this-environment' || 
-            error.code === 'auth/popup-closed-by-user') {
-            try {
-                await auth.signInWithRedirect(provider);
-            } catch (redirectErr) {
-                alert('❌ تعذر فتح نافذة تسجيل الدخول: ' + redirectErr.message);
+        // إذا كان التطبيق يعمل داخل بيئة Capacitor Native على الأندرويد
+        if (window.Capacitor && window.Capacitor.isNativePlatform() && window.Capacitor.Plugins && window.Capacitor.Plugins.GoogleAuth) {
+            const googleUser = await window.Capacitor.Plugins.GoogleAuth.signIn();
+            const credential = firebase.auth.GoogleAuthProvider.credential(googleUser.authentication.idToken);
+            let result = await auth.signInWithCredential(credential);
+            if (result && result.user) {
+                await processGoogleUser(result.user);
             }
         } else {
-            alert('❌ تعذر تسجيل الدخول عبر Google: ' + error.message);
+            // التسجيل عبر الويب المباشر
+            const provider = new firebase.auth.GoogleAuthProvider();
+            provider.setCustomParameters({ prompt: 'select_account' });
+
+            try {
+                let result = await auth.signInWithPopup(provider);
+                if (result && result.user) {
+                    await processGoogleUser(result.user);
+                }
+            } catch (error) {
+                if (error.code === 'auth/popup-blocked' || 
+                    error.code === 'auth/operation-not-supported-in-this-environment' || 
+                    error.code === 'auth/popup-closed-by-user') {
+                    await auth.signInWithRedirect(provider);
+                } else {
+                    alert('❌ تعذر تسجيل الدخول عبر Google: ' + error.message);
+                }
+            }
+        }
+    } catch (error) {
+        console.error("Google Auth error:", error);
+        if (error.code !== '12501' && error.message !== 'user canceled') {
+            alert('❌ حدث خطأ أثناء الاتصال بحساب Google: ' + (error.message || error));
         }
     }
 }
@@ -474,7 +482,6 @@ function logoutPlayer() {
     loginScreen.style.display = 'flex';
 }
 
-// دالة فتح شاشة متجر أساطير الفضاء الموسع المدمجة مباشرة
 function openStoreFromIndex() {
     mainMenu.style.display = 'none';
     bottomNavBar.style.display = 'none';
@@ -493,7 +500,6 @@ function closeLordStore() {
     updateUserInterfaceProfile();
 }
 
-// تصفية عناصر المتجر
 function filterStore(category, btnEl) {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     if (btnEl) btnEl.classList.add('active');
@@ -516,7 +522,6 @@ function filterStore(category, btnEl) {
     }
 }
 
-// دالة شراء العناصر والمتطلبات
 async function buyItem(type, itemId, cost, requiresAdmin = false) {
     let isAdmin = currentPilotData.isAdmin || currentPlayer === 'admin';
     if (requiresAdmin && !isAdmin) {
@@ -1527,9 +1532,17 @@ function initFabDrag() {
     }, true);
 }
 
-// دمج معالج زر الرجوع الخاص بـ Capacitor Native (Android Back Button)
+// دمج معالج زر الرجوع الخارجي وتجهيز إضافة Google Auth
 document.addEventListener('DOMContentLoaded', () => {
     initFabDrag();
+
+    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.GoogleAuth) {
+        window.Capacitor.Plugins.GoogleAuth.initialize({
+            clientId: '382519802983-2fbeclnmfvs335qgu6tpdk4tmsg4r8om.apps.googleusercontent.com',
+            scopes: ['profile', 'email'],
+            grantOfflineAccess: true
+        });
+    }
 
     if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
         window.Capacitor.Plugins.App.addListener('backButton', () => {
