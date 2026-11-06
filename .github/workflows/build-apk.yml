@@ -17,7 +17,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # 1. بناء تطبيق الأندرويد المُوقّع (APK & AAB)
   build-android:
     runs-on: ubuntu-latest
 
@@ -52,7 +51,7 @@ jobs:
           cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
           rm -rf www/android www/node_modules www/.git www/.github
 
-          # 2. إنشاء ملف capacitor.config.json مع إضافة إعدادات GoogleAuth
+          # 2. إنشاء ملف capacitor.config.json
           PKG_NAME="${PACKAGE_NAME:-io.github.karamegy.giti}"
           cat << EOF > capacitor.config.json
           {
@@ -69,7 +68,7 @@ jobs:
           }
           EOF
 
-          # 3. تثبيت حزم Capacitor وتجاوز تعارض الحزم عبر --legacy-peer-deps
+          # 3. تثبيت حزم Capacitor
           npm install --legacy-peer-deps @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets @codetrix-studio/capacitor-google-auth --save-dev
 
           # 4. إعادة إضافة منصة أندرويد
@@ -171,7 +170,7 @@ jobs:
             echo "$KEYSTORE_BASE64" | base64 -d > android/app/signing.keystore
           fi
 
-          # 9. إعداد التوقيع في build.gradle بأمان عبر متغيّرات البيئة
+          # 9. إعداد التوقيع وتفعيل إضافة Google Services في Gradle
           cat << 'EOF_GRADLE' >> android/app/build.gradle
 
           android {
@@ -200,7 +199,16 @@ jobs:
                   }
               }
           }
+          apply plugin: 'com.google.gms.google-services'
           EOF_GRADLE
+
+          cat << 'EOF_GRADLE_ROOT' >> android/build.gradle
+          buildscript {
+              dependencies {
+                  classpath 'com.google.gms:google-services:4.4.1'
+              }
+          }
+          EOF_GRADLE_ROOT
 
           # 10. مزامنة البناء والتنفيذ
           npx cap sync android
@@ -221,7 +229,6 @@ jobs:
           name: SpaceGame-V10.1-AAB
           path: android/app/build/outputs/bundle/release/*.aab
 
-  # 2. نشر موقع PWA على GitHub Pages
   deploy-pages:
     needs: build-android
     environment:
