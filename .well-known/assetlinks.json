@@ -4,8 +4,10 @@
     "target": {
       "namespace": "android_app",
       "package_name": "io.github.karamegy.giti",
-      "sha256_cert_fingerprints":
-        ["81:18:5A:DD:3A:6D:42:05:38:3A:2A:F3:44:97:2F:9C:4E:FE:6B:32:77:83:48:14:85:A0:22:D8:4D:90:E1:ED"]
+      "sha256_cert_fingerprints": [
+        "81:18:5A:DD:3A:6D:42:05:38:3A:2A:F3:44:97:2F:9C:4E:FE:6B:32:77:83:48:14:85:A0:22:D8:4D:90:E1:ED",
+        "E3:D7:01:C8:48:5B:4C:59:85:C4:75:53:95:40:14:D4:C8:F5:A0:C1:D8:AC:10:AA:93:28:46:8D:18:42:3E:32"
+      ]
     }
   }
 ]
