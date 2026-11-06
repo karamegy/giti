@@ -1,0 +1,11 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.karamegy.giti",
+      "sha256_cert_fingerprints":
+        ["81:18:5A:DD:3A:6D:42:05:38:3A:2A:F3:44:97:2F:9C:4E:FE:6B:32:77:83:48:14:85:A0:22:D8:4D:90:E1:ED"]
+    }
+  }
+]
