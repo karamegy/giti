@@ -1,4 +1,4 @@
-name: Build Android Space App V10.1
+name: Build Android App & Deploy to GitHub Pages
 
 on:
   push:
@@ -7,8 +7,18 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages-and-android-build"
+  cancel-in-progress: false
+
 jobs:
-  build:
+  # 1. بناء تطبيق الأندرويد الموقع (APK & AAB)
+  build-android:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,7 +31,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Node.js Environment (Node 22)
+      - name: Setup Node.js (Node 22)
         uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -37,14 +47,36 @@ jobs:
         run: |
           bubblewrap build --keyPath=android.keystore --keyAlias=${{ secrets.KEY_ALIAS }} --keyPassword=${{ secrets.KEY_PASSWORD }} --storePassword=${{ secrets.KEYSTORE_PASSWORD }}
 
-      - name: Upload Signed APK Output
+      - name: Upload Signed APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: SpaceGame-V10.1-APK
           path: '*.apk'
 
-      - name: Upload Signed AAB Output (Google Play)
+      - name: Upload Signed AAB Artifact (Google Play)
         uses: actions/upload-artifact@v4
         with:
           name: SpaceGame-V10.1-AAB
           path: '*.aab'
+
+  # 2. نشر موقع PWA على GitHub Pages
+  deploy-pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Static Web Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
