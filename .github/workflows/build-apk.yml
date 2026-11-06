@@ -38,7 +38,7 @@ jobs:
 
       - name: Build Android App with Capacitor & Gradle
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 || secrets.KEYSTORE_FILE_BASE64 }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -46,27 +46,27 @@ jobs:
         run: |
           set -e
 
-          # 1. إعداد مجلد الويب www وتجنب نسخ مجلد أندرويد بداخله
+          # 1. إعداد مجلد الويب www وتجنب نسخ المجلدات غير المطلوبة
           rm -rf www
           mkdir -p www
           cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
           rm -rf www/android www/node_modules www/.git www/.github
 
-          # 2. إعداد وتحديث ملف capacitor.config.json بالـ Package Name من Secrets
+          # 2. إعداد وتحديث ملف capacitor.config.json
           PKG_NAME="${PACKAGE_NAME:-io.github.karamegy.giti}"
           node -e "
             const fs = require('fs');
             let cfg = { appId: '$PKG_NAME', appName: 'مكتبة الألعاب الفضائية V10.1', webDir: 'www' };
             if (fs.existsSync('capacitor.config.json')) {
-              try { cfg = { ...cfg, ...JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8')) }; } catch(e){}
+              try { cfg = { ...cfg, ...JSON.parse(fs.readFileSync('capacitor.config.json', 'utf8')); } catch(e){}
             }
             cfg.webDir = 'www';
             cfg.appId = '$PKG_NAME';
             fs.writeFileSync('capacitor.config.json', JSON.stringify(cfg, null, 2));
           "
 
-          # 3. تثبيت حزم Capacitor
-          npm install @capacitor/cli @capacitor/core @capacitor/filesystem @capacitor/share @capacitor/assets --save-dev
+          # 3. تثبيت حزم Capacitor المكتملة (بما فيها @capacitor/android)
+          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets --save-dev
 
           # 4. إضافة منصة أندرويد
           rm -rf android
@@ -125,7 +125,7 @@ jobs:
           }
           EOF_GRADLE
 
-          # 10. تنفيذ عملية البناء الرسمية لملفات APK و AAB
+          # 10. تنفيذ عملية البناء لملفات APK و AAB
           cd android
           chmod +x gradlew
           ./gradlew assembleRelease --no-daemon
