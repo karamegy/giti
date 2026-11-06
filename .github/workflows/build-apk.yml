@@ -15,16 +15,16 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Java JDK
+      - name: Setup Java JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Setup Node.js Environment
+      - name: Setup Node.js Environment (Node 22)
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install Bubblewrap CLI
         run: npm install -g @bubblewrap/cli
@@ -35,7 +35,6 @@ jobs:
 
       - name: Build Signed Android Package
         run: |
-          bubblewrap merge --manifest=manifest.json
           bubblewrap build --keyPath=android.keystore --keyAlias=${{ secrets.KEY_ALIAS }} --keyPassword=${{ secrets.KEY_PASSWORD }} --storePassword=${{ secrets.KEYSTORE_PASSWORD }}
 
       - name: Upload Signed APK Output
