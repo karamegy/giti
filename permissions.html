@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إقرار الأذونات والبيانات - مكتبة الألعاب الفضائية</title>
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0b0c2a">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0a0b1e 0%, #020208 100%);
+            color: #e0e6ed;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.7;
+            padding: 20px 15px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(10, 12, 36, 0.92);
+            border: 1px solid rgba(0, 243, 255, 0.4);
+            border-radius: 20px;
+            padding: 30px 25px;
+            box-shadow: 0 0 50px rgba(0, 243, 255, 0.2);
+            backdrop-filter: blur(15px);
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid rgba(0, 243, 255, 0.2);
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #00f3ff;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.6);
+        }
+
+        .header p {
+            color: #a4b0be;
+            font-size: 0.85rem;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        section {
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            color: #00f3ff;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        p, ul {
+            font-size: 0.9rem;
+            color: #c8d6e5;
+            margin-bottom: 10px;
+        }
+
+        .perm-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.85rem;
+        }
+
+        .perm-table th, .perm-table td {
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            padding: 10px 12px;
+            text-align: right;
+        }
+
+        .perm-table th {
+            background: rgba(0, 243, 255, 0.1);
+            color: #00f3ff;
+        }
+
+        .perm-table td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .info-box {
+            background: rgba(0, 243, 255, 0.05);
+            border-right: 4px solid #00f3ff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .trader-box {
+            background: rgba(46, 204, 113, 0.05);
+            border-right: 4px solid #2ecc71;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 15px 0;
+            font-size: 0.85rem;
+        }
+
+        .btn-back {
+            display: block;
+            width: 100%;
+            max-width: 280px;
+            margin: 30px auto 10px auto;
+            text-align: center;
+            background: linear-gradient(45deg, #00f3ff, #0984e3);
+            color: #000;
+            font-weight: bold;
+            padding: 12px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-back:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.7);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem;
+            color: #8395a7;
+        }
+
+        a { color: #00f3ff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ وثيقة الأذونات وسلامة البيانات</h1>
+            <p>تطبيق ومكتبة الألعاب الفضائية - App Permissions & Declarations</p>
+            <div class="badge">إفصاح موثق ومتوافق مع سياسات Google Play</div>
+        </div>
+
+        <section>
+            <h2>1. الأذونات التقنية في النظام (App Permissions)</h2>
+            <p>يتضمن الجدول التالي تفنيداً كاملاً لكافة الأذونات المطلوبة في ملف البناء الرئيسي لتشغيل اللعبة، مع إيضاح السبب التقني لكل إذن:</p>
+
+            <table class="perm-table">
+                <thead>
+                    <tr>
+                        <th>الإذن (Permission)</th>
+                        <th>الغرض التقني داخل اللعبة</th>
+                        <th>درجة الخطورة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>android.permission.INTERNET</code></td>
+                        <td>مزامنة نتائج Firestore وتوثيق حسابات Google Auth وشات الطيارين.</td>
+                        <td>عادي (Normal)</td>
+                    </tr>
+                    <tr>
+                        <td><code>android.permission.ACCESS_NETWORK_STATE</code></td>
+                        <td>التحقق من حالة الاتصال بالإنترنت قبل إرسال الرسائل وتخزين النقاط.</td>
+                        <td>عادي (Normal)</td>
+                    </tr>
+                    <tr>
+                        <td><code>android.permission.VIBRATION</code></td>
+                        <td>توفير اهتزاز تفاعلي اختياري بالهاتف أثناء تصادم المركبة بالنيازك.</td>
+                        <td>عادي (Normal)</td>
+                    </tr>
+                    <tr>
+                        <td><code>android.permission.WAKE_LOCK</code></td>
+                        <td>منع إطفاء الشاشة أثناء التحكم بالمركبة باللمس لضمان استمرار اللعب.</td>
+                        <td>عادي (Normal)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section>
+            <h2>2. إقرار سلامة البيانات والشفافية (Data Safety & Privacy)</h2>
+            <div class="info-box">
+                <b>🔒 تشفير اتصالات البيانات:</b><br>
+                جميع عمليات نقل البيانات بين اللعبة وقواعد البيانات السحابية (Firebase / Google API) تتم عبر بروتوكولات <code>HTTPS</code> المشفرة والمحمية.
+            </div>
+            <div class="info-box">
+                <b>🎮 المشتريات الافتراضية داخل اللعبة:</b><br>
+                جميع المشتريات من الجواهر والنجوم أو المركبات هي عناصر مجانية تماماً افتراضية لتطوير الأداء ولا تتطلب استخدام أي أموال حقيقية أو بيانات مالية أو بطاقات بنكية.
+            </div>
+        </section>
+
+        <section>
+            <h2>3. إقرار التاجر والشفافية القانونية (Trader Declaration - DSA)</h2>
+            <p>بموجب أحكام قانون الخدمات الرقمية ومتطلبات متجر Google Play، يُقدم الناشر المطور هذا الإفصاح المباشر للمستخدمين والجهات التنظيمية:</p>
+            
+            <div class="trader-box">
+                <b>🏛️ بيانات المطور والمالك المسؤول:</b><br>
+                • <b>الاسم الكامل:</b> كرم حمدي عبد العظيم محمود عجاج (Karam Agaj)<br>
+                • <b>الصفة الرقمية:</b> مطور وناجر معتمد (Trader)<br>
+                • <b>الدولة / المقر:</b> جمهورية مصر العربية - محافظة الجيزة 🇪🇬<br>
+                • <b>البريد الإلكتروني المعتمد للدعم:</b> <a href="mailto:haretg@gmail.com">haretg@gmail.com</a> | <a href="mailto:eelkady188@gmail.com">eelkady188@gmail.com</a><br>
+                • <b>الهاتف الرسمي للتواصل:</b> <code>+201114099799</code><br>
+                • <b>التزامات الامتثال:</b> يلتزم التطبيق بسياسات العائلات والأطفال (COPPA & Google Play Family Policy).
+            </div>
+        </section>
+
+        <a href="./index.html" class="btn-back">🚀 العودة إلى اللعبة</a>
+
+        <footer>
+            جميع الحقوق محفوظة © 2026 - مكتبة الألعاب الفضائية (تطبيق عائلي وآمن)
+        </footer>
+    </div>
+
+</body>
+</html>
