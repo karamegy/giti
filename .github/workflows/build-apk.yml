@@ -52,18 +52,25 @@ jobs:
           cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
           rm -rf www/android www/node_modules www/.git www/.github
 
-          # 2. إنشاء ملف capacitor.config.json
+          # 2. إنشاء ملف capacitor.config.json مع إضافة إعدادات GoogleAuth
           PKG_NAME="${PACKAGE_NAME:-io.github.karamegy.giti}"
           cat << EOF > capacitor.config.json
           {
             "appId": "$PKG_NAME",
             "appName": "مكتبة الألعاب الفضائية V10.1",
-            "webDir": "www"
+            "webDir": "www",
+            "plugins": {
+              "GoogleAuth": {
+                "scopes": ["profile", "email"],
+                "serverClientId": "382519802983-2fbeclnmfvs335qgu6tpdk4tmsg4r8om.apps.googleusercontent.com",
+                "forceCodeForRefreshToken": true
+              }
+            }
           }
           EOF
 
-          # 3. تثبيت حزم Capacitor
-          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets --save-dev
+          # 3. تثبيت حزم Capacitor مع إضافة Google Auth الرسمية للأندرويد
+          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets @capacitor-community/google-auth --save-dev
 
           # 4. إعادة إضافة منصة أندرويد
           rm -rf android
@@ -152,7 +159,7 @@ jobs:
             echo "$KEYSTORE_BASE64" | base64 -d > android/app/signing.keystore
           fi
 
-          # 9. إعداد التوقيع في build.gradle بأمان عبر متغيّرات البيئة
+          # 9. إعداد التوقيع وتوافق Java 21 في build.gradle
           cat << 'EOF_GRADLE' >> android/app/build.gradle
 
           android {
@@ -162,6 +169,10 @@ jobs:
                   targetSdkVersion 34
                   versionCode 10010
                   versionName "10.1.0"
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_21
+                  targetCompatibility JavaVersion.VERSION_21
               }
               signingConfigs {
                   release {
