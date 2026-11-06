@@ -46,14 +46,13 @@ jobs:
         run: |
           set -e
 
-          # 1. تهيئة package.json وإعداد مجلد www
-          [ -f package.json ] || npm init -y
+          # 1. تجهيز مجلد الويب www
           rm -rf www
           mkdir -p www
           cp -r index.html style.css app.js manifest.json privacy.html sw.js icon-*.png www/ 2>/dev/null || cp -r * www/ 2>/dev/null || true
           rm -rf www/android www/node_modules www/.git www/.github
 
-          # 2. إنشاء ملف capacitor.config.json بشكل آمن
+          # 2. إنشاء ملف capacitor.config.json
           PKG_NAME="${PACKAGE_NAME:-io.github.karamegy.giti}"
           cat << EOF > capacitor.config.json
           {
@@ -63,10 +62,10 @@ jobs:
           }
           EOF
 
-          # 3. تثبيت حزم Capacitor المكتملة (شاملة @capacitor/android)
+          # 3. تثبيت حزم Capacitor
           npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets --save-dev
 
-          # 4. إعادة إنشاء منصة أندرويد
+          # 4. إعادة إضافة منصة أندرويد
           rm -rf android
           npx cap add android
 
@@ -86,7 +85,7 @@ jobs:
             cp google-services.json android/app/
           fi
 
-          # 7. إدراج ملفات الأذونات والـ AndroidManifest الخاصة بلعبتك
+          # 7. إعداد ملفات الأذونات والـ AndroidManifest
           mkdir -p android/app/src/main/res/xml/
           cat << 'EOF_PATHS' > android/app/src/main/res/xml/file_paths.xml
           <?xml version="1.0" encoding="utf-8"?>
@@ -148,17 +147,17 @@ jobs:
           </manifest>
           EOF_MANIFEST
 
-          # 8. استخراج شهادة التوقيع Keystore
+          # 8. استخراج شهادة التوقيع
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > android/app/signing.keystore
           fi
 
-          # 9. إعداد التوقيع و Gradle بشرط فحص وجود الشهادة لتفادي انهيار البناء
+          # 9. إعداد التوقيع في build.gradle بأمان عبر متغيّرات البيئة
           cat << 'EOF_GRADLE' >> android/app/build.gradle
 
           android {
               defaultConfig {
-                  applicationId "${System.getenv('PACKAGE_NAME') ?: 'io.github.karamegy.giti'}"
+                  applicationId System.getenv('PACKAGE_NAME') ?: 'io.github.karamegy.giti'
                   minSdkVersion 24
                   targetSdkVersion 34
                   versionCode 10010
@@ -184,7 +183,7 @@ jobs:
           }
           EOF_GRADLE
 
-          # 10. تنفيذ المزامنة والبناء الرسمي
+          # 10. مزامنة البناء والتنفيذ
           npx cap sync android
           cd android
           chmod +x gradlew
