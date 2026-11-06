@@ -92,7 +92,7 @@ jobs:
             cp google-services.json android/app/
           fi
 
-          # 7. إعداد ملفات الأذونات والـ AndroidManifest
+          # 7. إعداد ملفات الأذونات والـ AndroidManifest و strings.xml
           mkdir -p android/app/src/main/res/xml/
           cat << 'EOF_PATHS' > android/app/src/main/res/xml/file_paths.xml
           <?xml version="1.0" encoding="utf-8"?>
@@ -102,6 +102,18 @@ jobs:
               <files-path name="files_path" path="." />
           </paths>
           EOF_PATHS
+
+          mkdir -p android/app/src/main/res/values/
+          cat << EOF_STRINGS > android/app/src/main/res/values/strings.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <resources>
+              <string name="app_name">مكتبة الألعاب الفضائية V10.1</string>
+              <string name="title_activity_main">MainActivity</string>
+              <string name="package_name">$PKG_NAME</string>
+              <string name="custom_url_scheme">$PKG_NAME</string>
+              <string name="server_client_id">382519802983-2fbeclnmfvs335qgu6tpdk4tmsg4r8om.apps.googleusercontent.com</string>
+          </resources>
+          EOF_STRINGS
 
           cat << EOF_MANIFEST > android/app/src/main/AndroidManifest.xml
           <?xml version="1.0" encoding="utf-8"?>
