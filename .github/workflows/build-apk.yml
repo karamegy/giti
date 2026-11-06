@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 1. بناء تطبيق الأندرويد الموقع (APK & AAB)
+  # 1. بناء تطبيق الأندرويد المُوقّع (APK & AAB) بأعلى معايير Gradle و Capacitor
   build-android:
     runs-on: ubuntu-latest
 
@@ -25,39 +25,181 @@ jobs:
       - name: Checkout Source Code
         uses: actions/checkout@v4
 
-      - name: Setup Java JDK 17
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
       - name: Setup Node.js (Node 22)
         uses: actions/setup-node@v4
         with:
           node-version: '22'
 
-      - name: Install Bubblewrap CLI
-        run: npm install -g @bubblewrap/cli
-
-      - name: Decode Android Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > android.keystore
-
-      - name: Build Signed Android Package
-        run: |
-          bubblewrap build --keyPath=android.keystore --keyAlias=${{ secrets.KEY_ALIAS }} --keyPassword=${{ secrets.KEY_PASSWORD }} --storePassword=${{ secrets.KEYSTORE_PASSWORD }}
-
-      - name: Upload Signed APK Artifact
-        uses: actions/upload-artifact@v4
+      - name: Setup Java JDK 21
+        uses: actions/setup-java@v4
         with:
-          name: SpaceGame-V10.1-APK
-          path: '*.apk'
+          distribution: 'temurin'
+          java-version: '21'
 
-      - name: Upload Signed AAB Artifact (Google Play)
+      - name: Build Android App with Capacitor & Gradle
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 || secrets.KEYSTORE_FILE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          # 1. إعداد مجلد الويب وتجهيز الحزمة
+          mkdir -p www
+          cp -r * www/ 2>/dev/null || true
+          
+          # 2. إعداد وتحديث ملف capacitor.config.json
+          node -e '
+            const fs = require("fs");
+            let cfg = {};
+            if (fs.existsSync("capacitor.config.json")) {
+              try { cfg = JSON.parse(fs.readFileSync("capacitor.config.json", "utf8")); } catch(e){}
+            }
+            cfg.webDir = "www";
+            cfg.appId = process.env.PACKAGE_NAME || "io.github.karamegy.giti";
+            cfg.appName = "مكتبة الألعاب الفضائية V10.1";
+            fs.writeFileSync("capacitor.config.json", JSON.stringify(cfg, null, 2));
+          '
+
+          # 3. تثبيت أدوات Capacitor الأساسية والأيقونات
+          npm install @capacitor/cli @capacitor/core @capacitor/filesystem @capacitor/share @capacitor/assets --save-dev
+
+          # 4. إعادة بناء منصة أندرويد
+          rm -rf android
+          npx cap add android
+
+          # 5. توليد الأيقونات التلقائية للتطبيق
+          mkdir -p assets
+          if [ -f "icon-512.png" ]; then
+            cp icon-512.png assets/icon.png
+            cp icon-512.png assets/icon-only.png
+          elif [ -f "icon-192.png" ]; then
+            cp icon-192.png assets/icon.png
+            cp icon-192.png assets/icon-only.png
+          fi
+          npx @capacitor/assets generate --android || true
+
+          # 6. نسخ google-services.json إن وجد
+          if [ -f "google-services.json" ]; then
+            cp google-services.json android/app/
+          fi
+
+          # 7. إعداد ملفات الأذونات والـ AndroidManifest
+          mkdir -p android/app/src/main/res/xml/
+          cat << 'EOF' > android/app/src/main/res/xml/file_paths.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <paths xmlns:android="http://schemas.android.com/apk/res/android">
+              <external-path name="external_files" path="." />
+              <cache-path name="cache_files" path="." />
+              <files-path name="files_path" path="." />
+          </paths>
+          EOF
+
+          cat << 'EOF' > android/app/src/main/AndroidManifest.xml
+          <?xml version="1.0" encoding="utf-8"?>
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              package="io.github.karamegy.giti">
+
+              <uses-permission android:name="android.permission.INTERNET" />
+              <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+              <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+              <uses-permission android:name="android.permission.VIBRATE" />
+              <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+              <application
+                  android:allowBackup="true"
+                  android:icon="@mipmap/ic_launcher"
+                  android:label="@string/app_name"
+                  android:roundIcon="@mipmap/ic_launcher_round"
+                  android:supportsRtl="true"
+                  android:usesCleartextTraffic="true"
+                  android:theme="@style/AppTheme"
+                  tools:overrideLibrary="com.getcapacitor.android">
+
+                  <activity
+                      android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode"
+                      android:name="io.github.karamegy.giti.MainActivity"
+                      android:label="@string/title_activity_main"
+                      android:theme="@style/AppTheme.NoActionBarLaunch"
+                      android:launchMode="singleTask"
+                      android:screenOrientation="portrait"
+                      android:exported="true">
+
+                      <intent-filter>
+                          <action android:name="android.intent.action.MAIN" />
+                          <category android:name="android.intent.category.LAUNCHER" />
+                      </intent-filter>
+                  </activity>
+
+                  <provider
+                      android:name="androidx.core.content.FileProvider"
+                      android:authorities="io.github.karamegy.giti.fileprovider"
+                      android:exported="false"
+                      android:grantUriPermissions="true">
+                      <meta-data
+                          android:name="android.support.FILE_PROVIDER_PATHS"
+                          android:resource="@xml/file_paths" />
+                  </provider>
+
+              </application>
+          </manifest>
+          EOF
+
+          # 8. استخراج شهادة التوقيع من الـ Secrets
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > android/app/signing.keystore
+          fi
+
+          # 9. ضبط إعدادات التوقيع و JDK 21 و Target SDK 36 في Gradle
+          cat << EOF >> android/app/build.gradle
+
+          android {
+              defaultConfig {
+                  applicationId "io.github.karamegy.giti"
+                  minSdk 24
+                  targetSdk 36
+                  versionCode 10010
+                  versionName "10.1.0"
+              }
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_21
+                  targetCompatibility JavaVersion.VERSION_21
+              }
+              signingConfigs {
+                  release {
+                      storeFile file('signing.keystore')
+                      storePassword '$KEYSTORE_PASSWORD'
+                      keyAlias '$KEY_ALIAS'
+                      keyPassword '$KEY_PASSWORD'
+                  }
+              }
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                      minifyEnabled true
+                  }
+              }
+          }
+          EOF
+
+          # 10. تنفيذ المزامنة والبناء الرسمي
+          npx cap sync android
+          cd android
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon
+          ./gradlew assembleRelease --no-daemon
+
+      - name: Upload Signed AAB Bundle Artifact (Google Play)
         uses: actions/upload-artifact@v4
         with:
           name: SpaceGame-V10.1-AAB
-          path: '*.aab'
+          path: android/app/build/outputs/bundle/release/*.aab
+
+      - name: Upload Signed APK Artifact (Direct Install)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpaceGame-V10.1-APK
+          path: android/app/build/outputs/apk/release/*.apk
 
   # 2. نشر موقع PWA على GitHub Pages
   deploy-pages:
