@@ -174,12 +174,13 @@ jobs:
           cat << 'EOF_GRADLE' >> android/app/build.gradle
 
           android {
+              compileSdkVersion 36
               defaultConfig {
                   applicationId System.getenv('PACKAGE_NAME') ?: 'io.github.karamegy.giti'
                   minSdkVersion 24
-                  targetSdkVersion 36
-                  versionCode 10011
-                  versionName "10.1.1"
+                  targetSdkVersion 34
+                  versionCode 10010
+                  versionName "10.1.0"
               }
               signingConfigs {
                   release {
