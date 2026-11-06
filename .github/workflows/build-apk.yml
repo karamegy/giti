@@ -69,8 +69,8 @@ jobs:
           }
           EOF
 
-          # 3. تثبيت حزم Capacitor مع إضافة مكتبة Google Auth للأندرويد
-          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets @capacitor-community/google-auth --save-dev
+          # 3. تثبيت حزم Capacitor مع إضافة مكتبة Google Auth الرسمية للأندرويد
+          npm install @capacitor/cli @capacitor/core @capacitor/android @capacitor/filesystem @capacitor/share @capacitor/assets @codetrix-studio/capacitor-google-auth --save-dev
 
           # 4. إعادة إضافة منصة أندرويد
           rm -rf android
