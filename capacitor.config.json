@@ -1,0 +1,15 @@
+{
+  "appId": "io.github.karamegy.giti",
+  "appName": "مكتبة الألعاب الفضائية V10.1",
+  "webDir": "www",
+  "plugins": {
+    "GoogleAuth": {
+      "scopes": [
+        "profile",
+        "email"
+      ],
+      "serverClientId": "382519802983-2fbeclnmfvs335qgu6tpdk4tmsg4r8om.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
+    }
+  }
+}
