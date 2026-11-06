@@ -2,622 +2,25 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة الألعاب الفضائية - الإصدار العائلي الشامل (مع لوحة تحكم المدير)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>مكتبة الألعاب الفضائية ومتجر الأساطير</title>
+    
     <link rel="manifest" href="./manifest.json">
     <meta name="theme-color" content="#0b0c2a">
-   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6651309355082807" crossorigin="anonymous"></script>
 
-    <!-- استدعاء مكتبات Firebase السحابية المحدثة والمستقرة -->
+    <!-- CSS External -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6651309355082807" crossorigin="anonymous"></script>
+
+    <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: radial-gradient(circle at center, #020208 0%, #000003 100%);
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            user-select: none;
-            touch-action: none;
-        }
 
-        .screen {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-            -webkit-touch-callout: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(3, 3, 14, 0.98);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            z-index: 20;
-            text-align: center;
-            padding: 15px;
-            box-sizing: border-box;
-            overflow-y: auto;
-        }
-
-        #game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            max-width: 480px;
-            margin: auto;
-            background: rgba(2, 2, 10, 0.98);
-            box-shadow: 0 0 80px rgba(0, 243, 255, 0.35);
-            overflow: hidden;
-            perspective: 900px;
-            transition: background 0.8s ease;
-            will-change: transform;
-        }
-
-        #top-profile-badge {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            align-items: center;
-            background: rgba(10, 10, 30, 0.85);
-            border: 1px solid rgba(0, 243, 255, 0.5);
-            padding: 4px 12px;
-            border-radius: 30px;
-            backdrop-filter: blur(10px);
-            z-index: 15;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
-            display: none;
-        }
-
-        .profile-avatar-circle {
-            width: 36px;
-            height: 36px;
-            background: radial-gradient(circle, rgba(0,243,255,0.3) 0%, rgba(0,0,0,0.8) 100%);
-            border: 2px solid #00f3ff;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2rem;
-            margin-left: 8px;
-            box-shadow: 0 0 10px #00f3ff;
-        }
-
-        .profile-info-text {
-            display: flex;
-            flex-direction: column;
-            text-align: right;
-        }
-
-        .profile-name {
-            font-size: 0.75rem;
-            color: #fff;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(0, 243, 255, 0.8);
-        }
-
-        .profile-rank {
-            font-size: 0.62rem;
-            color: #2ecc71;
-            text-shadow: 0 0 5px rgba(46, 204, 113, 0.8);
-        }
-
-        .deep-space-warp {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(10,10,40,0.4) 0%, rgba(0,0,0,0.9) 100%);
-            z-index: 1;
-            pointer-events: none;
-        }
-
-        .bg-orion-nebula {
-            background: radial-gradient(circle at center, #8e44ad 0%, #2c3e50 50%, #000000 100%) !important;
-        }
-        .bg-milkyway-deep {
-            background: radial-gradient(circle at center, #002b5b 0%, #000814 60%, #000000 100%) !important;
-        }
-
-        .nebula {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(138, 43, 226, 0.25) 0%, rgba(0, 119, 255, 0.05) 50%, transparent 70%);
-            border-radius: 50%;
-            z-index: 1;
-            animation: rotateNebula 30s linear infinite;
-            will-change: transform;
-        }
-        @keyframes rotateNebula {
-            from { transform: rotate(0deg) scale(1); }
-            to { transform: rotate(360deg) scale(1.2); }
-        }
-
-        .star-bg {
-            position: absolute;
-            background: #ffffff;
-            border-radius: 50%;
-            animation: moveStar linear infinite;
-            z-index: 2;
-            will-change: transform;
-        }
-        @keyframes moveStar {
-            from { transform: translateZ(0) translateY(-10px); opacity: 0.2; }
-            to { transform: translateZ(250px) translateY(105vh); opacity: 1; }
-        }
-
-        @keyframes shake {
-            0% { transform: translate(0, 0); }
-            20% { transform: translate(-14px, 7px); }
-            40% { transform: translate(14px, -7px); }
-            60% { transform: translate(-7px, -7px); }
-            80% { transform: translate(7px, 7px); }
-            100% { transform: translate(0, 0); }
-        }
-        .shake { animation: shake 0.3s ease-in-out; }
-
-        #ui {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #fff;
-            font-size: 0.75rem;
-            font-weight: bold;
-            z-index: 10;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
-        }
-
-        .ui-badge {
-            background: rgba(0, 243, 255, 0.15);
-            padding: 5px 10px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 243, 255, 0.4);
-        }
-
-        #pause-btn, #home-btn, #snap-btn {
-            background: #ff3838;
-            border: none;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 12px rgba(255, 56, 56, 0.6);
-        }
-        #home-btn { background: #00cec9; box-shadow: 0 0 12px rgba(0, 206, 201, 0.6); }
-        #snap-btn { background: #9b59b6; box-shadow: 0 0 12px rgba(155, 89, 182, 0.6); }
-
-        #controls {
-            position: absolute;
-            bottom: 25px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 0 20px;
-            box-sizing: border-box;
-            z-index: 15;
-        }
-
-        #bottom-nav-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background: rgba(10, 10, 30, 0.95);
-            backdrop-filter: blur(15px);
-            border-top: 1px solid rgba(0, 243, 255, 0.3);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            z-index: 30;
-            box-sizing: border-box;
-            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.8);
-        }
-
-        .nav-item {
-            background: transparent;
-            border: none;
-            color: #a4b0be;
-            font-size: 0.65rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            flex: 1;
-            height: 100%;
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        .nav-item span.nav-icon {
-            font-size: 1.1rem;
-            margin-bottom: 2px;
-        }
-
-        .nav-item.active, .nav-item:hover {
-            color: #00f3ff;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.8);
-            background: rgba(0, 243, 255, 0.08);
-        }
-
-        .section-container {
-            display: none;
-            flex-direction: column;
-            width: 100%;
-            height: calc(100% - 70px);
-            overflow-y: auto;
-            padding: 10px;
-            box-sizing: border-box;
-            animation: fadeIn 0.3s ease;
-        }
-        .section-container.active-section {
-            display: flex;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fire-btn {
-            background: linear-gradient(135deg, #ff9f43, #ee5253);
-            border: 2px solid #ff3838;
-            font-size: 1.3rem;
-            font-weight: bold;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(255, 56, 56, 0.7);
-            color: white;
-            cursor: pointer;
-            backdrop-filter: blur(10px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            outline: none;
-            transition: all 0.2s ease;
-            padding: 0;
-        }
-        .fire-btn:active, .fire-btn.active-touch {
-            transform: scale(0.90);
-        }
-        .fire-btn.auto-fire-active {
-            background: linear-gradient(135deg, #00cec9, #0984e3) !important;
-            border-color: #00f3ff !important;
-            box-shadow: 0 0 30px #00f3ff !important;
-            animation: autoFirePulse 0.6s infinite alternate;
-        }
-        @keyframes autoFirePulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.1); }
-        }
-
-        #player {
-            position: absolute;
-            bottom: 110px;
-            left: 50%;
-            transform: translateX(-50%) translateZ(0);
-            width: 65px;
-            height: 65px;
-            font-size: 3.2rem;
-            text-align: center;
-            line-height: 65px;
-            z-index: 5;
-            filter: drop-shadow(0 0 20px rgba(0, 243, 255, 0.8));
-            transition: transform 0.05s ease-out;
-            will-change: transform, left;
-        }
-        #player::after {
-            content: '🔥';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 1.2rem;
-            animation: flameFlicker 0.1s infinite alternate;
-        }
-        @keyframes flameFlicker {
-            from { transform: translateX(-50%) scale(1); opacity: 0.8; }
-            to { transform: translateX(-50%) scale(1.3); opacity: 1; }
-        }
-
-        .shield-active {
-            filter: drop-shadow(0 0 30px #00f3ff) !important;
-        }
-
-        .item {
-            position: absolute;
-            width: 45px;
-            height: 45px;
-            font-size: 2.2rem;
-            text-align: center;
-            line-height: 45px;
-            z-index: 4;
-            transform: translateZ(0);
-            will-change: transform, top;
-        }
-
-        .laser-l1 { position: absolute; width: 6px; height: 24px; background: #00f3ff; box-shadow: 0 0 18px #00f3ff; border-radius: 3px; z-index: 4; will-change: bottom; }
-        .laser-l2 { position: absolute; width: 8px; height: 28px; background: #ff3838; box-shadow: 0 0 20px #ff3838; border-radius: 4px; z-index: 4; will-change: bottom; }
-        .laser-l3 { position: absolute; width: 10px; height: 30px; background: #2ecc71; box-shadow: 0 0 22px #2ecc71; border-radius: 5px; z-index: 4; will-change: bottom; }
-        
-        .laser-plasma_blue { position: absolute; width: 8px; height: 30px; background: #00f3ff; box-shadow: 0 0 25px #00f3ff, 0 0 10px #ffffff; border-radius: 4px; z-index: 4; will-change: bottom; }
-        .laser-lava_red { position: absolute; width: 9px; height: 32px; background: #ff3838; box-shadow: 0 0 25px #ff3838, 0 0 12px #f1c40f; border-radius: 5px; z-index: 4; will-change: bottom; }
-        .laser-emerald_quantum { position: absolute; width: 9px; height: 32px; background: #2ecc71; box-shadow: 0 0 25px #2ecc71, 0 0 12px #00f3ff; border-radius: 5px; z-index: 4; will-change: bottom; }
-        .laser-blackhole_purple { position: absolute; width: 11px; height: 34px; background: #8e44ad; box-shadow: 0 0 28px #8e44ad, 0 0 14px #e74c3c; border-radius: 6px; z-index: 4; will-change: bottom; }
-        .laser-supernova_gold { position: absolute; width: 12px; height: 36px; background: #f1c40f; box-shadow: 0 0 30px #f1c40f, 0 0 15px #ffffff; border-radius: 6px; z-index: 4; will-change: bottom; }
-
-        .missile {
-            position: absolute;
-            width: 12px;
-            height: 36px;
-            background: linear-gradient(to top, #f1c40f, #e74c3c);
-            box-shadow: 0 0 28px #f1c40f;
-            border-radius: 6px;
-            z-index: 4;
-            will-change: bottom;
-        }
-
-        .split-laser-p1 { position: absolute; width: 8px; height: 25px; background: #00f3ff; box-shadow: 0 0 15px #00f3ff; border-radius: 4px; z-index: 6; will-change: top; }
-        .split-laser-p2 { position: absolute; width: 8px; height: 25px; background: #ff3838; box-shadow: 0 0 15px #ff3838; border-radius: 4px; z-index: 6; will-change: top; }
-        .split-meteor { position: absolute; font-size: 2rem; z-index: 5; will-change: top; }
-
-        .explosion {
-            position: absolute;
-            width: 90px;
-            height: 90px;
-            background: radial-gradient(circle, rgba(255,165,2,1) 0%, rgba(255,71,87,0.85) 50%, transparent 80%);
-            border-radius: 50%;
-            z-index: 6;
-            transform: translate(-50%, -50%);
-            animation: explodeAnim 0.35s forwards;
-            pointer-events: none;
-        }
-        @keyframes explodeAnim {
-            0% { transform: scale(0.2); opacity: 1; }
-            100% { transform: scale(2.2); opacity: 0; }
-        }
-
-        #login-screen {
-            background: radial-gradient(circle at center, #0b0c2a 0%, #020208 100%);
-            border: 2px solid rgba(0, 243, 255, 0.3);
-            box-sizing: border-box;
-        }
-
-        .cinema-radar-box {
-            position: relative;
-            width: 90px;
-            height: 90px;
-            border: 2px dashed rgba(0, 243, 255, 0.6);
-            border-radius: 50%;
-            margin: 8px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.25);
-            animation: radarSpin 10s linear infinite;
-        }
-        @keyframes radarSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .cinema-radar-box::after {
-            content: '🛸';
-            position: absolute;
-            font-size: 1.8rem;
-            animation: radarSpinReverse 10s linear infinite;
-        }
-        @keyframes radarSpinReverse {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(-360deg); }
-        }
-
-        .screen h1 {
-            font-size: 1.2rem;
-            color: #00f3ff;
-            margin-bottom: 4px;
-            text-shadow: 0 0 20px rgba(0, 243, 255, 0.8);
-        }
-
-        .screen p {
-            font-size: 0.78rem;
-            color: #a4b0be;
-            margin-bottom: 8px;
-            line-height: 1.3;
-        }
-
-        .input-field {
-            background: rgba(255,255,255,0.08);
-            border: 2px solid rgba(0, 243, 255, 0.5);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            width: 85%;
-            max-width: 270px;
-            margin-bottom: 6px;
-            text-align: center;
-            outline: none;
-            box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.1);
-        }
-        .input-field:focus { border-color: #00f3ff; box-shadow: 0 0 15px #00f3ff, inset 0 0 10px rgba(0,243,255,0.3); }
-
-        .btn {
-            background: linear-gradient(45deg, #00f3ff, #009432);
-            color: #fff;
-            border: none;
-            padding: 9px 16px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
-            margin: 4px auto;
-            width: 90%;
-            max-width: 290px;
-            transition: transform 0.1s;
-            display: block;
-        }
-        .btn:active { transform: scale(0.95); }
-
-        .btn-secondary { background: linear-gradient(45deg, #3b5998, #192f6a); }
-        .btn-purple { background: linear-gradient(45deg, #8e44ad, #512e5f); }
-        .btn-orange { background: linear-gradient(45deg, #e67e22, #b9770e); }
-        .btn-red { background: linear-gradient(45deg, #c0392b, #78281f); }
-        .btn-register { background: linear-gradient(45deg, #2ecc71, #27ae60); color: #fff; box-shadow: 0 0 20px rgba(46, 204, 113, 0.7); }
-        .btn-google { background: linear-gradient(45deg, #db4437, #c53829); color: #fff; box-shadow: 0 0 20px rgba(219, 68, 55, 0.7); }
-
-        .ship-options {
-            display: flex;
-            gap: 10px;
-            margin: 10px 0;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .ship-option {
-            font-size: 2.2rem;
-            padding: 6px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 14px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: transform 0.15s ease, border-color 0.15s ease;
-        }
-        .ship-option:hover { transform: scale(1.1); }
-        .ship-option.selected {
-            border-color: #00f3ff;
-            background: rgba(0, 243, 255, 0.2);
-            box-shadow: 0 0 12px #00f3ff;
-            transform: scale(1.15);
-        }
-
-        .info-card {
-            background: rgba(0, 243, 255, 0.06);
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 8px auto;
-            width: 90%;
-            max-width: 290px;
-            text-align: right;
-            box-sizing: border-box;
-        }
-
-        .chat-box-container {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            background: rgba(10, 10, 25, 0.95);
-            border-radius: 12px;
-            border: 1px solid rgba(0, 243, 255, 0.3);
-            overflow: hidden;
-        }
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            text-align: right;
-        }
-        .chat-msg-item {
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            padding: 8px 10px;
-            border-radius: 10px;
-            max-width: 90%;
-            font-size: 0.75rem;
-            position: relative;
-        }
-        .chat-msg-item.my-msg {
-            align-self: flex-start;
-            background: rgba(0, 243, 255, 0.1);
-            border-color: #00f3ff;
-        }
-        .chat-input-area {
-            display: flex;
-            padding: 8px;
-            background: rgba(0,0,0,0.5);
-            border-top: 1px solid rgba(0, 243, 255, 0.2);
-            gap: 5px;
-            align-items: center;
-        }
-        .emoji-picker-bar {
-            display: flex;
-            gap: 5px;
-            padding: 5px;
-            overflow-x: auto;
-            background: rgba(0,0,0,0.3);
-            font-size: 1.1rem;
-            cursor: pointer;
-        }
-        .chat-snapshot-img {
-            max-width: 100%;
-            border-radius: 6px;
-            margin-top: 4px;
-            border: 1px solid #00f3ff;
-        }
-        
-        .admin-user-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(0,243,255,0.2);
-            padding: 6px 10px;
-            border-radius: 8px;
-            margin-bottom: 6px;
-            font-size: 0.75rem;
-        }
-
-        .floating-fab {
-            position: absolute;
-            bottom: 80px;
-            left: 20px;
-            background: linear-gradient(45deg, #00f3ff, #009432);
-            color: white;
-            border: none;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 25px rgba(0, 243, 255, 0.8);
-            cursor: grab;
-            z-index: 9999;
-            touch-action: none;
-            user-select: none;
-            -webkit-user-select: none;
-            transition: transform 0.1s, box-shadow 0.2s;
-        }
-        .floating-fab:active {
-            transform: scale(0.92);
-            cursor: grabbing;
-        }
-    </style>
+    <!-- Capacitor Bridge script -->
+    <script src="capacitor.js" onerror="console.log('Capacitor bridge not present in web mode')"></script>
 </head>
 <body>
 
@@ -626,7 +29,22 @@
         <div class="nebula" style="top: 10%; left: -20%;"></div>
         <div class="nebula" style="bottom: 15%; right: -20%; background: radial-gradient(circle, rgba(0, 119, 255, 0.18) 0%, transparent 70%);"></div>
 
+        <!-- إشعار التنبيهات والإنجازات (Toast Notification) -->
+        <div id="achievement-toast">🏆 تم إتمام العملية بنجاح!</div>
+
+        <!-- الزر العائم لمتجر الأساطير (FAB) -->
         <button id="floating-store-btn" class="floating-fab" onclick="openStoreFromIndex()" title="متجر أساطير الفضاء">🛒</button>
+
+        <!-- نافذة حقيبة المقتنيات (Inventory Modal) -->
+        <div id="inventory-modal">
+            <div class="modal-content">
+                <h2 style="color: #00f3ff; font-size: 1rem; margin-top:0;">🎒 حقيبة مقتنيات الطيار</h2>
+                <div id="inventory-list-container" style="text-align: right; font-size: 0.75rem; margin: 10px 0; color: #a4b0be;">
+                    <!-- يتم تعبئتها ديناميكياً -->
+                </div>
+                <button class="btn btn-red" onclick="closeInventory()">إغلاق الحقيبة</button>
+            </div>
+        </div>
 
         <div id="top-profile-badge">
             <div class="profile-avatar-circle" id="profile-avatar-icon">🛸</div>
@@ -635,28 +53,28 @@
                 <span class="profile-rank" id="profile-display-rank">متاح لجميع الأعمار (3-30)</span>
             </div>
         </div>
-                <!-- 1. شاشة تسجيل الدخول والتسجيل المتكاملة -->
+
+        <!-- 1. شاشة تسجيل الدخول والتسجيل -->
         <div id="login-screen" class="screen">
             <div class="cinema-radar-box"></div>
             <h1>🌌 مكتبة الألعاب الفضائية (عائلي وآمن)</h1>
             <p>أدخل اسمك للانطلاق في مغامرات الفضاء (للأعمار من 3 إلى 30 سنة):</p>
-            <input type="text" id="username-input" class="input-field" placeholder="اسم الطيار (أدخل admin للمدير)..." maxlength="15">
+            <input type="text" id="username-input" class="input-field" placeholder="اسم الطيار (أدخل admin للمدير)..." maxlength="35">
             <input type="password" id="password-input" class="input-field" placeholder="الرقم السري (اختياري)...">
             <button class="btn" onclick="loginPlayer()">🚀 ابدأ اللعب فوراً</button>
             <button class="btn btn-register" onclick="registerNewPlayer()">✨ تسجيل حساب جديد</button>
             
             <div style="margin: 8px 0; width: 100%; display: flex; flex-direction: column; gap: 4px; align-items: center;">
                 <button class="btn btn-google" onclick="googleLogin()">🌐 الدخول باستخدام Google</button>
-                <!-- زر سياسة الخصوصية -->
                 <button class="btn" style="background: linear-gradient(45deg, #0984e3, #00cec9); margin-top: 4px;" onclick="window.open('privacy.html', '_blank')">📜 سياسة الخصوصية (Privacy Policy)</button>
             </div>
         </div>
 
-        <!-- 2. الشاشة الرئيسية مع الأقسام المتعددة -->
-        <div id="main-menu" class="screen" style="display: none; padding-bottom: 70px;">
+        <!-- 2. الشاشة الرئيسية -->
+        <div id="main-menu" class="screen" style="display: none;">
             <h1 id="welcome-title">مرحباً بك يا بطل الفضاء</h1>
-            <p id="user-status-desc" style="color: #2ecc71; font-weight: bold; margin-bottom: 5px;">الوضع: مجاني بالكامل لجميع الأعمار 🌟 | الجواهر: 💎 0</p>
-            <!-- حاوية إعلان AdSense -->
+            <p id="user-status-desc" style="color: #2ecc71; font-weight: bold; margin-bottom: 5px;">الوضع: مجاني بالكامل لجميع الأعمار 🌟 | الجواهر: 💎 0 | النجوم: ⭐ 0</p>
+            
             <div class="ad-container" style="width: 100%; max-width: 320px; margin: 10px auto; text-align: center; z-index: 25;">
               <ins class="adsbygoogle"
                    style="display:block"
@@ -670,7 +88,7 @@
             </div>
 
             <div id="sec-games" class="section-container active-section">
-                <p style="color: #00f3ff; font-size: 0.8rem; margin: 2px 0 8px 0;">🎮 الأقسام الرئيسية للألعاب الفضائية (متاحة للجميع):</p>
+                <p style="color: #00f3ff; font-size: 0.8rem; margin: 2px 0 8px 0;">🎮 الأقسام الرئيسية للألعاب الفضائية:</p>
                 <button class="btn" onclick="openGame(1)">⭐ 1. صائد النجوم الكلاسيكي</button>
                 <button class="btn btn-secondary" onclick="openGame(2)">☄️ 2. تحدي النيازك القاتلة</button>
                 <button class="btn btn-purple" onclick="openGame(3)">🚀 3. غزو الفضاء السريع</button>
@@ -680,25 +98,24 @@
                 <button class="btn btn-purple" onclick="openGame(7)">🌀 7. سباق الثقوب الدودية</button>
                 <button class="btn btn-orange" onclick="openGame(8)">🔥 8. حرب الليزر والصواريخ</button>
                 <button class="btn btn-red" onclick="openGame(9)">👑 9. معركة الزعيم الأخير (Boss)</button>
-                <button class="btn" style="background: linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openGame(10)">🔒 10. معركة الحصار الفضائي (مفتوحة للجميع!)</button>
-                <button class="btn" style="background: linear-gradient(45deg, #3498db, #9b59b6);" onclick="openSplitScreenGame()">👥 11. صراع المجرّتين (لعب ثنائي مواجهة حقيقية 1v1)</button>
+                <button class="btn" style="background: linear-gradient(45deg, #27ae60, #2ecc71);" onclick="openGame(10)">🔒 10. معركة الحصار الفضائي</button>
+                <button class="btn" style="background: linear-gradient(45deg, #3498db, #9b59b6);" onclick="openSplitScreenGame()">👥 11. صراع المجرّتين (لعب ثنائي 1v1)</button>
             </div>
 
             <div id="sec-store" class="section-container">
-                <p style="color: #2ecc71; font-size: 0.8rem; margin: 2px 0 8px 0;">🌟 مرآب المركبات والمحاكاة الترفيهية (مجاني 100%):</p>
-                
+                <p style="color: #2ecc71; font-size: 0.8rem; margin: 2px 0 8px 0;">🌟 مرآب المركبات والمتاجر:</p>
                 <div class="info-card" style="border-color: #2ecc71; background: rgba(46, 204, 113, 0.05); text-align: center;">
-                    <b style="color: #2ecc71; font-size: 0.85rem;">🛡️️ تطبيق عائلي آمن ومجاني:</b><br>
-                    <span style="font-size: 0.75rem; color: #fff;">• جميع الألعاب والمستويات والمركبات مفتوحة مجاناً لجميع الفئات العمرية من 3 إلى 30 سنة.</span><br>
-                    <span style="font-size: 0.7rem; color: #a4b0be; display:block; margin-top:4px;">لا توجد أي مدفوعات، رسوم، أو اشتراكات مالية نهائياً.</span>
+                    <b style="color: #2ecc71; font-size: 0.85rem;">🛡 تطبيق عائلي آمن ومجاني:</b><br>
+                    <span style="font-size: 0.75rem; color: #fff;">• جميع الألعاب والمستويات والمركبات مفتوحة مجاناً.</span>
                 </div>
-
-                <button class="btn" style="background: linear-gradient(45deg, #2ecc71, #27ae60);" onclick="openCockpitSimulation()">🛰️️ محاكاة الكابينة والرادار التفاعلية</button>
-                <button class="btn" style="background: linear-gradient(45deg, #fdcb6e, #e17055);" onclick="openShop()">🛸 مرآب المركبات الفضائية المجاني</button>
+                <button class="btn btn-gold" onclick="openStoreFromIndex()">🛒 دخول متجر أساطير الفضاء الموسع</button>
+                <button class="btn" style="background: linear-gradient(45deg, #2ecc71, #27ae60);" onclick="openCockpitSimulation()">🛰 محاكاة الكابينة والرادار</button>
+                <button class="btn" style="background: linear-gradient(45deg, #fdcb6e, #e17055);" onclick="openShop()">🛸 مرآب المركبات الفضائية السريع</button>
+                <button class="btn btn-purple" onclick="openInventory()">🎒 فتح حقيبة المقتنيات</button>
             </div>
 
             <div id="sec-chat" class="section-container">
-                <p style="color: #00f3ff; font-size: 0.8rem; margin: 2px 0 8px 0;">💬 شات الطيارين العام (آمن ومراقب):</p>
+                <p style="color: #00f3ff; font-size: 0.8rem; margin: 2px 0 8px 0;">💬 شات الطيارين العام:</p>
                 <div class="chat-box-container">
                     <div class="emoji-picker-bar" onclick="insertEmoji(event)">
                         <span>🛸</span><span>🚀</span><span>⭐</span><span>💎</span><span>👑</span><span>🔥</span><span>⚡</span><span>👾</span><span>😎</span><span>💬</span><span>❤️</span><span>🛡️</span>
@@ -715,37 +132,188 @@
                 <p style="color: #ff3838; font-size: 0.8rem; margin: 2px 0 8px 0;">🛡️ لوحة إدارة الشات والحسابات (Admin):</p>
                 <div class="info-card" style="border-color: #ff3838; background: rgba(255, 56, 56, 0.05); text-align: right;">
                     <b style="color: #ff3838; font-size: 0.8rem;">⚙️ أدوات الحظر والتحكم:</b><br>
-                    <span style="font-size: 0.7rem; color: #fff;">• يمكنك هنا حظر المستخدمين المخالفين من الشات والتطبيق نهائياً عبر الـ ID والحساب.</span>
+                    <span style="font-size: 0.7rem; color: #fff;">• حظر المستخدمين المخالفين من الشات والتطبيق نهائياً.</span>
                 </div>
                 <div id="admin-users-list" style="margin-top: 10px; max-height: 250px; overflow-y: auto;">
                     <p style="color: #a4b0be; font-size: 0.75rem;">جاري جلب قائمة المستخدمين...</p>
                 </div>
-                <button class="btn btn-red" style="margin-top: 10px;" onclick="loadAdminUsersList()">🔄 تحديث قائمة المستخدمين</button>
+                <button class="btn btn-red" style="margin-top: 10px;" onclick="loadAdminUsersList()">🔄 تحديث القائمة</button>
             </div>
 
             <div id="sec-support" class="section-container">
-                <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وأمان العائلة والمؤسس:</p>
+                <p style="color: #25D366; font-size: 0.8rem; margin: 2px 0 8px 0;">🛠️ الدعم الفني وأمان العائلة:</p>
                 <div class="info-card" style="border-color: #00f3ff; background: rgba(0, 243, 255, 0.05);">
                     <b style="color: #00f3ff; font-size: 0.8rem;">👨‍💻 معلومات المؤسس والمطور:</b><br>
                     <span style="font-size: 0.75rem; color: #fff;">• المؤسس والمطور: كرم حمدي (Malak Haret)</span><br>
-                    <span style="font-size: 0.75rem; color: #a4b0be;">• رائد أعمال ومطور برمجيات وأنظمة لوجستية وتطبيقات ألعاب الفضاء.</span><br>
                     <span style="font-size: 0.75rem; color: #2ecc71;">• مقر العمل: جمهورية مصر العربية 🇪🇬</span>
                 </div>
-
-                <div class="info-card" style="border-color: #2ecc71; background: rgba(46, 204, 113, 0.05);">
-                    <b style="color: #2ecc71; font-size: 0.8rem;">🌟 الإصدار العائلي الآمن (All Ages):</b><br>
-                    <span style="font-size: 0.75rem; color: #fff;">• مصمم خصيصاً ليتناسب مع الأطفال والكبار من سن 3 إلى 30 سنة.</span><br>
-                    <span style="font-size: 0.75rem; color: #00f3ff;">• محتوى ترفيهي نظيف وخالٍ تماماً من أي معاملات مادية.</span><br>
-                    <span style="font-size: 0.75rem; color: #f1c40f;">• تحكم سلس باللمس أو الماوس يناسب جميع الأجهزة.</span>
-                </div>
-
-                <!-- زر الانتقال إلى صفحة سياسة الخصوصية لمتطلبات جوجل بلاي -->
                 <a href="privacy.html" class="btn btn-secondary" style="background: linear-gradient(45deg, #0984e3, #6c5ce7); text-decoration: none; display: block; text-align: center; margin-top: 10px; margin-bottom: 5px;">📜 سياسة الخصوصية (Privacy Policy)</a>
-
                 <button class="btn btn-secondary" style="background: #57606f; margin-top: 5px;" onclick="logoutPlayer()">🚪 تسجيل خروج</button>
             </div>
         </div>
 
+        <!-- 3. شاشة متجر أساطير الفضاء الموسع المدمجة (Lord Store Screen) -->
+        <div id="lord-store-screen" class="screen" style="display: none;">
+            <h1>🛒 متجر المعدات والمركبات الكوني الموسع</h1>
+            <div class="gem-badge-bar">
+                <span class="gem-badge" id="user-gems-display">💎 الجواهر: 0</span>
+                <span class="gem-badge" id="user-stars-display" style="border-color:#f1c40f; color:#f1c40f;">⭐ النجوم: 0</span>
+                <button class="gem-badge" style="background:#8e44ad; border-color:#d2b4de; cursor:pointer;" onclick="openInventory()">🎒 حقيبتي</button>
+            </div>
+            <p id="store-welcome-msg" style="color: #2ecc71; font-weight: bold; margin: 0 0 3px 0;"></p>
+
+            <div class="store-tabs">
+                <button class="tab-btn active" onclick="filterStore('all', this)">الكل 🌟</button>
+                <button class="tab-btn" onclick="filterStore('laser', this)">⚡ الليزر</button>
+                <button class="tab-btn" onclick="filterStore('ship', this)">🛸 السفن</button>
+                <button class="tab-btn" onclick="filterStore('bg', this)">🌌 الخلفيات</button>
+                <button class="tab-btn" onclick="filterStore('powerup', this)">🚀 القدرات الخارقة</button>
+                <button class="tab-btn" onclick="filterStore('helmet', this)">👑 الخوذ الملكية</button>
+            </div>
+
+            <div class="store-grid" id="store-items-container">
+                
+                <!-- قسم أنواع الليزر -->
+                <div class="category-header" data-category="laser">⚡ ترقيات وأنواع الليزر المتقدمة (500 جوهرة)</div>
+                
+                <div class="store-item-card" data-category="laser">
+                    <div class="item-info">
+                        <h3>⚡ ليزر البلازما الأزرق القوسي</h3>
+                        <p>شعاع أزرق فائق السرعة لدحر النيازك.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('laser', 'plasma_blue', 500)">شراء (500 💎)</button>
+                </div>
+
+                <div class="store-item-card" data-category="laser">
+                    <div class="item-info">
+                        <h3>🔥 ليزر الحمم البركانية الحمراء</h3>
+                        <p>قوة تدميرية هائلة محترقة ومستعرة.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('laser', 'lava_red', 500)">شراء (500 💎)</button>
+                </div>
+
+                <div class="store-item-card" data-category="laser">
+                    <div class="item-info">
+                        <h3>💚 ليزر الزمرد الكمومي الفائق</h3>
+                        <p>طاقة متطورة ذات ترددات كمومية متطافرة.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('laser', 'emerald_quantum', 500)">شراء (500 💎)</button>
+                </div>
+
+                <div class="store-item-card" data-category="laser">
+                    <div class="item-info">
+                        <h3>💜 ليزر الثقب الأسود البنفسجي</h3>
+                        <p>أقوى أنواع الليزر الكوني لابتلاع الحواجز.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('laser', 'blackhole_purple', 500)">شراء (500 💎)</button>
+                </div>
+
+                <div class="store-item-card" data-category="laser">
+                    <div class="item-info">
+                        <h3>🟡 ليزر السوبرنوفا الذهبي المتفجر</h3>
+                        <p>يطلق نبضات شمسية تضيء كامل المجرة.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('laser', 'supernova_gold', 500)">شراء (500 💎)</button>
+                </div>
+
+                <!-- قسم السفن الأدمين -->
+                <div class="category-header" data-category="ship">🛸 أيقونات السفينة الفضائية الملكية (صلاحيات الأدمين والدرع)</div>
+                
+                <div class="store-item-card" data-category="ship">
+                    <div class="item-info">
+                        <h3>🛸 مركبة الأدمين القائدة الملكية</h3>
+                        <p>تتطلب درع وصلاحيات الأدمين المطلقة.</p>
+                    </div>
+                    <button class="btn btn-blue" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('ship', 'admin_mothership', 0, true)">فتح بالدرع 🛡️</button>
+                </div>
+
+                <div class="store-item-card" data-category="ship">
+                    <div class="item-info">
+                        <h3>🚀 صاروخ مجرة الأندرويد الفاخر</h3>
+                        <p>سفينة فضاء مجهزة للسرعات الفائقة في المجرة.</p>
+                    </div>
+                    <button class="btn btn-blue" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('ship', 'android_cruiser', 0, true)">فتح بالدرع 🛡️</button>
+                </div>
+
+                <div class="store-item-card" data-category="ship">
+                    <div class="item-info">
+                        <h3>👾 مدمرة الفضاء الأجنبية (Alien Destroyer)</h3>
+                        <p>مركبة حربية متطورة ذات تقنيات فضائية محظورة.</p>
+                    </div>
+                    <button class="btn btn-blue" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('ship', 'alien_destroyer', 0, true)">فتح بالدرع 🛡️</button>
+                </div>
+
+                <!-- قسم الخلفيات -->
+                <div class="category-header" data-category="bg">🌌 خلفيات المجرات والنجوم المتقدمة (1000 نجمة)</div>
+                
+                <div class="store-item-card" data-category="bg">
+                    <div class="item-info">
+                        <h3>✨ خلفية سديم أوريون النجمي</h3>
+                        <p>خلفية ساحرة مليئة بالسحب النجمية المتلألئة.</p>
+                    </div>
+                    <button class="btn btn-purple" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('background', 'orion_nebula', 1000)">شراء (1000 ⭐)</button>
+                </div>
+
+                <div class="store-item-card" data-category="bg">
+                    <div class="item-info">
+                        <h3>🌌 خلفية ثقب درب التبانة العميق</h3>
+                        <p>أعمق درجات الفضاء المظلم والنجوم البعيدة.</p>
+                    </div>
+                    <button class="btn btn-purple" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('background', 'milkyway_deep', 1000)">شراء (1000 ⭐)</button>
+                </div>
+
+                <!-- قسم القدرات الخارقة -->
+                <div class="category-header" data-category="powerup">🚀 تعزيزات القدرات الخارقة المتقدمة</div>
+                
+                <div class="store-item-card" data-category="powerup">
+                    <div class="item-info">
+                        <h3>⏳ محرك الالتواء الزمني (Time Warp)</h3>
+                        <p>يبطئ حركة النيازك بمقدار 25% تلقائياً.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('powerup', 'time_warp', 400)">شراء (400 💎)</button>
+                </div>
+
+                <div class="store-item-card" data-category="powerup">
+                    <div class="item-info">
+                        <h3>🌟 مضاعف الجواهر الكوني (Gem Multiplier)</h3>
+                        <p>يضاعف الجواهر المكتسبة في اللعبة بنسبة 2x.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('powerup', 'gem_multiplier', 600)">شراء (600 💎)</button>
+                </div>
+
+                <div class="store-item-card" data-category="powerup">
+                    <div class="item-info">
+                        <h3>🛸 طائرة الدرون المرافق الذكية (AI Drone)</h3>
+                        <p>تطلق طلقات ليزر جانبية مزدوجة مع مركبك.</p>
+                    </div>
+                    <button class="btn btn-gold" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('powerup', 'ai_drone', 800)">شراء (800 💎)</button>
+                </div>
+
+                <!-- الخوذ الملكية -->
+                <div class="category-header" data-category="helmet">👑 خوذات وأقنعة الطيارين الملكية (1200 نجمة)</div>
+                
+                <div class="store-item-card" data-category="helmet">
+                    <div class="item-info">
+                        <h3>👑 خوذة الإمبراطور الذهبية الملكية</h3>
+                        <p>تعطي طابعاً هيبةً ومضاعفة لهيبة السفينة.</p>
+                    </div>
+                    <button class="btn btn-purple" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('helmet', 'golden_emperor', 1200)">شراء (1200 ⭐)</button>
+                </div>
+
+                <div class="store-item-card" data-category="helmet">
+                    <div class="item-info">
+                        <h3>🔮 خوذة العقل الإلكتروني السيبراني</h3>
+                        <p>تمنحك رؤية استباقية لمسار النيازك في الفضاء.</p>
+                    </div>
+                    <button class="btn btn-purple" style="width:auto; margin:0; padding:4px 10px; font-size:0.65rem;" onclick="buyItem('helmet', 'cyber_mind', 1200)">شراء (1200 ⭐)</button>
+                </div>
+
+            </div>
+
+            <button class="btn btn-red" style="margin-top: 8px;" onclick="closeLordStore()">🏠 العودة للقائمة الرئيسية</button>
+        </div>
+
+        <!-- الشريط السفلي للتنقل -->
         <div id="bottom-nav-bar" style="display: none;">
             <button class="nav-item active" onclick="switchSection('sec-games', this)">
                 <span class="nav-icon">🎮</span>
@@ -753,7 +321,7 @@
             </button>
             <button class="nav-item" onclick="switchSection('sec-store', this)">
                 <span class="nav-icon">🛸</span>
-                <span>المركبات</span>
+                <span>المتاجر</span>
             </button>
             <button class="nav-item" onclick="switchSection('sec-chat', this)">
                 <span class="nav-icon">💬</span>
@@ -769,8 +337,9 @@
             </button>
         </div>
 
+        <!-- 4. نافذة اختيار المركبة السريعة -->
         <div id="shop-modal" class="screen" style="display: none;">
-            <h2>مرآب مركبات المستقبل (مجاني للجميع)</h2>
+            <h2>مرآب مركبات المستقبل</h2>
             <p>اختر طراز سفينتك الفضائية المفضلة:</p>
             <div class="ship-options">
                 <div class="ship-option" onclick="selectShip('🛸', this)">🛸</div>
@@ -782,6 +351,7 @@
             <button class="btn" onclick="closeShop()">حفظ والعودة للمكتبة</button>
         </div>
 
+        <!-- 5. شاشة بدء/توقف اللعبة -->
         <div id="game-screen" class="screen" style="display: none;">
             <h1 id="screen-title">عنوان اللعبة</h1>
             <p id="screen-desc">تعليمات اللعب...</p>
@@ -790,7 +360,7 @@
             <button class="btn btn-secondary" onclick="returnToMenu()">🏠 العودة للقائمة الرئيسية</button>
         </div>
 
-        <!-- 8. واجهة الشاشة المنقسمة التفاعلية الحقيقية (صراع المجرتين - 12 قلب لكل لاعب) -->
+        <!-- 6. شاشة اللعب الثنائي -->
         <div id="split-screen-container" class="screen" style="display: none; padding:0; background:#000;">
             <div id="p2-area" style="position:relative; width:100%; height:50%; background:rgba(35,0,15,0.95); border-bottom:3px solid #00f3ff; overflow:hidden; touch-action:none;">
                 <div style="position:absolute; top:8px; right:12px; color:#ff3838; font-weight:bold; font-size:0.75rem; z-index:10; background:rgba(0,0,0,0.6); padding:4px 8px; border-radius:10px; border:1px solid #ff3838;">
@@ -810,6 +380,7 @@
             </div>
         </div>
 
+        <!-- 7. واجهة أزرار الـ UI أثناء اللعب -->
         <div id="ui" style="display: none;">
             <div class="ui-badge">⭐ <span id="score">0</span></div>
             <div class="ui-badge">❤️ <span id="lives">12</span></div>
@@ -821,1373 +392,13 @@
 
         <div id="player" style="display: none;">🛸</div>
 
-        <!-- زر الإطلاق الدائري المحدث في الأسفل -->
+        <!-- 8. أزرار التحكم السفلي -->
         <div id="controls" style="display: none;">
-            <button class="fire-btn" id="fire-btn" title="إطلاق النار (اضغط مطولاً للتلقائي)">⚡</button>
+            <button class="fire-btn" id="fire-btn" title="إطلاق النار">⚡</button>
         </div>
     </div>
 
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAekw5iD-7t-BeRbrVBykXNWqtY0C7y7ug",
-            authDomain: "tarazan-284f3.firebaseapp.com",
-            projectId: "tarazan-284f3",
-            storageBucket: "tarazan-284f3.firebasestorage.app",
-            messagingSenderId: "382519802983",
-            appId: "1:382519802983:web:c5826a8cdba73335a528c2",
-            measurementId: "G-KCRSY63RTC"
-        };
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        // معالج أداء اللعبة وسلاسة الإطارات (Game Performance Processor)
-        const GamePerformanceOptimizer = {
-            lastFrameTime: performance.now(),
-            fps: 60,
-            targetDelta: 1000 / 60,
-            cleanUpThreshold: 40,
-            optimizeDOM() {
-                const garbage = document.querySelectorAll('.explosion, .laser-l1:not([style*="bottom"]), .item:not([style*="top"])');
-                if (garbage.length > 20) {
-                    garbage.forEach(el => el.remove());
-                }
-            }
-        };
-
-        const gameContainer = document.getElementById('game-container');
-        const deepSpaceBg = document.getElementById('deep-space-bg');
-        const loginScreen = document.getElementById('login-screen');
-        const mainMenu = document.getElementById('main-menu');
-        const bottomNavBar = document.getElementById('bottom-nav-bar');
-        const topProfileBadge = document.getElementById('top-profile-badge');
-        const shopModal = document.getElementById('shop-modal');
-        const gameScreen = document.getElementById('game-screen');
-        const splitScreenContainer = document.getElementById('split-screen-container');
-        const ui = document.getElementById('ui');
-        const controls = document.getElementById('controls');
-        const player = document.getElementById('player');
-        const floatingStoreBtn = document.getElementById('floating-store-btn');
-
-        const usernameInput = document.getElementById('username-input');
-        const passwordInput = document.getElementById('password-input');
-        const welcomeTitle = document.getElementById('welcome-title');
-        const userStatusDesc = document.getElementById('user-status-desc');
-        const profileAvatarIcon = document.getElementById('profile-avatar-icon');
-        const profileDisplayName = document.getElementById('profile-display-name');
-        const profileDisplayRank = document.getElementById('profile-display-rank');
-        const screenTitle = document.getElementById('screen-title');
-        const screenDesc = document.getElementById('screen-desc');
-        const highScoreText = document.getElementById('high-score-text');
-        const startBtn = document.getElementById('start-btn');
-        const scoreDisplay = document.getElementById('score');
-        const livesDisplay = document.getElementById('lives');
-        const liveGemsDisplay = document.getElementById('live-gems');
-        const chatMessagesBox = document.getElementById('chat-messages-box');
-        const chatTextInput = document.getElementById('chat-text-input');
-        const navAdminBtn = document.getElementById('nav-admin-btn');
-        const adminUsersList = document.getElementById('admin-users-list');
-
-        const fireBtn = document.getElementById('fire-btn');
-
-        let currentPlayer = localStorage.getItem('currentSpacePilotV10') || '';
-        let currentPilotData = {
-            name: '',
-            highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
-            ship: '🛸',
-            gems: 0,
-            stars: 0,
-            inventory: [],
-            isBanned: false,
-            isMuted: false,
-            isAdmin: false
-        };
-
-        let isTouchingScreen = false;
-        let selectedShipIcon = '🛸';
-        
-        gameContainer.addEventListener('touchstart', (e) => {
-            if (!isPlaying || isPaused) return;
-            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn') || e.target.closest('#split-screen-container')) return;
-            isTouchingScreen = true;
-            updateTouchPosition(e.touches[0].clientX);
-        }, { passive: true });
-
-        gameContainer.addEventListener('touchmove', (e) => {
-            if (!isPlaying || isPaused || !isTouchingScreen) return;
-            if (e.target.closest('#split-screen-container')) return;
-            updateTouchPosition(e.touches[0].clientX);
-        }, { passive: true });
-
-        gameContainer.addEventListener('touchend', () => { isTouchingScreen = false; });
-
-        gameContainer.addEventListener('mousedown', (e) => {
-            if (!isPlaying || isPaused) return;
-            if (e.target.closest('#controls') || e.target.closest('#ui') || e.target.closest('#floating-store-btn') || e.target.closest('#split-screen-container')) return;
-            isTouchingScreen = true;
-            updateTouchPosition(e.clientX);
-        });
-
-        window.addEventListener('mousemove', (e) => {
-            if (!isPlaying || isPaused || !isTouchingScreen) return;
-            updateTouchPosition(e.clientX);
-        });
-
-        window.addEventListener('mouseup', () => { isTouchingScreen = false; });
-
-        function updateTouchPosition(clientX) {
-            requestAnimationFrame(() => {
-                const rect = gameContainer.getBoundingClientRect();
-                playerX = clientX - rect.left;
-                if (playerX < 35) playerX = 35;
-                if (playerX > rect.width - 35) playerX = rect.width - 35;
-                player.style.left = playerX + 'px';
-            });
-        }
-
-        fireBtn.addEventListener('mousedown', onFireButtonDown);
-        fireBtn.addEventListener('mouseup', onFireButtonUp);
-        fireBtn.addEventListener('mouseleave', onFireButtonUp);
-        fireBtn.addEventListener('touchstart', (e) => { e.preventDefault(); onFireButtonDown(); });
-        fireBtn.addEventListener('touchend', onFireButtonUp);
-
-        function onFireButtonDown() {
-            if (!isPlaying || isPaused) return;
-            if (isAutoFire) { disableAutoFire(); return; }
-            firePressTimer = setTimeout(() => { enableAutoFire(); }, 350);
-        }
-
-        function onFireButtonUp() {
-            if (!isPlaying || isPaused) return;
-            if (firePressTimer) {
-                clearTimeout(firePressTimer);
-                firePressTimer = null;
-                if (!isAutoFire) { fireWeapon(); }
-            }
-        }
-
-        if (currentPlayer) {
-            loadPlayerDataFromCloud(currentPlayer, (data) => {
-                if (data) {
-                    if (data.isBanned) {
-                        alert('❌ حسابك محظور نهائياً من قبل الإدارة.');
-                        logoutPlayer();
-                        return;
-                    }
-                    currentPilotData = data;
-                }
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
-                floatingStoreBtn.style.display = 'flex';
-                checkAdminPermissions();
-                initChatListener();
-            });
-        }
-
-        function switchSection(sectionId, btnElement) {
-            document.querySelectorAll('.section-container').forEach(sec => sec.classList.remove('active-section'));
-            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-            
-            document.getElementById(sectionId).classList.add('active-section');
-            btnElement.classList.add('active');
-        }
-
-        function checkAdminPermissions() {
-            if (currentPlayer === 'admin' || currentPilotData.isAdmin) {
-                navAdminBtn.style.display = 'flex';
-            } else {
-                navAdminBtn.style.display = 'none';
-            }
-        }
-
-        async function googleLogin() {
-            const provider = new firebase.auth.GoogleAuthProvider();
-            try {
-                let result = await auth.signInWithPopup(provider);
-                let user = result.user;
-                let name = user.displayName || user.email.split('@')[0];
-
-                const docRef = db.collection("spacePilotsV10").doc(name);
-                let doc = await docRef.get();
-
-                if (doc.exists && doc.data().isBanned) {
-                    alert('❌ هذا الحساب محظور من دخول التطبيق.');
-                    return;
-                }
-
-                if (!doc.exists) {
-                    currentPilotData = {
-                        name: name,
-                        password: '',
-                        highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
-                        ship: '🛸',
-                        gems: 0,
-                        stars: 0,
-                        inventory: [],
-                        isBanned: false,
-                        isMuted: false,
-                        isAdmin: (name === 'admin'),
-                        lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                    };
-                    await docRef.set(currentPilotData);
-                } else {
-                    currentPilotData = doc.data();
-                    currentPilotData.name = name;
-                }
-
-                currentPlayer = name;
-                localStorage.setItem('currentSpacePilotV10', currentPlayer);
-
-                alert(`🎉 أهلاً بك يا ${name}! تم تسجيل الدخول بنجاح عبر Google.`);
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
-                floatingStoreBtn.style.display = 'flex';
-                checkAdminPermissions();
-                initChatListener();
-            } catch (error) {
-                alert('❌ تعذر تسجيل الدخول عبر Google: ' + error.message);
-            }
-        }
-
-        async function loginPlayer() {
-            let name = usernameInput.value.trim();
-            let pass = passwordInput.value.trim();
-
-            if (!name) { alert('الرجاء إدخال اسم الطيار أو البطل!'); return; }
-
-            const docRef = db.collection("spacePilotsV10").doc(name);
-            try {
-                let doc = await docRef.get();
-                if (doc.exists && doc.data().isBanned) {
-                    alert('❌ حسابك محظور نهائياً من قبل الإدارة.');
-                    return;
-                }
-
-                if (!doc.exists) {
-                    currentPilotData = {
-                        name: name,
-                        password: pass,
-                        highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
-                        ship: '🛸',
-                        gems: 0,
-                        stars: 0,
-                        inventory: [],
-                        isBanned: false,
-                        isMuted: false,
-                        isAdmin: (name === 'admin')
-                    };
-                    await docRef.set(currentPilotData);
-                } else {
-                    currentPilotData = doc.data();
-                    currentPilotData.name = name;
-                    if (currentPilotData.gems === undefined) currentPilotData.gems = 0;
-                    if (currentPilotData.inventory === undefined) currentPilotData.inventory = [];
-                    if (name === 'admin') currentPilotData.isAdmin = true;
-                }
-
-                currentPlayer = name;
-                localStorage.setItem('currentSpacePilotV10', currentPlayer);
-
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
-                floatingStoreBtn.style.display = 'flex';
-                checkAdminPermissions();
-                initChatListener();
-            } catch (error) {
-                currentPlayer = name;
-                localStorage.setItem('currentSpacePilotV10', currentPlayer);
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
-                floatingStoreBtn.style.display = 'flex';
-                checkAdminPermissions();
-            }
-        }
-
-        async function registerNewPlayer() {
-            let name = usernameInput.value.trim();
-            let pass = passwordInput.value.trim();
-
-            if (!name) {
-                alert('الرجاء إدخال اسم الطيار!');
-                return;
-            }
-
-            const docRef = db.collection("spacePilotsV10").doc(name);
-            try {
-                let doc = await docRef.get();
-                if (doc.exists && doc.data().isBanned) {
-                    alert('❌ هذا الاسم محظور ولا يمكن التسجيل به.');
-                    return;
-                }
-
-                currentPilotData = {
-                    name: name,
-                    password: pass,
-                    highScores: {1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0, 8:0, 9:0, 10:0},
-                    ship: '🛸',
-                    gems: 0,
-                    stars: 0,
-                    inventory: [],
-                    isBanned: false,
-                    isMuted: false,
-                    isAdmin: (name === 'admin'),
-                    lastLogin: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                await docRef.set(currentPilotData);
-                currentPlayer = name;
-                localStorage.setItem('currentSpacePilotV10', currentPlayer);
-
-                alert('🎉 أهلاً بك في مكتبة الألعاب الفضائية!');
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
-                floatingStoreBtn.style.display = 'flex';
-                checkAdminPermissions();
-                initChatListener();
-            } catch (error) {
-                currentPlayer = name;
-                localStorage.setItem('currentSpacePilotV10', currentPlayer);
-                updateUserInterfaceProfile();
-                loginScreen.style.display = 'none';
-                mainMenu.style.display = 'flex';
-                bottomNavBar.style.display = 'flex';
-                topProfileBadge.style.display = 'flex';
-                floatingStoreBtn.style.display = 'flex';
-                checkAdminPermissions();
-            }
-        }
-
-        function loadPlayerDataFromCloud(name, callback) {
-            db.collection("spacePilotsV10").doc(name).get().then((doc) => {
-                if (doc.exists) { callback(doc.data()); } else { callback(null); }
-            }).catch(() => { callback(null); });
-        }
-
-        function savePlayerDataToCloud() {
-            if (!currentPlayer) return;
-            db.collection("spacePilotsV10").doc(currentPlayer).set(currentPilotData, { merge: true }).catch(() => {});
-        }
-
-        // تم إصلاح الدالة لحفظ وتطبيق شكل السفينة فوراً بدون تداخل
-        function updateUserInterfaceProfile() {
-            selectedShipIcon = currentPilotData.ship || '🛸';
-
-            player.innerText = selectedShipIcon;
-            welcomeTitle.innerText = `مرحباً بك يا بطل: ${currentPlayer}`;
-            userStatusDesc.innerHTML = `الوضع: <span style="color:#2ecc71;">مجاني بالكامل لجميع الأعمار (3-30)</span> | رصيد الجواهر: 💎 ${currentPilotData.gems || 0}`;
-            liveGemsDisplay.innerText = currentPilotData.gems || 0;
-
-            profileAvatarIcon.innerText = selectedShipIcon;
-            profileDisplayName.innerText = currentPlayer;
-            profileDisplayRank.innerText = (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'متاح للجميع (3-30)');
-
-            if (currentPilotData.inventory) {
-                if (currentPilotData.inventory.includes('orion_nebula')) {
-                    deepSpaceBg.className = 'deep-space-warp bg-orion-nebula';
-                } else if (currentPilotData.inventory.includes('milkyway_deep')) {
-                    deepSpaceBg.className = 'deep-space-warp bg-milkyway-deep';
-                }
-            }
-        }
-
-        function logoutPlayer() {
-            localStorage.removeItem('currentSpacePilotV10');
-            currentPlayer = '';
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
-            floatingStoreBtn.style.display = 'none';
-            navAdminBtn.style.display = 'none';
-            loginScreen.style.display = 'flex';
-        }
-
-        function openStoreFromIndex() {
-            let activePilot = localStorage.getItem('currentSpacePilotV10') || 'admin';
-            localStorage.setItem('currentSpacePilotV10', activePilot);
-            window.location.href = 'lord.html';
-        }
-
-        function openCockpitSimulation() {
-            isPlaying = false;
-            isPaused = true;
-            topProfileBadge.style.display = 'none';
-            floatingStoreBtn.style.display = 'none';
-            
-            screenTitle.innerText = "🛸 محاكاة قمرة القيادة التفاعلية";
-            screenDesc.innerHTML = `<h2 id="sim-timer" style="color: #00f3ff; font-size: 1.6rem;">10</h2><p>استمتع برؤية رادار الفضاء المذهل المصمم لجميع الأعمار!</p>`;
-            highScoreText.innerText = `البطل: ${currentPlayer}`;
-            startBtn.style.display = 'none';
-            gameScreen.style.display = 'flex';
-
-            let timeLeft = 10;
-            const timerElement = document.getElementById('sim-timer');
-            const simInterval = setInterval(() => {
-                timeLeft--;
-                if (timerElement) timerElement.innerText = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(simInterval);
-                    alert('✨ انتهت جولة المحاكاة الترفيهية بنجاح!');
-                    startBtn.style.display = 'block';
-                    returnToMenu();
-                }
-            }, 1000);
-        }
-
-        let splitActive = false;
-        let splitAnimFrame = null;
-        let splitSpawnInterval = null;
-        let p1X = 200, p2X = 200;
-        let p1Lives = 12, p2Lives = 12;
-        let p1Score = 0, p2Score = 0;
-
-        let p1AutoFire = false, p2AutoFire = false;
-        let p1FireInterval = null, p2FireInterval = null;
-        let p1HoldTimer = null, p2HoldTimer = null;
-        let p1HoldTriggered = false, p2HoldTriggered = false;
-
-        function openSplitScreenGame() {
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
-            floatingStoreBtn.style.display = 'none';
-            splitScreenContainer.style.display = 'flex';
-            startSplitScreenGame();
-        }
-
-        function startSplitScreenGame() {
-            splitActive = true;
-            p1Lives = 12; p2Lives = 12;
-            p1Score = 0; p2Score = 0;
-            
-            disableP1AutoFire();
-            disableP2AutoFire();
-
-            document.getElementById('p1-lives').innerText = p1Lives;
-            document.getElementById('p2-lives').innerText = p2Lives;
-            document.getElementById('p1-score').innerText = p1Score;
-            document.getElementById('p2-score').innerText = p2Score;
-
-            const rect = splitScreenContainer.getBoundingClientRect();
-            p1X = rect.width / 2;
-            p2X = rect.width / 2;
-            document.getElementById('p1-ship').style.left = p1X + 'px';
-            document.getElementById('p2-ship').style.left = p2X + 'px';
-
-            document.querySelectorAll('.split-laser-p1, .split-laser-p2, .split-meteor').forEach(el => el.remove());
-            
-            if (splitSpawnInterval) clearInterval(splitSpawnInterval);
-            splitSpawnInterval = setInterval(spawnSplitMeteor, 1200);
-
-            bindSplitFireButtons();
-
-            cancelAnimationFrame(splitAnimFrame);
-            splitGameLoop();
-        }
-
-        function bindSplitFireButtons() {
-            const p1Btn = document.getElementById('p1-fire-btn');
-            const p2Btn = document.getElementById('p2-fire-btn');
-
-            if (!p1Btn || !p2Btn) return;
-
-            const onP1Down = (e) => {
-                if (e) e.preventDefault();
-                if (!splitActive) return;
-                p1HoldTriggered = false;
-                p1HoldTimer = setTimeout(() => {
-                    p1HoldTriggered = true;
-                    toggleP1AutoFire();
-                }, 350);
-            };
-
-            const onP1Up = (e) => {
-                if (e) e.preventDefault();
-                if (!splitActive) return;
-                if (p1HoldTimer) {
-                    clearTimeout(p1HoldTimer);
-                    p1HoldTimer = null;
-                }
-                if (!p1HoldTriggered) {
-                    if (p1AutoFire) {
-                        disableP1AutoFire();
-                    } else {
-                        fireSplitLaserP1();
-                    }
-                }
-            };
-
-            p1Btn.onmousedown = onP1Down;
-            p1Btn.onmouseup = onP1Up;
-            p1Btn.onmouseleave = onP1Up;
-            p1Btn.ontouchstart = onP1Down;
-            p1Btn.ontouchend = onP1Up;
-
-            const onP2Down = (e) => {
-                if (e) e.preventDefault();
-                if (!splitActive) return;
-                p2HoldTriggered = false;
-                p2HoldTimer = setTimeout(() => {
-                    p2HoldTriggered = true;
-                    toggleP2AutoFire();
-                }, 350);
-            };
-
-            const onP2Up = (e) => {
-                if (e) e.preventDefault();
-                if (!splitActive) return;
-                if (p2HoldTimer) {
-                    clearTimeout(p2HoldTimer);
-                    p2HoldTimer = null;
-                }
-                if (!p2HoldTriggered) {
-                    if (p2AutoFire) {
-                        disableP2AutoFire();
-                    } else {
-                        fireSplitLaserP2();
-                    }
-                }
-            };
-
-            p2Btn.onmousedown = onP2Down;
-            p2Btn.onmouseup = onP2Up;
-            p2Btn.onmouseleave = onP2Up;
-            p2Btn.ontouchstart = onP2Down;
-            p2Btn.ontouchend = onP2Up;
-        }
-
-        function toggleP1AutoFire() {
-            if (p1AutoFire) { disableP1AutoFire(); } else { enableP1AutoFire(); }
-        }
-
-        function enableP1AutoFire() {
-            p1AutoFire = true;
-            const btn = document.getElementById('p1-fire-btn');
-            if (btn) {
-                btn.innerText = '⚡ آلي P1 🔥';
-                btn.style.background = 'linear-gradient(45deg, #00cec9, #0984e3)';
-                btn.style.boxShadow = '0 0 25px #00f3ff';
-            }
-            if (!p1FireInterval) { p1FireInterval = setInterval(fireSplitLaserP1, 150); }
-        }
-
-        function disableP1AutoFire() {
-            p1AutoFire = false;
-            const btn = document.getElementById('p1-fire-btn');
-            if (btn) {
-                btn.innerText = '⚡ إطلاق P1';
-                btn.style.background = 'linear-gradient(45deg, #00f3ff, #0984e3)';
-                btn.style.boxShadow = '0 0 12px #00f3ff';
-            }
-            if (p1FireInterval) { clearInterval(p1FireInterval); p1FireInterval = null; }
-        }
-
-        function toggleP2AutoFire() {
-            if (p2AutoFire) { disableP2AutoFire(); } else { enableP2AutoFire(); }
-        }
-
-        function enableP2AutoFire() {
-            p2AutoFire = true;
-            const btn = document.getElementById('p2-fire-btn');
-            if (btn) {
-                btn.innerText = '🔥 آلي P2 🔥';
-                btn.style.background = 'linear-gradient(45deg, #e17055, #d63031)';
-                btn.style.boxShadow = '0 0 25px #ff3838';
-            }
-            if (!p2FireInterval) { p2FireInterval = setInterval(fireSplitLaserP2, 150); }
-        }
-
-        function disableP2AutoFire() {
-            p2AutoFire = false;
-            const btn = document.getElementById('p2-fire-btn');
-            if (btn) {
-                btn.innerText = '🔥 إطلاق P2';
-                btn.style.background = 'linear-gradient(45deg, #ff3838, #c0392b)';
-                btn.style.boxShadow = '0 0 12px #ff3838';
-            }
-            if (p2FireInterval) { clearInterval(p2FireInterval); p2FireInterval = null; }
-        }
-
-        function handleSplitTouch(e) {
-            if (!splitActive) return;
-            const containerRect = splitScreenContainer.getBoundingClientRect();
-            for (let i = 0; i < e.touches.length; i++) {
-                const touch = e.touches[i];
-                if (touch.target.tagName === 'BUTTON') continue;
-                const relY = touch.clientY - containerRect.top;
-                const relX = touch.clientX - containerRect.left;
-                
-                if (relY < containerRect.height / 2) {
-                    p2X = Math.max(30, Math.min(containerRect.width - 30, relX));
-                    document.getElementById('p2-ship').style.left = p2X + 'px';
-                } else {
-                    p1X = Math.max(30, Math.min(containerRect.width - 30, relX));
-                    document.getElementById('p1-ship').style.left = p1X + 'px';
-                }
-            }
-        }
-
-        splitScreenContainer.addEventListener('touchstart', handleSplitTouch, {passive: true});
-        splitScreenContainer.addEventListener('touchmove', handleSplitTouch, {passive: true});
-
-        window.addEventListener('keydown', (e) => {
-            if (!splitActive) return;
-            const containerRect = splitScreenContainer.getBoundingClientRect();
-            if (e.key === 'ArrowLeft') {
-                p1X = Math.max(30, p1X - 25);
-                document.getElementById('p1-ship').style.left = p1X + 'px';
-            } else if (e.key === 'ArrowRight') {
-                p1X = Math.min(containerRect.width - 30, p1X + 25);
-                document.getElementById('p1-ship').style.left = p1X + 'px';
-            } else if (e.key === ' ' || e.code === 'Space') {
-                fireSplitLaserP1();
-            }
-
-            if (e.key === 'a' || e.key === 'A') {
-                p2X = Math.max(30, p2X - 25);
-                document.getElementById('p2-ship').style.left = p2X + 'px';
-            } else if (e.key === 'd' || e.key === 'D') {
-                p2X = Math.min(containerRect.width - 30, p2X + 25);
-                document.getElementById('p2-ship').style.left = p2X + 'px';
-            } else if (e.key === 'w' || e.key === 'W') {
-                fireSplitLaserP2();
-            }
-        });
-
-        function fireSplitLaserP1() {
-            if (!splitActive) return;
-            const laser = document.createElement('div');
-            laser.classList.add('split-laser-p1');
-            laser.style.left = (p1X - 4) + 'px';
-            laser.style.top = (splitScreenContainer.clientHeight - 80) + 'px';
-            splitScreenContainer.appendChild(laser);
-        }
-
-        function fireSplitLaserP2() {
-            if (!splitActive) return;
-            const laser = document.createElement('div');
-            laser.classList.add('split-laser-p2');
-            laser.style.left = (p2X - 4) + 'px';
-            laser.style.top = '70px';
-            splitScreenContainer.appendChild(laser);
-        }
-
-        function spawnSplitMeteor() {
-            if (!splitActive) return;
-            const meteor = document.createElement('div');
-            meteor.classList.add('split-meteor');
-            meteor.innerText = '☄️';
-            const width = splitScreenContainer.clientWidth;
-            meteor.style.left = (Math.random() * (width - 40)) + 'px';
-            
-            if (Math.random() > 0.5) {
-                meteor.style.top = '10px';
-                meteor.dataset.dir = 'down';
-            } else {
-                meteor.style.top = (splitScreenContainer.clientHeight - 40) + 'px';
-                meteor.dataset.dir = 'up';
-            }
-            splitScreenContainer.appendChild(meteor);
-        }
-
-        function createExplosionAt(x, y) {
-            const exp = document.createElement('div');
-            exp.classList.add('explosion');
-            exp.style.left = x + 'px';
-            exp.style.top = y + 'px';
-            splitScreenContainer.appendChild(exp);
-            setTimeout(() => exp.remove(), 350);
-        }
-
-        function splitGameLoop() {
-            if (!splitActive) return;
-
-            const p1ShipEl = document.getElementById('p1-ship');
-            const p2ShipEl = document.getElementById('p2-ship');
-            const p1Rect = p1ShipEl.getBoundingClientRect();
-            const p2Rect = p2ShipEl.getBoundingClientRect();
-
-            document.querySelectorAll('.split-laser-p1').forEach(laser => {
-                let top = parseFloat(laser.style.top);
-                top -= 12;
-                laser.style.top = top + 'px';
-                const lRect = laser.getBoundingClientRect();
-
-                if (lRect.left < p2Rect.right && lRect.right > p2Rect.left && lRect.top < p2Rect.bottom && lRect.bottom > p2Rect.top) {
-                    p2Lives--;
-                    p1Score += 100;
-                    document.getElementById('p2-lives').innerText = p2Lives;
-                    document.getElementById('p1-score').innerText = p1Score;
-                    createExplosionAt(p2Rect.left + 20, p2Rect.top + 20);
-                    laser.remove();
-                    if (p2Lives <= 0) checkSplitWinner('اللاعب 1 (المجرة الزرقاء)');
-                } else if (top < 0) {
-                    laser.remove();
-                }
-            });
-
-            document.querySelectorAll('.split-laser-p2').forEach(laser => {
-                let top = parseFloat(laser.style.top);
-                top += 12;
-                laser.style.top = top + 'px';
-                const lRect = laser.getBoundingClientRect();
-
-                if (lRect.left < p1Rect.right && lRect.right > p1Rect.left && lRect.top < p1Rect.bottom && lRect.bottom > p1Rect.top) {
-                    p1Lives--;
-                    p2Score += 100;
-                    document.getElementById('p1-lives').innerText = p1Lives;
-                    document.getElementById('p2-score').innerText = p2Score;
-                    createExplosionAt(p1Rect.left + 20, p1Rect.top + 20);
-                    laser.remove();
-                    if (p1Lives <= 0) checkSplitWinner('اللاعب 2 (المجرة الحمراء)');
-                } else if (top > splitScreenContainer.clientHeight) {
-                    laser.remove();
-                }
-            });
-
-            document.querySelectorAll('.split-meteor').forEach(meteor => {
-                let top = parseFloat(meteor.style.top);
-                if (meteor.dataset.dir === 'down') {
-                    top += 4;
-                } else {
-                    top -= 4;
-                }
-                meteor.style.top = top + 'px';
-                const mRect = meteor.getBoundingClientRect();
-
-                if (mRect.left < p1Rect.right && mRect.right > p1Rect.left && mRect.top < p1Rect.bottom && mRect.bottom > p1Rect.top) {
-                    p1Lives--;
-                    document.getElementById('p1-lives').innerText = p1Lives;
-                    createExplosionAt(p1Rect.left + 20, p1Rect.top + 20);
-                    meteor.remove();
-                    if (p1Lives <= 0) checkSplitWinner('اللاعب 2 (المجرة الحمراء)');
-                }
-                else if (mRect.left < p2Rect.right && mRect.right > p2Rect.left && mRect.top < p2Rect.bottom && mRect.bottom > p2Rect.top) {
-                    p2Lives--;
-                    document.getElementById('p2-lives').innerText = p2Lives;
-                    createExplosionAt(p2Rect.left + 20, p2Rect.top + 20);
-                    meteor.remove();
-                    if (p2Lives <= 0) checkSplitWinner('اللاعب 1 (المجرة الزرقاء)');
-                } else if (top < -40 || top > splitScreenContainer.clientHeight + 40) {
-                    meteor.remove();
-                }
-            });
-
-            if (splitActive) {
-                splitAnimFrame = requestAnimationFrame(splitGameLoop);
-            }
-        }
-
-        function checkSplitWinner(winnerName) {
-            splitActive = false;
-            disableP1AutoFire();
-            disableP2AutoFire();
-            cancelAnimationFrame(splitAnimFrame);
-            clearInterval(splitSpawnInterval);
-
-            setTimeout(() => {
-                alert(`🎉 انتصر ${winnerName} في صراع المجرّتين!\n\n🏆 النتيجة:\nاللاعب 1: ${p1Score}\nاللاعب 2: ${p2Score}`);
-                returnToMenu();
-            }, 100);
-        }
-
-        function insertEmoji(e) {
-            if (e.target.tagName === 'SPAN') {
-                chatTextInput.value += e.target.innerText;
-                chatTextInput.focus();
-            }
-        }
-
-        async function sendChatMessage(customImgUrl = '') {
-            if (currentPilotData.isMuted || currentPilotData.isBanned) {
-                alert('❌ تم حظرك أو كتمك من إرسال الرسائل في الشات بواسطة الإدارة.');
-                return;
-            }
-
-            let msg = chatTextInput.value.trim();
-            if (!msg && !customImgUrl) return;
-
-            try {
-                await db.collection("spaceChatV10").add({
-                    sender: currentPlayer,
-                    rank: (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'بطل الفضاء'),
-                    message: msg,
-                    image: customImgUrl || '',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (e) {
-                let localChats = JSON.parse(localStorage.getItem('spaceLocalChatsV10') || '[]');
-                localChats.push({
-                    sender: currentPlayer,
-                    rank: (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'بطل الفضاء'),
-                    message: msg,
-                    image: customImgUrl || '',
-                    timestamp: new Date().toISOString()
-                });
-                localStorage.setItem('spaceLocalChatsV10', JSON.stringify(localChats));
-                renderChatMessages();
-            }
-
-            chatTextInput.value = '';
-        }
-
-        function initChatListener() {
-            db.collection("spaceChatV10").orderBy("timestamp", "asc").limit(50).onSnapshot(snapshot => {
-                let serverChats = [];
-                snapshot.forEach(doc => {
-                    serverChats.push({ id: doc.id, ...doc.data() });
-                });
-                renderCloudAndLocalChats(serverChats);
-            }, () => {
-                renderChatMessages();
-            });
-        }
-
-        function renderChatMessages() {
-            let localChats = JSON.parse(localStorage.getItem('spaceLocalChatsV10') || '[]');
-            renderCloudAndLocalChats(localChats);
-        }
-
-        function renderCloudAndLocalChats(chatsArray) {
-            let html = '';
-            chatsArray.forEach(c => {
-                let isMe = (c.sender === currentPlayer);
-                let isAdminUser = (currentPlayer === 'admin' || currentPilotData.isAdmin);
-                html += `
-                    <div class="chat-msg-item ${isMe ? 'my-msg' : ''}">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:2px; font-size:0.65rem; color:#00f3ff;">
-                            <b>${c.sender} (${c.rank || 'عضو'})</b>
-                            ${isAdminUser ? `<button onclick="deleteChatMessage('${c.id || ''}')" style="background:#ff3838; border:none; color:white; border-radius:4px; padding:1px 5px; font-size:0.6rem; cursor:pointer;">حذف</button>` : ''}
-                        </div>
-                        <div>${c.message || ''}</div>
-                        ${c.image ? `<img src="${c.image}" class="chat-snapshot-img">` : ''}
-                    </div>
-                `;
-            });
-            chatMessagesBox.innerHTML = html || '<div style="color:#a4b0be; text-align:center;">لا توجد رسائل بعد... كن أول المتحدثين!</div>';
-            chatMessagesBox.scrollTop = chatMessagesBox.scrollHeight;
-        }
-
-        async function deleteChatMessage(msgId) {
-            if (!msgId) return;
-            try {
-                await db.collection("spaceChatV10").doc(msgId).delete();
-                alert('🗑️ تم حذف الرسالة بنجاح.');
-            } catch (e) {
-                alert('❌ تعذر حذف الرسالة.');
-            }
-        }
-
-        async function loadAdminUsersList() {
-            if (currentPlayer !== 'admin' && !currentPilotData.isAdmin) return;
-            adminUsersList.innerHTML = '<p style="color:#00f3ff; font-size:0.75rem;">جاري تحميل القائمة...</p>';
-            try {
-                let snapshot = await db.collection("spacePilotsV10").get();
-                let html = '';
-                snapshot.forEach(doc => {
-                    let u = doc.data();
-                    html += `
-                        <div class="admin-user-row">
-                            <span><b>${u.name}</b> ${u.isBanned ? '(محظور ❌)' : '(نشط ✅)'}</span>
-                            <div>
-                                ${u.isBanned ? 
-                                  `<button class="btn" style="width:auto; padding:3px 8px; font-size:0.65rem; background:#2ecc71;" onclick="setPlayerBanStatus('${u.name}', false)">إلغاء الحظر</button>` : 
-                                  `<button class="btn btn-red" style="width:auto; padding:3px 8px; font-size:0.65rem;" onclick="setPlayerBanStatus('${u.name}', true)">باند / حظر</button>`
-                                }
-                            </div>
-                        </div>
-                    `;
-                });
-                adminUsersList.innerHTML = html || '<p style="color:#a4b0be; font-size:0.75rem;">لا توجد حسابات مسجلة.</p>';
-            } catch (e) {
-                adminUsersList.innerHTML = '<p style="color:#ff3838; font-size:0.75rem;">تعذر جلب المستخدمين.</p>';
-            }
-        }
-
-        async function setPlayerBanStatus(username, status) {
-            try {
-                await db.collection("spacePilotsV10").doc(username).update({
-                    isBanned: status
-                });
-                alert(`✅ تم تحديث حالة الحظر للمستخدم: ${username}`);
-                loadAdminUsersList();
-            } catch (e) {
-                alert('❌ حدث خطأ أثناء تنفيذ الحظر.');
-            }
-        }
-
-        function takeGameSnapshot() {
-            if (!isPlaying) {
-                alert('يجب أن تكون داخل اللعبة لالتقاط ومشاركة الصورة!');
-                return;
-            }
-            let canvas = document.createElement('canvas');
-            canvas.width = 300; canvas.height = 150;
-            let ctx = canvas.getContext('2d');
-            ctx.fillStyle = '#0b0c2a'; ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00f3ff'; ctx.font = '16px Tahoma';
-            ctx.fillText(`لقطة شاشة البطل: ${currentPlayer}`, 20, 40);
-            ctx.fillText(`النتيجة الحالية: ${score} ⭐`, 20, 80);
-            ctx.fillText(`السفينة: ${selectedShipIcon}`, 20, 120);
-
-            let dataUrl = canvas.toDataURL();
-            switchSection('sec-chat', document.querySelectorAll('.nav-item')[2]);
-            sendChatMessage();
-            sendCustomImageToChat(dataUrl);
-        }
-
-        async function sendCustomImageToChat(imgUrl) {
-            try {
-                await db.collection("spaceChatV10").add({
-                    sender: currentPlayer,
-                    rank: (currentPlayer === 'admin' ? 'مدير النظام 🛡️' : 'بطل الفضاء'),
-                    message: 'لقطة شاشة من داخل اللعبة 🎮',
-                    image: imgUrl,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
-            } catch (e) {}
-        }
-
-        let currentGame = 1, score = 0, lives = 12, level = 1, gameSpeed = 5, spawnRate = 400;
-        let gameAnimFrame = null, itemInterval, fireInterval;
-        let isPlaying = false, isPaused = false, playerX = 240, hasShield = false;
-        let firePressTimer = null, isAutoFire = false;
-
-        // توليد الخلفية النجمية الخفيفة لزيادة السلاسة
-        for (let i = 0; i < 25; i++) {
-            let star = document.createElement('div');
-            star.classList.add('star-bg');
-            star.style.left = Math.random() * 100 + 'vw';
-            star.style.top = Math.random() * 100 + 'vh';
-            let size = Math.random() * 2 + 1;
-            star.style.width = size + 'px'; star.style.height = size + 'px';
-            star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            gameContainer.appendChild(star);
-        }
-
-        function openShop() {
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
-            floatingStoreBtn.style.display = 'none';
-            shopModal.style.display = 'flex';
-
-            document.querySelectorAll('.ship-option').forEach(o => {
-                if(o.innerText === (currentPilotData.ship || '🛸')) {
-                    o.classList.add('selected');
-                } else {
-                    o.classList.remove('selected');
-                }
-            });
-        }
-
-        function closeShop() {
-            shopModal.style.display = 'none';
-            mainMenu.style.display = 'flex';
-            bottomNavBar.style.display = 'flex';
-            topProfileBadge.style.display = 'flex';
-            floatingStoreBtn.style.display = 'flex';
-            
-            savePlayerDataToCloud();
-            updateUserInterfaceProfile();
-        }
-
-        // تم إصلاح اختيار شكل المركبة ليتطبق فوراً سحابياً ومحلياً وفي شاشة اللعب
-        function selectShip(icon, el) {
-            selectedShipIcon = icon;
-            currentPilotData.ship = icon;
-            player.innerText = icon;
-            profileAvatarIcon.innerText = icon;
-            
-            document.querySelectorAll('.ship-option').forEach(o => o.classList.remove('selected'));
-            if(el) el.classList.add('selected');
-            
-            savePlayerDataToCloud();
-        }
-
-        function openGame(gameNum) {
-            currentGame = gameNum;
-            mainMenu.style.display = 'none';
-            bottomNavBar.style.display = 'none';
-            topProfileBadge.style.display = 'none';
-            floatingStoreBtn.style.display = 'none';
-            gameScreen.style.display = 'flex';
-            let highScore = (currentPilotData.highScores && currentPilotData.highScores[currentGame]) || 0;
-            highScoreText.innerText = `أعلى نتيجة سحابية: ${highScore}`;
-
-            const descriptions = {
-                1: "⭐ صائد النجوم الكلاسيكي: طور مستواك بلا نهاية واجمع النجوم بحرية.",
-                2: "☄️ تحدي النيازك القاتلة: نيازك متسارعة وتحدٍ مشوق وممتع.",
-                3: "🚀 غزو الفضاء السريع: سرعة رائعة وتحدي ردة الفعل للأبطال.",
-                4: "💎 جامع الألماس والمجرات: اجمع الألماس الثمين بدون أي قيود.",
-                5: "⚡ حرب الثقوب السوداء: مغامرة ممتعة بعناصر كونية مثيرة.",
-                6: "🛡️ معركة حقول الألغام: تفادي الحواجز بمهارة وذكاء.",
-                7: "🌀 سباق الثقوب الدودية: عواصف نيزكية متعرجة وسرعة مشوقة.",
-                8: "🔥 حرب الليزر والصواريخ: إطلاق صواريخ ممتعة ومسلية.",
-                9: "👑 معركة الزعيم الأخير: واجه التحدي الكبير بمهارة فائقة!",
-                10: "🔒 معركة الحصار الفضائي: لعبة حصرية مفتوحة ومتاحة للجميع مجاناً!"
-            };
-
-            const titles = {
-                1: "⭐ 1. صائد النجوم الكلاسيكي", 2: "☄️️ 2. تحدي النيازك القاتلة", 3: "🚀 3. غزو الفضاء السريع",
-                4: "💎 4. جامع الألماس والمجرات", 5: "⚡ 5. حرب الثقوب السوداء", 6: "🛡️ 6. معركة حقول الألغام",
-                7: "🌀 7. سباق الثقوب الدودية", 8: "🔥 8. حرب الليزر والصواريخ", 9: "👑 9. معركة الزعيم الأخير",
-                10: "🔒 10. معركة الحصار الفضائي (مفتوحة للجميع)"
-            };
-
-            screenTitle.innerText = titles[gameNum];
-            screenDesc.innerText = descriptions[gameNum];
-        }
-
-        function returnToMenu() {
-            isPlaying = false; isPaused = false; isAutoFire = false; splitActive = false;
-            disableP1AutoFire(); disableP2AutoFire();
-            cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
-            cancelAnimationFrame(splitAnimFrame); clearInterval(splitSpawnInterval);
-
-            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .laser-plasma_blue, .laser-lava_red, .laser-emerald_quantum, .laser-blackhole_purple, .laser-supernova_gold, .missile, .explosion, .split-laser-p1, .split-laser-p2, .split-meteor').forEach(el => el.remove());
-            
-            gameScreen.style.display = 'none';
-            splitScreenContainer.style.display = 'none';
-            ui.style.display = 'none';
-            controls.style.display = 'none';
-            player.style.display = 'none';
-            mainMenu.style.display = 'flex';
-            bottomNavBar.style.display = 'flex';
-            topProfileBadge.style.display = 'flex';
-            floatingStoreBtn.style.display = 'flex';
-            checkAdminPermissions();
-            updateUserInterfaceProfile();
-        }
-
-        function enableAutoFire() {
-            isAutoFire = true;
-            fireBtn.classList.add('auto-fire-active');
-            fireBtn.innerText = '🔥';
-            if (!fireInterval) { fireInterval = setInterval(fireWeapon, 120); }
-        }
-
-        function disableAutoFire() {
-            isAutoFire = false;
-            fireBtn.classList.remove('auto-fire-active');
-            fireBtn.innerText = '⚡';
-            clearInterval(fireInterval);
-            fireInterval = null;
-        }
-
-        function fireWeapon() {
-            if (!isPlaying || isPaused) return;
-            const missile = document.createElement('div');
-            
-            let inv = currentPilotData.inventory || [];
-            if (inv.includes('supernova_gold')) { missile.classList.add('laser-supernova_gold'); }
-            else if (inv.includes('blackhole_purple')) { missile.classList.add('laser-blackhole_purple'); }
-            else if (inv.includes('emerald_quantum')) { missile.classList.add('laser-emerald_quantum'); }
-            else if (inv.includes('lava_red')) { missile.classList.add('laser-lava_red'); }
-            else if (inv.includes('plasma_blue')) { missile.classList.add('laser-plasma_blue'); }
-            else if (currentGame === 8 || currentGame === 10 || level >= 4) { missile.classList.add('missile'); }
-            else if (level === 3) { missile.classList.add('laser-l3'); }
-            else if (level === 2) { missile.classList.add('laser-l2'); }
-            else { missile.classList.add('laser-l1'); }
-
-            missile.style.left = (playerX - 4) + 'px';
-            missile.style.bottom = '135px';
-            gameContainer.appendChild(missile);
-
-            if (inv.includes('ai_drone')) {
-                const droneLaser1 = document.createElement('div');
-                droneLaser1.classList.add('laser-l1');
-                droneLaser1.style.left = (playerX - 25) + 'px';
-                droneLaser1.style.bottom = '135px';
-                gameContainer.appendChild(droneLaser1);
-
-                const droneLaser2 = document.createElement('div');
-                droneLaser2.classList.add('laser-l1');
-                droneLaser2.style.left = (playerX + 20) + 'px';
-                droneLaser2.style.bottom = '135px';
-                gameContainer.appendChild(droneLaser2);
-            }
-        }
-
-        function startCurrentGame() {
-            score = 0;
-            lives = 12;
-            level = 1;
-            hasShield = true;
-            isAutoFire = false;
-            fireBtn.classList.remove('auto-fire-active');
-            fireBtn.innerText = '⚡';
-
-            // تطبيق شكل المركبة المختار فوراً وبشكل مؤكد
-            player.innerText = currentPilotData.ship || selectedShipIcon || '🛸';
-            
-            if (hasShield) { player.classList.add('shield-active'); } else { player.classList.remove('shield-active'); }
-
-            let speeds = { 1: 5, 2: 6.5, 3: 8, 4: 5.5, 5: 7, 6: 6.5, 7: 8.5, 8: 7, 9: 9.5, 10: 7.5 };
-            const rates = { 1: 550, 2: 380, 3: 280, 4: 450, 5: 320, 6: 350, 7: 260, 8: 300, 9: 240, 10: 280 };
-
-            let inv = currentPilotData.inventory || [];
-            let speedFactor = inv.includes('time_warp') ? 0.75 : 1.0;
-
-            gameSpeed = (speeds[currentGame] || 5) * speedFactor;
-            spawnRate = rates[currentGame] || 500;
-
-            scoreDisplay.innerText = score;
-            livesDisplay.innerText = lives;
-            liveGemsDisplay.innerText = currentPilotData.gems || 0;
-
-            gameScreen.style.display = 'none';
-            ui.style.display = 'flex';
-            controls.style.display = 'flex';
-            player.style.display = 'block';
-            playerX = gameContainer.clientWidth / 2;
-            player.style.left = playerX + 'px';
-
-            isPlaying = true; isPaused = false;
-            document.querySelectorAll('.item, .laser-l1, .laser-l2, .laser-l3, .laser-plasma_blue, .laser-lava_red, .laser-emerald_quantum, .laser-blackhole_purple, .laser-supernova_gold, .missile, .explosion').forEach(el => el.remove());
-            cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval); clearInterval(fireInterval);
-            fireInterval = null;
-
-            itemInterval = setInterval(spawnItem, spawnRate);
-            
-            function gameLoop() {
-                if (!isPlaying) return;
-                if (!isPaused) {
-                    updateGame();
-                    GamePerformanceOptimizer.optimizeDOM();
-                }
-                gameAnimFrame = requestAnimationFrame(gameLoop);
-            }
-            gameAnimFrame = requestAnimationFrame(gameLoop);
-        }
-
-        function togglePause() {
-            if (!isPlaying) return;
-            isPaused = !isPaused;
-            if (isPaused) {
-                if (!isAutoFire) { clearInterval(fireInterval); fireInterval = null; }
-                screenTitle.innerText = "⏸️ اللعبة متوقفة مؤقتاً";
-                screenDesc.innerText = "خذ أنفاسك واستعد للمتابعة!";
-                highScoreText.innerText = `النتيجة الحالية: ${score}`;
-                startBtn.innerText = "استئناف اللعب";
-                gameScreen.style.display = 'flex';
-            } else {
-                if (isAutoFire && !fireInterval) { fireInterval = setInterval(fireWeapon, 120); }
-                gameScreen.style.display = 'none';
-            }
-        }
-
-        function spawnItem() {
-            if (!isPlaying || isPaused) return;
-            const item = document.createElement('div');
-            item.classList.add('item');
-            const rect = gameContainer.getBoundingClientRect();
-            const randomX = Math.random() * (rect.width - 50);
-            const rand = Math.random();
-
-            if (currentGame === 9 || currentGame === 10) {
-                if (rand < 0.35) { item.innerHTML = '👑'; item.dataset.type = 'good'; item.dataset.val = 60; }
-                else { item.innerHTML = '👾'; item.dataset.type = 'bad'; }
-            } else {
-                if (rand < 0.45) { item.innerHTML = '⭐'; item.dataset.type = 'good'; item.dataset.val = 15; }
-                else if (rand < 0.70) { item.innerHTML = '☄️'; item.dataset.type = 'bad'; }
-                else if (rand < 0.85) { item.innerHTML = '❤️'; item.dataset.type = 'heart'; }
-                else if (rand < 0.95) { item.innerHTML = '🛡️'; item.dataset.type = 'shield'; }
-                else { item.innerHTML = '💎'; item.dataset.type = 'gem'; }
-            }
-
-            item.style.left = randomX + 'px';
-            item.style.top = '-50px';
-            gameContainer.appendChild(item);
-        }
-
-        function updateGame() {
-            const projectiels = document.querySelectorAll('.laser-l1, .laser-l2, .laser-l3, .laser-plasma_blue, .laser-lava_red, .laser-emerald_quantum, .laser-blackhole_purple, .laser-supernova_gold, .missile');
-            projectiels.forEach(proj => {
-                let bottom = parseFloat(proj.style.bottom);
-                proj.style.bottom = (bottom + 24) + 'px';
-                const projRect = proj.getBoundingClientRect();
-
-                const items = document.querySelectorAll('.item');
-                items.forEach(item => {
-                    const itemRect = item.getBoundingClientRect();
-                    if (projRect.left < itemRect.right && projRect.right > itemRect.left && projRect.top < itemRect.bottom && projRect.bottom > itemRect.top) {
-                        if (item.dataset.type === 'bad') {
-                            score += 15; item.remove();
-                            scoreDisplay.innerText = score;
-                            proj.remove();
-                        }
-                    }
-                });
-                if (bottom > window.innerHeight) proj.remove();
-            });
-
-            const items = document.querySelectorAll('.item');
-            const playerRect = player.getBoundingClientRect();
-
-            items.forEach(item => {
-                let top = parseFloat(item.style.top);
-                item.style.top = (top + gameSpeed) + 'px';
-                const itemRect = item.getBoundingClientRect();
-
-                if (itemRect.left < playerRect.right && itemRect.right > playerRect.left && itemRect.top < playerRect.bottom && itemRect.bottom > playerRect.top) {
-                    let type = item.dataset.type;
-                    let inv = currentPilotData.inventory || [];
-
-                    if (type === 'good') {
-                        score += Math.round(parseInt(item.dataset.val || 15) * 2);
-                        scoreDisplay.innerText = score;
-                        if (score >= level * 100) { level++; gameSpeed += 0.4; }
-                    } else if (type === 'heart') {
-                        lives++; livesDisplay.innerText = lives;
-                    } else if (type === 'shield') {
-                        hasShield = true; player.classList.add('shield-active');
-                    } else if (type === 'gem') {
-                        let gemGain = inv.includes('gem_multiplier') ? 20 : 10;
-                        currentPilotData.gems = (currentPilotData.gems || 0) + gemGain;
-                        liveGemsDisplay.innerText = currentPilotData.gems;
-                        savePlayerDataToCloud();
-                    } else {
-                        if (hasShield) {
-                            hasShield = false; player.classList.remove('shield-active');
-                        } else {
-                            lives--; livesDisplay.innerText = lives; triggerShake();
-                            if (lives <= 0) gameOver();
-                        }
-                    }
-                    item.remove();
-                }
-                if (top > window.innerHeight) item.remove();
-            });
-        }
-
-        function triggerShake() {
-            gameContainer.classList.add('shake');
-            setTimeout(() => gameContainer.classList.remove('shake'), 300);
-        }
-
-        function gameOver() {
-            isPlaying = false; disableAutoFire();
-            cancelAnimationFrame(gameAnimFrame); clearInterval(itemInterval);
-
-            if (currentPlayer) {
-                if (!currentPilotData.highScores) currentPilotData.highScores = {};
-                if (score > (currentPilotData.highScores[currentGame] || 0)) {
-                    currentPilotData.highScores[currentGame] = score;
-                }
-                savePlayerDataToCloud();
-            }
-
-            let highScore = (currentPilotData.highScores && currentPilotData.highScores[currentGame]) || 0;
-            screenTitle.innerText = "🏆 أحسنت صنعاً يا بطل الفضاء!";
-            screenDesc.innerHTML = `البطل: <b>${currentPlayer}</b><br>نقاطك: <b>${score}</b><br>رقمك القياسي: <b>${highScore}</b>`;
-            highScoreText.innerText = `رصيد الجواهر المجانية: 💎 ${currentPilotData.gems}`;
-            startBtn.innerText = "العب مرة أخرى";
-            gameScreen.style.display = 'flex';
-        }
-
-        let isDraggingFab = false;
-        let fabStartTouchX = 0, fabStartTouchY = 0;
-        let fabStartLeft = 0, fabStartTop = 0;
-        let fabHasDragged = false;
-
-        function initFabDrag() {
-            const fab = document.getElementById('floating-store-btn');
-            if (!fab) return;
-
-            const onDragStart = (e) => {
-                isDraggingFab = true;
-                fabHasDragged = false;
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-                
-                fabStartTouchX = clientX;
-                fabStartTouchY = clientY;
-                
-                const rect = fab.getBoundingClientRect();
-                const containerRect = gameContainer.getBoundingClientRect();
-
-                fabStartLeft = rect.left - containerRect.left;
-                fabStartTop = rect.top - containerRect.top;
-
-                fab.style.position = 'absolute';
-                fab.style.bottom = 'auto';
-                fab.style.right = 'auto';
-                fab.style.left = fabStartLeft + 'px';
-                fab.style.top = fabStartTop + 'px';
-            };
-
-            const onDragMove = (e) => {
-                if (!isDraggingFab) return;
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-                const deltaX = clientX - fabStartTouchX;
-                const deltaY = clientY - fabStartTouchY;
-
-                if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
-                    fabHasDragged = true;
-                }
-
-                const containerRect = gameContainer.getBoundingClientRect();
-                let newLeft = fabStartLeft + deltaX;
-                let newTop = fabStartTop + deltaY;
-
-                newLeft = Math.max(10, Math.min(containerRect.width - 66, newLeft));
-                newTop = Math.max(10, Math.min(containerRect.height - 66, newTop));
-
-                fab.style.left = newLeft + 'px';
-                fab.style.top = newTop + 'px';
-            };
-
-            const onDragEnd = () => {
-                isDraggingFab = false;
-            };
-
-            fab.addEventListener('touchstart', onDragStart, { passive: true });
-            window.addEventListener('touchmove', onDragMove, { passive: true });
-            window.addEventListener('touchend', onDragEnd);
-
-            fab.addEventListener('mousedown', onDragStart);
-            window.addEventListener('mousemove', onDragMove);
-            window.addEventListener('mouseup', onDragEnd);
-
-            fab.addEventListener('click', (e) => {
-                if (fabHasDragged) {
-                    e.stopImmediatePropagation();
-                    e.preventDefault();
-                    fabHasDragged = false;
-                }
-            }, true);
-        }
-
-        initFabDrag();
-
-        // تسجيل الـ Service Worker
-        if ('serviceWorker' in navigator) {
-          window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').then((registration) => {
-              registration.update();
-            }).catch((err) => {});
-          });
-        }
-    </script>
+    <!-- JS Logic -->
+    <script src="app.js" defer></script>
 </body>
 </html>
